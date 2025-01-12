@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- 상단 타이틀 -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아이디 및 비밀번호 찾기"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="80dp"
+        android:layout_marginStart="24dp"/>
+
+    <!-- 서브 타이틀/설명 -->
+    <TextView
+        android:id="@+id/tvSubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아이디 및 비밀번호 찾기 서비스"
+        android:textSize="14sp"
+        android:layout_below="@id/tvTitle"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="24dp"/>
+
+    <!-- 아래부터 아이디 찾기 / 비밀번호 찾기 기능을 추가하고 싶다면 추가 버튼, EditText 등을 배치하시면 됩니다. -->
+
+</RelativeLayout>

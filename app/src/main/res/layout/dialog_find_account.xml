@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@drawable/logo">
+
+    <!-- 닫기 아이콘 -->
+    <ImageView
+        android:id="@+id/btnDialogClose"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="top|end"
+        android:src="@drawable/logo"
+        android:contentDescription="닫기" />
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp"
+        >
+
+        <TextView
+            android:id="@+id/tvDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이메일 찾기 완료"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            />
+
+        <!-- 성공/실패 아이콘을 넣거나 -->
+        <!-- <ImageView ... /> -->
+
+        <TextView
+            android:id="@+id/tvDialogMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="홍길동 님의 가입 이메일은 ~~~~~"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:textSize="14sp"
+            android:gravity="center"
+            />
+
+        <Button
+            android:id="@+id/btnDialogConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="확인"
+            />
+    </LinearLayout>
+</FrameLayout>

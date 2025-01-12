@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:title="시니어 목록"
+        android:icon="@drawable/logo" />
+    <item
+        android:id="@+id/nav_knowledge"
+        android:title="관련 지식"
+        android:icon="@drawable/logo" />
+    <item
+        android:id="@+id/nav_products"
+        android:title="예방 물품"
+        android:icon="@drawable/logo" />
+    <item
+        android:id="@+id/nav_exercise"
+        android:title="예방 운동"
+        android:icon="@drawable/logo" />
+</menu>
+
+<!--icon 그림 넣기-->

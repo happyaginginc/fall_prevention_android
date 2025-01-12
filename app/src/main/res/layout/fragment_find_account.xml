@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 뒤로가기 버튼과 타이틀을 한 줄로 배치하고 싶다면
+             여기서 Horizontal LinearLayout or ConstraintLayout을 써서 조정할 수 있음 -->
+        <!-- 상단: 뒤로가기(아이콘) + 타이틀 텍스트 -->
+        <!-- 실제론 Toolbar나 ActionBar를 사용해도 됨 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+
+            <!-- 뒤로가기 아이콘 (왼쪽) -->
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:padding="4dp"
+                android:src="@drawable/logo" />
+
+        </LinearLayout>
+
+        <!-- 화면 타이틀 -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="8dp"
+            android:text="이메일 및 비밀번호 찾기"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- 부가 설명 -->
+        <TextView
+            android:id="@+id/tvDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="이메일 및 비밀번호 찾기 서비스"
+            android:textSize="14sp" />
+
+        <!-- [이메일 찾기 서비스] -->
+        <TextView
+            android:id="@+id/tvFindEmailHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="이메일 찾기 서비스"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- 이름 입력 -->
+        <EditText
+            android:id="@+id/edtFindEmailName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_background"
+            android:hint="이름을 입력해주세요"
+            android:padding="12dp"
+            android:textSize="14sp" />
+
+        <!-- 전화번호 입력 -->
+        <EditText
+            android:id="@+id/edtFindEmailPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_background"
+            android:hint="전화번호를 입력해주세요"
+            android:padding="12dp"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnFindEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="#A9CF54"
+            android:text="이메일 찾기"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <!-- 구분선 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="24dp"
+            android:background="#E0E0E0" />
+
+        <!-- [비밀번호 찾기 서비스] -->
+        <TextView
+            android:id="@+id/tvFindPwHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="비밀번호 찾기 서비스"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- 이메일 입력 (비밀번호 찾기용) -->
+        <EditText
+            android:id="@+id/edtFindPwEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_background"
+            android:hint="이메일을 입력해주세요"
+            android:padding="12dp"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnFindPw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#A9CF54"
+            android:text="이메일로 비밀번호 받기"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+</ScrollView>

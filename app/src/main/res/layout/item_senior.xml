@@ -1,0 +1,31 @@
+<!-- res/layout/item_senior.xml 예시 -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvSeniorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="홍길동"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/tvSeniorInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="대구 달성군 가창면 / 20세"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- 관리하기 버튼 -->
+    <Button
+        android:id="@+id/btnManage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="관리하기"/>
+</LinearLayout>
