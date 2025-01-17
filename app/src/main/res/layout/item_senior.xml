@@ -1,4 +1,3 @@
-<!-- res/layout/item_senior.xml 예시 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

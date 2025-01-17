@@ -1,5 +1,6 @@
 package com.winter.happyaging.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.statusBarColor = Color.parseColor("#B8660E")
         setContentView(R.layout.activity_home)
 
         // 1) 뷰 연결
@@ -41,7 +43,7 @@ class HomeActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val dummy = listOf(
-            SeniorData("박재영", "광주 / 27세)", 1),
+            SeniorData("박재영", "광주 / 27세", 1),
             SeniorData("이상민", "대구 / 22세", 2)
         )
 
@@ -83,3 +85,5 @@ class HomeActivity : AppCompatActivity() {
             .commit()
     }
 }
+
+//

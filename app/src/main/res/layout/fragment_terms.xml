@@ -11,6 +11,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/back_icon"
+            android:contentDescription="뒤로가기"
+            android:layout_gravity="start"
+            android:layout_marginBottom="16dp" />
+
         <!-- 상단 타이틀 -->
         <TextView
             android:id="@+id/tvTitle"
@@ -30,12 +39,30 @@
             android:textSize="14sp"
             android:layout_marginBottom="16dp"/>
 
+        <!-- 설명문 -->
+        <TextView
+            android:id="@+id/tvDescribe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="<낙상예방9988> 참여 신청 및 지원과 관련하여\n다음과 같이 귀하의 개인정보를 수집∙이용하기 위하여\n<개인정보 보호법> 제 15조에 따라 관련 사항을 알려 드리오니\n동의하여 주시기 바랍니다."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp"/>
+
         <!-- 본문 내용 -->
         <TextView
             android:id="@+id/tvContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1) 개인정보의 수집·이용 목적\n2) 수집·이용할 개인정보 항목\n3) 개인정보의 보유·이용기간\n...\n(필요한 문구를 여기에 넣어주세요)"
+            android:text="1) 개인정보의 수집·이용 목적\n<낙상예방9988> 참여안내 및 위험측정 결과안내\n\n2) 수집·이용할 개인정보 항목\n성별, 성명, 주소, 출생년도, 휴대전화번호\n\n3) 개인정보의 보유·이용기간\n<낙상예방9988> 참여종료 후 5년간\n\n"
+            android:layout_marginBottom="24dp"/>
+
+<!--        위험문-->
+        <TextView
+            android:id="@+id/tvDanger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="※ 수집된 정보는 어르신 개인의 낙상예방에 필요한 위험도 산출\n및 예방에 필요한 제언 등의 정보 생성을 위해 활용됩니다.\n 이외 회사의 영리 및 제3자 제공 등 다른 목적으로는\n활용되지 않습니다.
+            \n\n※ 위의 개인정보 수집∙이용에 대한 동의를 거부할 권리가\n있습니다. 그러나, 동의를 거부할 경우 <낙상예방9988>\n신청이 불가합니다."
             android:layout_marginBottom="24dp"/>
 
         <!-- 확인 버튼 -->

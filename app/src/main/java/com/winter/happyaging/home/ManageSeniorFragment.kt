@@ -1,6 +1,7 @@
 package com.winter.happyaging.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -13,16 +14,12 @@ class ManageSeniorFragment : Fragment() {
     private var grade: Int? = null
 
     companion object {
-        private const val ARG_NAME = "arg_name"
-        private const val ARG_INFO = "arg_info"
-        private const val ARG_GRADE = "arg_grade"
-
         fun newInstance(name: String, info: String, grade: Int): ManageSeniorFragment {
             val fragment = ManageSeniorFragment()
             val args = Bundle().apply {
-                putString(ARG_NAME, name)
-                putString(ARG_INFO, info)
-                putInt(ARG_GRADE, grade)
+                putString("name", name)
+                putString("info", info)
+                putInt("grade", grade)
             }
             fragment.arguments = args
             return fragment
@@ -32,9 +29,9 @@ class ManageSeniorFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            name = it.getString(ARG_NAME)
-            info = it.getString(ARG_INFO)
-            grade = it.getInt(ARG_GRADE, 1)
+            name = it.getString("name")
+            info = it.getString("info")
+            grade = it.getInt("grade")
         }
     }
 
@@ -48,13 +45,10 @@ class ManageSeniorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 예: 시니어 이름/정보/등급을 표시
-        val tvSeniorName = view.findViewById<TextView>(R.id.tvSeniorName)
-        val tvSeniorInfo = view.findViewById<TextView>(R.id.tvSeniorInfo)
-
-        tvSeniorName.text = name ?: "이름 없음"
-        tvSeniorInfo.text = info ?: "정보 없음"
-
-        // etc... 1등급이면 뷰를 어떻게 표시 etc.
+        Log.d("HomeActivity", "관리하기 버튼 클릭됨")
+        // 데이터 못 받아옴
+        view.findViewById<TextView>(R.id.tvSeniorName).text = name ?: "이름 없음"
+        view.findViewById<TextView>(R.id.tvSeniorInfo).text = info ?: "정보 없음"
     }
 }
+

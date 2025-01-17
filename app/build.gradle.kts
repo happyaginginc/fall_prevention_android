@@ -6,7 +6,6 @@ plugins {
 android {
     namespace = "com.winter.happyaging"
 
-    // compileSdk를 35로 변경
     compileSdk = 35
 
     defaultConfig {
@@ -17,10 +16,10 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    // 빌드 타입 설정
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -30,13 +29,11 @@ android {
             )
         }
     }
-
-    // dataBinding 활성화 등
+    
     buildFeatures {
         dataBinding = true
     }
 
-    // 자바, 코틀린 호환 버전
     compileOptions {
         sourceCompatibility(JavaVersion.VERSION_1_8)
         targetCompatibility(JavaVersion.VERSION_1_8)
@@ -47,7 +44,6 @@ android {
 }
 
 dependencies {
-    // core-ktx 1.15.0은 compileSdk=35를 요구
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
@@ -58,7 +54,6 @@ dependencies {
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
     implementation("androidx.cardview:cardview:1.0.0")
 
-    // 테스트
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
