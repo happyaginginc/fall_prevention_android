@@ -6,10 +6,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <!-- 상단 여백이나 툴바/뒤로가기 버튼이 필요하다면 추가 -->
-    <!-- 예: LinearLayout horizontal로 "← 시니어 등록하기" 구성 -->
-
-    <!-- 스크롤 영역 (이름, 성별, 거주지, 출생년도, 연락처, 관계 등) -->
     <ScrollView
         android:id="@+id/scrollViewRegister"
         android:layout_width="match_parent"
@@ -22,17 +18,30 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 타이틀: "시니어 등록하기" -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <!-- 이름 -->
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="시니어 등록하기"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/back_icon"
+                    android:contentDescription="뒤로가기"
+                    android:layout_gravity="start"
+                    android:layout_marginBottom="16dp" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="시니어 등록하기"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -46,12 +55,12 @@
                 android:hint="이름을 입력해주세요"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- 성별 (예: Dropdown) -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="성별 *"
                 android:textStyle="bold"/>
+
             <EditText
                 android:id="@+id/edtGender"
                 android:layout_width="match_parent"

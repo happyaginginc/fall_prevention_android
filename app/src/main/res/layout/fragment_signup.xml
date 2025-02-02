@@ -45,7 +45,23 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:background="@drawable/edittext_background"
-            android:hint="이름을 입력하세요" />
+            android:hint="이름을 입력해주세요" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="전화번호"
+            android:textSize="18dp"/>
+
+        <!-- 전화번호 입력 -->
+        <EditText
+            android:id="@+id/etPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edittext_background"
+            android:hint="전화번호를 입력해주세요" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -56,12 +72,12 @@
 
         <!-- 이메일 입력 -->
         <EditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:background="@drawable/edittext_background"
-            android:hint="이메일을 입력하세요"
+            android:hint="이메일을 입력해주세요"
             android:inputType="textEmailAddress" />
 
         <TextView
@@ -73,7 +89,7 @@
 
         <!-- 비밀번호 입력 -->
         <EditText
-            android:id="@+id/passwordEditText"
+            android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
@@ -90,7 +106,6 @@
 
         <!-- 비밀번호 확인 -->
         <EditText
-            android:id="@+id/confirmPasswordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"

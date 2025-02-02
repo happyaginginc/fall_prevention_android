@@ -2,18 +2,25 @@ package com.winter.happyaging.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.winter.happyaging.R
-import com.winter.happyaging.login.FindAccountFragment
-import com.winter.happyaging.login.SignUpFragment
+import com.winter.happyaging.ReqDTO.LoginRequest
+import com.winter.happyaging.ResDTO.LoginResponse
+import com.winter.happyaging.RetrofitClient
 import com.winter.happyaging.home.HomeActivity
+import com.winter.happyaging.service.AuthService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class LoginFragment : Fragment() {
 
@@ -22,24 +29,18 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // fragment_login.xml 레이아웃을 inflate
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
-    // onViewCreated에서 뷰 참조 후 작업
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // "이메일/비밀번호 찾기" 텍스트 뷰
         val tvFindEmailPassword = view.findViewById<TextView>(R.id.tvFindEmailPassword)
-
-        // "계정이 없으신가요?" 텍스트뷰
         val tvSignUpLink = view.findViewById<TextView>(R.id.signupLink)
-
-        // "로그인" 버튼 (layout에 해당 버튼이 있다고 가정)
         val btnLogin = view.findViewById<Button>(R.id.loginButton)
+        val etEmail = view.findViewById<EditText>(R.id.emailEditText)
+        val etPassword = view.findViewById<EditText>(R.id.passwordEditText)
 
-        // [1] "이메일/비밀번호 찾기" 클릭 → FindAccountFragment로 교체
         tvFindEmailPassword.setOnClickListener {
             parentFragmentManager.commit {
                 replace(R.id.fragmentContainer, FindAccountFragment())
@@ -47,31 +48,87 @@ class LoginFragment : Fragment() {
             }
         }
 
-        // [2] "계정이 없으신가요?" 클릭 → SignUpFragment로 교체
         tvSignUpLink.setOnClickListener {
             parentFragmentManager.commit {
                 replace(R.id.fragmentContainer, SignUpFragment())
-                addToBackStack(null) // 뒤로가기 시 이전(LoginFragment) 화면 복귀
+                addToBackStack(null)
             }
         }
 
-        // [3] "로그인" 버튼 클릭 시 → 로그인 검증 후, HomeActivity로 이동
         btnLogin.setOnClickListener {
-            // TODO: 실제 로그인 검증(서버 통신 등)
-            val loginSuccess = true  // 여기선 임시로 성공 처리
+            val email = etEmail.text.toString().trim()
+            val password = etPassword.text.toString().trim()
 
-            if (loginSuccess) {
-
-//                startActivity(Intent(this, HomeActivity::class.java))
-//                finish() // 로그인 성공 시
-                // HomeActivity로 이동
-                val intent = Intent(requireContext(), HomeActivity::class.java)
-                startActivity(intent)
-                // 로그인 화면 액티비티(MainActivity)를 닫아, 뒤로가기 시 로그인 화면으로 돌아가지 않게 처리
-                requireActivity().finish()
-            } else {
-                Toast.makeText(requireContext(), "로그인 실패", Toast.LENGTH_SHORT).show()
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(requireContext(), "이메일과 비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            val authService = RetrofitClient.getInstance(requireContext()).create(AuthService::class.java)
+            val loginRequest = LoginRequest(email, password)
+
+            authService.login(loginRequest).enqueue(object : Callback<LoginResponse> {
+                override fun onResponse(
+                    call: Call<LoginResponse>,
+                    response: Response<LoginResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.let { loginResponse ->
+                            Log.d("LoginFragment", "로그인 응답 데이터: $loginResponse")
+
+                            if (loginResponse.status == 200) { // 백엔드에서 성공 코드 확인 (200 또는 201 등)
+                                Toast.makeText(requireContext(), "로그인 성공!", Toast.LENGTH_SHORT)
+                                    .show()
+
+                                val accessToken = loginResponse.data.accessToken.value
+                                val refreshToken = loginResponse.data.refreshToken.value
+
+                                saveToken(accessToken, refreshToken)
+
+                                val intent = Intent(requireContext(), HomeActivity::class.java)
+                                startActivity(intent)
+                                requireActivity().finish()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "로그인 실패: ${loginResponse.status}, 메시지: ${loginResponse.data}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                Log.e(
+                                    "LoginFragment",
+                                    "로그인 실패: ${loginResponse.status}, 메시지: ${loginResponse.data}"
+                                )
+                            }
+                        } ?: run {
+                            Log.e("LoginFragment", "로그인 실패: 응답 본문이 null")
+                            Toast.makeText(
+                                requireContext(),
+                                "로그인 실패: 응답 본문이 없습니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } else {
+                        val errorBody = response.errorBody()?.string() ?: "Unknown error"
+                        Log.e("LoginFragment", "로그인 실패: ${response.code()}, 에러 내용: $errorBody")
+                        Toast.makeText(requireContext(), "로그인 실패: $errorBody", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    Log.e("LoginFragment", "네트워크 오류 발생: ${t.message}")
+                    Toast.makeText(requireContext(), "네트워크 오류 발생: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+    }
+
+    private fun saveToken(accessToken: String, refreshToken: String) {
+        val sharedPref = requireContext().getSharedPreferences("auth", 0)
+        with(sharedPref.edit()) {
+            putString("access_token", accessToken)
+            putString("refresh_token", refreshToken)
+            apply()
         }
     }
 }

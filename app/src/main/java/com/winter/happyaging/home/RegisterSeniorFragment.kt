@@ -15,7 +15,6 @@ class RegisterSeniorFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // XML 레이아웃 inflate
         return inflater.inflate(R.layout.fragment_register_senior, container, false)
     }
 
