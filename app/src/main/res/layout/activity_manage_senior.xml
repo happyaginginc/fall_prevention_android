@@ -50,7 +50,7 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/tvSeniorName"
+                    android:id="@+id/tvSeniorName2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="홍길동"
@@ -58,28 +58,26 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvSeniorAddress"
+                    android:id="@+id/tvSeniorAddress2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="대구 달성군 가창면 / 20세"
+                    android:text="대구 달성군 가창면"
                     android:textSize="14sp"
                     android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/tvSeniorAge2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20세"
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tvSeniorLevel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1등급"
-                        android:textSize="14sp"
-                        android:background="@drawable/rounded_background"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        android:textColor="@android:color/white" />
+
 
 <!--                    <ImageView-->
 <!--                        android:id="@+id/btnEditSenior"-->
@@ -121,6 +119,7 @@
             <LinearLayout
                 android:layout_width="1dp"
                 android:layout_height="140dp"
+                android:id="@+id/balanceBtn"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
                 android:orientation="vertical"

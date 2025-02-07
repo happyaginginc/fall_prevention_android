@@ -1,29 +1,46 @@
+<!-- SeniorAdapter 아이템 레이아웃 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tvSeniorName"
-        android:layout_width="wrap_content"
+    <!-- 왼쪽 텍스트 정보 (이름, 주소, 나이) -->
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="홍길동"
-        android:textStyle="bold"
-        android:textSize="16sp"/>
+        android:orientation="vertical"
+        android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/tvSeniorInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="대구 달성군 가창면 / 20세"
-        android:textSize="14sp"
-        android:layout_marginBottom="8dp"/>
+        <TextView
+            android:id="@+id/tvSeniorName2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="홍길동"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
 
-    <!-- 관리하기 버튼 -->
+        <TextView
+            android:id="@+id/tvSeniorAddress2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="대구 달성군 가창면"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tvSeniorAge2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="나이: 20세"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
+
+    <!-- 오른쪽 "관리하기" 버튼 -->
     <Button
-        android:id="@+id/btnManage"
+        android:id="@+id/btnManage2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="관리하기"/>

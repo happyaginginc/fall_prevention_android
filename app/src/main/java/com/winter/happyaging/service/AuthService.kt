@@ -15,7 +15,6 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface AuthService {
-
     // 회원가입 API
     @Headers("Content-Type: application/json")
     @POST("/auth/register")
@@ -36,8 +35,4 @@ interface AuthService {
     // 자신의 개인정보 조회 API (로그인 여부 확인)
     @GET("/account/me")
     fun getUserInfo(accessToken: String): Call<UserInfoResponse>
-//
-//    // 시니어 추가 API
-//    @POST("/senior")
-//    fun senior(@Body request: SeniorRequest): Call<SeniorResponse>
 }
