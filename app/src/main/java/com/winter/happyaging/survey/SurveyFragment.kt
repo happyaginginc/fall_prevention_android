@@ -18,7 +18,6 @@ class SurveyFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Fragment의 레이아웃 설정
         return inflater.inflate(R.layout.fragment_survey, container, false)
     }
 

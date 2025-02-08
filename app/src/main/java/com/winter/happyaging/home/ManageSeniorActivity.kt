@@ -7,7 +7,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.winter.happyaging.R
-import com.winter.happyaging.survey.SurveyReadyActivity
 
 class ManageSeniorActivity : AppCompatActivity() {
 
