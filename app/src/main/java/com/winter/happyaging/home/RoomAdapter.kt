@@ -21,11 +21,11 @@ class RoomAdapter(
             binding.roomNumber.text = (position + 1).toString()
             binding.roomName.setText(room.name)
 
-            when {
-                room.imageUri1 != null -> binding.preview1.setImageURI(room.imageUri1)
-                room.imageUri2 != null -> binding.preview2.setImageURI(room.imageUri2)
-                room.imageUri3 != null -> binding.preview3.setImageURI(room.imageUri3)
-            }
+            // 이미지 미리보기
+            room.imageUri1?.let { binding.preview1.setImageURI(it) }
+            room.imageUri2?.let { binding.preview2.setImageURI(it) }
+            room.imageUri3?.let { binding.preview3.setImageURI(it) }
+
 
             if (position == 0) {
                 binding.DeleteRoomButton.visibility = View.GONE
@@ -47,13 +47,11 @@ class RoomAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
-        // 뷰 바인딩을 사용하여 레이아웃 인플레이트
         val binding = ItemRoomBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RoomViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
-        // 데이터를 뷰에 바인딩
         holder.bind(roomList[position], position)
     }
 
