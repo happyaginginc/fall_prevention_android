@@ -46,6 +46,9 @@
             android:exported="false"
             android:label="Home" />
 
+        <activity android:name=".home.ManageSeniorActivity"
+            android:exported="false"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.winter.happyaging"

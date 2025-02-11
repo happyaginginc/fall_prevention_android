@@ -1,5 +1,6 @@
 package com.winter.happyaging.home
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,43 +9,58 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.winter.happyaging.R
+import com.winter.happyaging.ReqDTO.SeniorRequest
+import java.util.Calendar
 
 class SeniorAdapter(
-    private val items: List<SeniorData>,
-    private val onManageClick: (SeniorData) -> Unit // 관리하기 버튼 클릭 시 콜백
+    private var seniorList: List<SeniorData>,
+    private val onItemClick: (SeniorData) -> Unit
 ) : RecyclerView.Adapter<SeniorAdapter.SeniorViewHolder>() {
 
-    // ViewHolder 생성
+    class SeniorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val nameTextView: TextView = view.findViewById(R.id.tvSeniorName2)
+        val addressTextView: TextView = view.findViewById(R.id.tvSeniorAddress2)
+        val ageTextView: TextView = view.findViewById(R.id.tvSeniorAge2)
+        val manageButton: Button = view.findViewById(R.id.btnManage2)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeniorViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_senior, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_senior, parent, false)
         return SeniorViewHolder(view)
     }
 
-    // ViewHolder와 데이터를 바인딩
     override fun onBindViewHolder(holder: SeniorViewHolder, position: Int) {
-        val seniorData = items[position]
-        holder.bind(seniorData, onManageClick)
+        val senior = seniorList[position]
+        holder.nameTextView.text = senior.name
+        holder.addressTextView.text = "${senior.address}"
+        holder.ageTextView.text = "${calculateAge(senior.birthYear)}세"
+
+        holder.manageButton.setOnClickListener {
+            val context = holder.itemView.context
+            val intent = Intent(context, ManageSeniorActivity::class.java).apply {
+                putExtra("name", senior.name)
+                putExtra("address", senior.address)
+                putExtra("birthYear", senior.birthYear)
+                putExtra("sex", senior.sex)
+                putExtra("phoneNumber", senior.phoneNumber)
+                putExtra("relationship", senior.relationship)
+                putExtra("memo", senior.memo)
+            }
+            Log.d("SeniorAdapter", "🚀 ManageSeniorActivity 실행: $senior")
+            context.startActivity(intent)
+        }
+
     }
 
-    // 아이템 개수 반환
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = seniorList.size
 
-    // ViewHolder 클래스 정의
-    class SeniorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvName: TextView = itemView.findViewById(R.id.tvSeniorName)
-        private val tvInfo: TextView = itemView.findViewById(R.id.tvSeniorInfo)
-        private val btnManage: Button = itemView.findViewById(R.id.btnManage)
+    private fun calculateAge(birthYear: Int): Int {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        return currentYear - birthYear
+    }
 
-        // 데이터와 클릭 이벤트를 바인딩
-        fun bind(data: SeniorData, onManageClick: (SeniorData) -> Unit) {
-            tvName.text = data.name
-            tvInfo.text = data.info
-
-            // "관리하기" 버튼 클릭 시 콜백 호출
-            btnManage.setOnClickListener {
-                onManageClick(data)
-            }
-        }
+    fun updateData(newList: List<SeniorData>) {
+        seniorList = newList
+        notifyDataSetChanged() // 🚀 데이터 변경 후 UI 갱신
     }
 }

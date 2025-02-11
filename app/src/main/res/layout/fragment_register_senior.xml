@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinatorRegister"
     android:layout_width="match_parent"
@@ -18,10 +18,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- 상단 타이틀 -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:id="@+id/btnBack"
@@ -29,123 +31,60 @@
                     android:layout_height="24dp"
                     android:src="@drawable/back_icon"
                     android:contentDescription="뒤로가기"
-                    android:layout_gravity="start"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginEnd="16dp" />
 
                 <TextView
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:text="시니어 등록하기"
                     android:textSize="20sp"
                     android:textStyle="bold" />
-
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="이름 *"
-                android:textStyle="bold"/>
-            <EditText
-                android:id="@+id/edtName"
+            <!-- 이름 -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="이름 *" android:textStyle="bold"/>
+            <EditText android:id="@+id/edtName" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="이름을 입력해주세요" android:layout_marginBottom="16dp"/>
+
+            <!-- 성별 -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="성별 *" android:textStyle="bold"/>
+            <Spinner
+                android:id="@+id/spinnerSex"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="이름을 입력해주세요"
-                android:layout_marginBottom="16dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="성별 *"
-                android:textStyle="bold"/>
-
-            <EditText
-                android:id="@+id/edtGender"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="성별을 선택해주세요"
-                android:drawableEnd="@drawable/arrow_left"
-                android:focusable="false"
-                android:clickable="true"
                 android:layout_marginBottom="16dp"/>
 
             <!-- 거주지 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="거주지 *"
-                android:textStyle="bold"/>
-            <EditText
-                android:id="@+id/edtAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="거주지를 입력하세요"
-                android:layout_marginBottom="16dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="거주지 *" android:textStyle="bold"/>
+            <EditText android:id="@+id/edtAddress" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="거주지를 입력하세요" android:layout_marginBottom="16dp"/>
 
             <!-- 상세 주소 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="상세 주소 *"
-                android:textStyle="bold"/>
-            <EditText
-                android:id="@+id/edtAddressDetail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="상세주소를 입력하세요"
-                android:layout_marginBottom="16dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="상세 주소 *" android:textStyle="bold"/>
+            <EditText android:id="@+id/edtAddressDetail" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="상세 주소를 입력하세요" android:layout_marginBottom="16dp"/>
 
             <!-- 출생년도 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="출생년도 *"
-                android:textStyle="bold"/>
-            <EditText
-                android:id="@+id/edtBirthYear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="출생년도를 입력하세요 (예: 1990)"
-                android:inputType="number"
-                android:layout_marginBottom="16dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="출생년도 *" android:textStyle="bold"/>
+            <EditText android:id="@+id/edtBirthYear" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="출생년도를 입력하세요 (예: 1990)" android:inputType="number" android:layout_marginBottom="16dp"/>
 
             <!-- 연락처 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="연락처 *"
-                android:textStyle="bold"/>
-            <EditText
-                android:id="@+id/edtPhone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="연락처를 입력하세요"
-                android:inputType="phone"
-                android:layout_marginBottom="16dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="연락처 *" android:textStyle="bold"/>
+            <EditText android:id="@+id/edtPhone" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="연락처를 입력하세요" android:inputType="phone" android:layout_marginBottom="16dp"/>
 
             <!-- 관계 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="관계 *"
-                android:textStyle="bold"/>
-            <EditText
-                android:id="@+id/edtRelation"
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="관계 *" android:textStyle="bold"/>
+            <Spinner
+                android:id="@+id/spinnerRelationship"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="관계를 선택해 주세요"
-                android:drawableEnd="@drawable/arrow_left"
-                android:focusable="false"
-                android:clickable="true"
-                android:layout_marginBottom="100dp"/>
-            <!--  ↑ 아래쪽 공간을 넉넉히 줘서 FAB이 겹치지 않도록 여유 -->
+                android:layout_marginBottom="16dp"/>
+
+            <!-- 비고 -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="비고" android:textStyle="bold"/>
+            <EditText android:id="@+id/edtMemo" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="메모를 입력해주세요" android:layout_marginBottom="100dp"/>
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- 플로팅 "등록하기" 버튼 (Extended FAB) -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabRegister"
         android:layout_width="match_parent"
@@ -155,9 +94,5 @@
         android:layout_gravity="center|bottom"
         android:layout_margin="16dp"
         android:backgroundTint="@color/green"
-        android:textColor="@android:color/white"
-        />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-<!--    app:layout_anchor="@id/coordinatorRegister"-->
-<!--    app:layout_anchorGravity="bottom"-->
+        android:textColor="@android:color/white"/>
+</FrameLayout>
