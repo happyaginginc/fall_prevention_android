@@ -1,189 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:padding="16dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/back_icon"
+                android:layout_gravity="start"
+                android:layout_marginBottom="16dp"
                 android:contentDescription="뒤로가기"
-                android:layout_marginEnd="8dp" />
+                android:src="@drawable/back_icon" />
 
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvStep"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1/3"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:background="@drawable/rounded_background"
-            android:padding="8dp"
-            android:gravity="center"
-            android:layout_marginEnd="8dp" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="화장실"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp" />
-
-        <TextView
-            android:id="@+id/tvSubtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="다음 조건에 맞게 화장실을 촬영해주세요"
-            android:textSize="14sp"
-            android:textColor="#808080"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp" />
-
-        <!-- 촬영 가이드 리스트 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- 첫 번째 가이드 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical">
+                android:layout_below="@id/btnBack"
+                android:layout_marginTop="110dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="방문이 있는 벽면에서 방 전체가 보이도록"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginBottom="8dp"
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/btnCamera1"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:src="@drawable/camera_emoji"
-                        android:contentDescription="촬영 버튼"
-                        android:background="@drawable/camera_background"
-                        android:padding="8dp"
-                        android:layout_marginEnd="16dp" />
-
-                    <ImageView
-                        android:id="@+id/preview1"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:background="@drawable/preview_background"
-                        android:contentDescription="촬영된 이미지 미리보기" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- 두 번째 가이드 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical">
+                    android:gravity="center"
+                    android:text="낙상 위험요소 AI 분석"
+                    android:textColor="#4CAF50"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="방문이 있는 벽면에서 방 전체가 보이도록"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:text="사진 촬영으로 우리 집의\n낙상 위험을 한번에 파악하기"
+                    android:textColor="#808080"
+                    android:textSize="14sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/btnCamera2"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:src="@drawable/camera_emoji"
-                        android:contentDescription="촬영 버튼"
-                        android:background="@drawable/camera_background"
-                        android:padding="8dp"
-                        android:layout_marginEnd="16dp" />
-
-                    <ImageView
-                        android:id="@+id/preview2"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:background="@drawable/preview_background"
-                        android:contentDescription="촬영된 이미지 미리보기" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- 세 번째 가이드 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical">
+                <ImageView
+                    android:id="@+id/iconImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="40dp"
+                    android:contentDescription="분석 아이콘"
+                    android:src="@drawable/camera" />
 
                 <TextView
+                    android:id="@+id/tvDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="방문이 있는 벽면에서 방 전체가 보이도록"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginBottom="24dp"
+                    android:gravity="center"
+                    android:layout_marginTop="90dp"
+                    android:text="* 요구되는 각도로 모두 촬영될 수록\nAI 분석 정확도가 증가합니다"
+                    android:textColor="#FF9800"
+                    android:textSize="12sp" />
 
-                <LinearLayout
+                <Button
+                    android:id="@+id/btnStartAnalysis"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/btnCamera3"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:src="@drawable/camera_emoji"
-                        android:contentDescription="촬영 버튼"
-                        android:background="@drawable/camera_background"
-                        android:padding="8dp"
-                        android:layout_marginEnd="16dp" />
-
-                    <ImageView
-                        android:id="@+id/preview3"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:background="@drawable/preview_background"
-                        android:contentDescription="촬영된 이미지 미리보기" />
-
-                </LinearLayout>
-
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#8BC34A"
+                    android:text="분석 촬영 시작하기"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
             </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
 
-
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

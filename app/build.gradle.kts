@@ -41,6 +41,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    viewBinding.isEnabled=true
 }
 
 dependencies {
@@ -60,6 +61,10 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.8.1")
     implementation("com.squareup.retrofit2:converter-gson:2.8.1")
     implementation(libs.cronet.embedded)
+
+    implementation ("com.github.bumptech.glide:glide:4.12.0" )
+    implementation(libs.androidx.activity)
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
