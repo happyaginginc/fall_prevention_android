@@ -1,6 +1,5 @@
-package com.winter.happyaging.home
+package com.winter.happyaging.ai
 
-import android.graphics.Bitmap
 import android.net.Uri
 
 data class RoomData(

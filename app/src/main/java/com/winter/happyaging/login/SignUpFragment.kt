@@ -1,6 +1,7 @@
 package com.winter.happyaging.login
 
 import android.os.Bundle
+import android.text.TextUtils.replace
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +36,7 @@ class SignUpFragment : Fragment() {
         val etPassword = view.findViewById<EditText>(R.id.etPassword)
         val etPhoneNumber = view.findViewById<EditText>(R.id.etPhoneNumber)
         val btnSignUp = view.findViewById<Button>(R.id.btnSignUp)
+        val btnAlready = view.findViewById<TextView>(R.id.loginLink)
 
         // "내용 보기" 클릭 시 TermsFragment로 이동
         tvTermsDetail.setOnClickListener {
@@ -99,6 +101,13 @@ class SignUpFragment : Fragment() {
                     Toast.makeText(requireContext(), "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                 }
             })
+        }
+
+        btnAlready.setOnClickListener{
+            parentFragmentManager.commit {
+                replace(R.id.fragmentContainer, LoginFragment())
+                addToBackStack(null)
+            }
         }
     }
 }

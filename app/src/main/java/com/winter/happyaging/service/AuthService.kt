@@ -24,9 +24,11 @@ interface AuthService {
     @POST("/auth/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 
-    // 토큰 재발급 API
+    // 토큰 재발급 API - 액세스 토큰
     @POST("/auth/refresh")
-    fun refreshAccessToken(@Body request: RefreshTokenRequest): Call<RefreshTokenResponse>
+    fun refreshAccessToken(
+        @Header("Authorization") authorization: String // Bearer {refreshTokenValue}
+    ): Call<RefreshTokenResponse>
 
 //    // 로그아웃 API
 //    @POST("/auth/logout")

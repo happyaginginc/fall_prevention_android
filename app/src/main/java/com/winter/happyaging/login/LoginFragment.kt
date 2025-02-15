@@ -1,5 +1,6 @@
 package com.winter.happyaging.login
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -16,8 +17,10 @@ import com.winter.happyaging.R
 import com.winter.happyaging.ReqDTO.LoginRequest
 import com.winter.happyaging.ResDTO.LoginResponse
 import com.winter.happyaging.RetrofitClient
+import com.winter.happyaging.TokenManager
 import com.winter.happyaging.home.HomeActivity
 import com.winter.happyaging.service.AuthService
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -68,22 +71,27 @@ class LoginFragment : Fragment() {
             val loginRequest = LoginRequest(email, password)
 
             authService.login(loginRequest).enqueue(object : Callback<LoginResponse> {
-                override fun onResponse(
-                    call: Call<LoginResponse>,
-                    response: Response<LoginResponse>
-                ) {
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful) {
                         response.body()?.let { loginResponse ->
                             Log.d("LoginFragment", "로그인 응답 데이터: $loginResponse")
 
-                            if (loginResponse.status == 200) { // 백엔드에서 성공 코드 확인 (200 또는 201 등)
-                                Toast.makeText(requireContext(), "로그인 성공!", Toast.LENGTH_SHORT)
-                                    .show()
+                            if (loginResponse.status == 200) { // 백엔드에서 성공 코드 확인
+                                Toast.makeText(requireContext(), "로그인 성공!", Toast.LENGTH_SHORT).show()
 
                                 val accessToken = loginResponse.data.accessToken.value
                                 val refreshToken = loginResponse.data.refreshToken.value
 
-                                saveToken(accessToken, refreshToken)
+                                Log.d("LoginFragment", "🚀 AccessToken: $accessToken, RefreshToken: $refreshToken")
+
+                                runBlocking {
+                                    val tokenManager = TokenManager(requireContext())
+                                    tokenManager.saveTokens(accessToken, refreshToken) // 토큰 저장
+                                }
+
+                                Thread.sleep(1000) // DataStore 저장이 완료될 시간을 주기 위해 잠시 대기
+                                val savedToken = TokenManager(requireContext()).getAccessToken()
+                                Log.d("LoginFragment", "저장된 토큰 확인: $savedToken")
 
                                 val intent = Intent(requireContext(), HomeActivity::class.java)
                                 startActivity(intent)
@@ -101,17 +109,12 @@ class LoginFragment : Fragment() {
                             }
                         } ?: run {
                             Log.e("LoginFragment", "로그인 실패: 응답 본문이 null")
-                            Toast.makeText(
-                                requireContext(),
-                                "로그인 실패: 응답 본문이 없습니다.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(requireContext(), "로그인 실패: 응답 본문이 없습니다.", Toast.LENGTH_SHORT).show()
                         }
                     } else {
                         val errorBody = response.errorBody()?.string() ?: "Unknown error"
                         Log.e("LoginFragment", "로그인 실패: ${response.code()}, 에러 내용: $errorBody")
-                        Toast.makeText(requireContext(), "로그인 실패: $errorBody", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(requireContext(), "로그인 실패: $errorBody", Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -123,12 +126,26 @@ class LoginFragment : Fragment() {
         }
     }
 
+    // 토큰 저장 메서드 수정 (SharedPreferences 사용)
     private fun saveToken(accessToken: String, refreshToken: String) {
-        val sharedPref = requireContext().getSharedPreferences("auth", 0)
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
             putString("access_token", accessToken)
             putString("refresh_token", refreshToken)
-            apply()
+            apply() // commit()
         }
+        Log.d("LoginFragment", "토큰이 저장되었습니다: accessToken=$accessToken, refreshToken=$refreshToken")
+    }
+
+    // 저장된 토큰 가져오기
+    private fun getAuthToken(): String {
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val token = sharedPref.getString("access_token", "") ?: ""
+        if (token.isEmpty()) {
+            Log.e("LoginFragment", "저장된 토큰이 없습니다!")
+        } else {
+            Log.d("LoginFragment", "불러온 토큰: $token")
+        }
+        return token
     }
 }

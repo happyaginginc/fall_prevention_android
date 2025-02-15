@@ -2,79 +2,87 @@ package com.winter.happyaging
 
 import android.content.Context
 import android.util.Log
-import com.winter.happyaging.ReqDTO.RefreshTokenRequest
+import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response as RetrofitResponse
 import com.winter.happyaging.ResDTO.RefreshTokenResponse
 import com.winter.happyaging.RetrofitClient
 import com.winter.happyaging.service.AuthService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
+// DataStore 선언
+private val Context.dataStore by preferencesDataStore("auth_prefs")
 
 class TokenManager(private val context: Context) {
 
-    private val sharedPref = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+    // 키 선언
+    companion object {
+        private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
+        private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
+    }
 
+    // AccessToken 가져오기
     fun getAccessToken(): String? {
-        return sharedPref.getString("access_token", null)
-    }
-
-    fun getRefreshToken(): String? {
-        return sharedPref.getString("refresh_token", null)
-    }
-
-    fun saveTokens(accessToken: String, refreshToken: String) {
-        with(sharedPref.edit()) {
-            putString("access_token", accessToken)
-            putString("refresh_token", refreshToken)
-            apply()
+        return runBlocking {
+            context.dataStore.data.map { it[ACCESS_TOKEN_KEY] ?: "" }.first()
         }
     }
 
+    // RefreshToken 가져오기
+    fun getRefreshToken(): String? {
+        return runBlocking {
+            context.dataStore.data.map { it[REFRESH_TOKEN_KEY] ?: "" }.first()
+        }
+    }
+
+    // 토큰 저장 (영속성 보장)
+    suspend fun saveTokens(accessToken: String, refreshToken: String) {
+        context.dataStore.edit { preferences ->
+            preferences[ACCESS_TOKEN_KEY] = accessToken
+            preferences[REFRESH_TOKEN_KEY] = refreshToken
+        }
+        Log.d("TokenManager", "토큰 저장 완료: AccessToken: $accessToken, RefreshToken: $refreshToken")
+    }
+
+    // AccessToken 갱신
     fun refreshAccessToken(onComplete: (Boolean) -> Unit) {
         val refreshToken = getRefreshToken()
         if (refreshToken.isNullOrEmpty()) {
-            Log.e("TokenManager", "refreshToken이 없습니다.")
+            Log.e("TokenManager", "RefreshToken 없음. 로그아웃 필요")
             onComplete(false)
             return
         }
 
         val authService = RetrofitClient.getInstance(context).create(AuthService::class.java)
-        val request = RefreshTokenRequest(refreshToken)
-
-        authService.refreshAccessToken(request).enqueue(object : Callback<RefreshTokenResponse> {
-            override fun onResponse(call: Call<RefreshTokenResponse>, response: Response<RefreshTokenResponse>) {
-                if (response.isSuccessful) {
-                    response.body()?.let { refreshResponse ->
-                        if (refreshResponse.status == 200) {
-                            val newAccessToken = refreshResponse.data.accessToken.value
-                            val newRefreshToken = refreshResponse.data.refreshToken.value
-
-                            saveTokens(newAccessToken, newRefreshToken)
-                            Log.d("TokenManager", "새로운 토큰 저장 완료")
+        authService.refreshAccessToken("Bearer $refreshToken")
+            .enqueue(object : Callback<RefreshTokenResponse> {
+                override fun onResponse(
+                    call: Call<RefreshTokenResponse>,
+                    response: RetrofitResponse<RefreshTokenResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            runBlocking {
+                                saveTokens(it.data.accessToken.value, it.data.refreshToken.value)
+                            }
+                            Log.d("TokenManager", "AccessToken 갱신 성공!")
                             onComplete(true)
-                        } else {
-                            Log.e("TokenManager", "토큰 갱신 실패: 상태 코드 ${refreshResponse.status}")
-                            onComplete(false)
                         }
+                    } else {
+                        Log.e("TokenManager", "AccessToken 갱신 실패")
+                        onComplete(false)
                     }
-                } else {
-                    Log.e("TokenManager", "토큰 갱신 실패: ${response.code()}, ${response.errorBody()?.string()}")
+                }
+
+                override fun onFailure(call: Call<RefreshTokenResponse>, t: Throwable) {
+                    Log.e("TokenManager", "네트워크 오류: ${t.message}")
                     onComplete(false)
                 }
-            }
-
-            override fun onFailure(call: Call<RefreshTokenResponse>, t: Throwable) {
-                Log.e("TokenManager", "토큰 갱신 요청 실패: ${t.message}")
-                onComplete(false)
-            }
-        })
-    }
-
-    fun clearTokens() {
-        with(sharedPref.edit()) {
-            remove("access_token")
-            remove("refresh_token")
-            apply()
-        }
+            })
     }
 }

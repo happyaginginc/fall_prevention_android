@@ -11,6 +11,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.winter.happyaging.R
 import com.winter.happyaging.ResDTO.SeniorResponse
 import com.winter.happyaging.RetrofitClient
+import com.winter.happyaging.TokenManager
 import com.winter.happyaging.service.SeniorService
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,31 +50,31 @@ class RegisterSeniorFragment : Fragment() {
 
         // 등록 버튼 클릭 이벤트
         fabRegister.setOnClickListener {
-            val name = edtName.text.toString().trim()
-            val address = edtAddress.text.toString().trim()
-            val birthYearText = edtBirthYear.text.toString().trim()
-            val phoneNumber = edtPhoneNumber.text.toString().trim()
-            val memo = edtMemo.text.toString().trim()
+            val name = edtName.text?.toString()?.trim() ?: ""
+            val address = edtAddress.text?.toString()?.trim() ?: ""
+            val birthYearText = edtBirthYear.text?.toString()?.trim() ?: ""
+            val phoneNumber = edtPhoneNumber.text?.toString()?.trim() ?: ""
+            val memo = edtMemo.text?.toString()?.trim() ?: ""
 
             val formattedPhoneNumber = formatPhoneNumber(phoneNumber)
 
             val sex = spinnerSex.selectedItem?.toString()?.trim() ?: "MALE"
             val relationship = spinnerRelationship.selectedItem?.toString()?.trim() ?: "SELF"
 
-            // 🚨 필수 값 검증 (이름, 주소, 출생년도, 성별, 관계, 전화번호)
+            // 필수 값 검증 (이름, 주소, 출생년도, 성별, 관계, 전화번호)
             if (name.isEmpty() || address.isEmpty() || birthYearText.isEmpty() || phoneNumber.isEmpty() || sex.isEmpty() || relationship.isEmpty()) {
                 Toast.makeText(requireContext(), "모든 필수 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // 🚨 출생년도 숫자 변환 검증
+            // 출생년도 숫자 변환 검증
             val birthYear = birthYearText.toIntOrNull()
             if (birthYear == null || birthYear < 1900 || birthYear > 2100) {
                 Toast.makeText(requireContext(), "올바른 출생년도를 입력해주세요 (예: 2000)", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            Log.d("RegisterSeniorFragment", "보내는 데이터 - name: $name, address: $address, birthYear: $birthYear, sex: $sex, phoneNumber: $phoneNumber, relationship: $relationship, memo: $memo")
+            Log.d("RegisterSeniorFragment", "보내는 데이터 - name: $name, address: $address, birthYear: $birthYear, sex: $sex, phoneNumber: $formattedPhoneNumber, relationship: $relationship, memo: $memo")
 
             // SeniorRequest 객체 생성 (Sex & Relationship을 String으로 저장)
             val data = SeniorData(
@@ -90,15 +91,24 @@ class RegisterSeniorFragment : Fragment() {
         }
     }
 
-    private fun sendSeniorRequest(request: SeniorData) {
+    private fun sendSeniorRequest(request: SeniorData) { // 서버로 데이터 보내기
         val seniorService = RetrofitClient.getInstance(requireContext()).create(SeniorService::class.java)
+
+        val tokenManager = TokenManager(requireContext())
+        val accessToken = tokenManager.getAccessToken()
+        Log.d("RegisterSeniorFragment", "사용자 Access Token: $accessToken")
+
         seniorService.registerSenior(request).enqueue(object : Callback<SeniorResponse> {
             override fun onResponse(call: Call<SeniorResponse>, response: Response<SeniorResponse>) {
+                Log.d("RegisterSeniorFragment", "서버 응답 코드: ${response.code()}")
+                Log.d("RegisterSeniorFragment", "서버 응답 바디: ${response.body()?.toString()}")
+                Log.d("RegisterSeniorFragment", "서버 에러 바디: ${response.errorBody()?.string()}")
+
                 if (response.isSuccessful) {
                     Toast.makeText(requireContext(), "시니어 등록 성공!", Toast.LENGTH_SHORT).show()
                     requireActivity().supportFragmentManager.popBackStack()
 
-                    // 🚀 데이터 갱신 요청
+                    // 데이터 갱신 요청
                     (requireActivity() as? HomeActivity)?.fetchSeniorData()
                 } else {
                     Toast.makeText(requireContext(), "등록 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
@@ -106,7 +116,8 @@ class RegisterSeniorFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<SeniorResponse>, t: Throwable) {
-                Toast.makeText(requireContext(), "네트워크 오류: ${t.message}", Toast.LENGTH_SHORT).show()
+                Log.e("RegisterSeniorFragment", "네트워크 오류 발생: ${t.message}")
+                Toast.makeText(requireContext(), "네트워크 오류 발생", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -119,9 +130,10 @@ class RegisterSeniorFragment : Fragment() {
             else -> input // 올바르지 않은 경우 원본 유지
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("RegisterSeniorFragment", "🛑 RegisterSeniorFragment 제거됨")
+        Log.d("RegisterSeniorFragment", "RegisterSeniorFragment 제거됨")
     }
 
 }

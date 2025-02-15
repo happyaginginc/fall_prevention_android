@@ -1,4 +1,4 @@
-package com.winter.happyaging.home
+package com.winter.happyaging.ai
 
 import androidx.appcompat.app.AppCompatActivity
 

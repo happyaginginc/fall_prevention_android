@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#F1F1F1"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- 상단 네비게이션 바 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,6 +24,7 @@
             android:src="@drawable/back_icon"
             android:contentDescription="뒤로가기"
             android:layout_marginEnd="8dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,10 +32,43 @@
             android:textSize="22sp"
             android:fontFamily="@font/nanumsquareround_extrabold"
             android:textColor="#4E4E4E" />
-
     </LinearLayout>
 
+    <!-- 로딩 화면 (기본적으로 숨겨짐) -->
+    <LinearLayout
+        android:id="@+id/loadingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="분석 결과지 생성 중"
+            android:textSize="18sp"
+            android:textColor="#4E7426"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI가 집 안의 낙상 위험 요소를 분석하고 있어요!"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginTop="8dp"/>
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            style="@android:style/Widget.ProgressBar.Large"/>
+    </LinearLayout>
+
+    <!-- 기존 화면 (촬영 기능 포함) -->
     <ScrollView
+        android:id="@+id/mainContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -41,7 +77,6 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:orientation="vertical">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,7 +90,6 @@
                     android:layout_height="wrap_content"
                     android:paddingVertical="8dp"
                     android:paddingHorizontal="12dp"
-
                     android:text="3/3"
                     android:textSize="16sp"
                     android:fontFamily="@font/nanumsquareround_extrabold"
@@ -69,7 +103,7 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="기타 외부"
+                    android:text="기타 공간"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:layout_marginTop="12dp" />
@@ -78,19 +112,20 @@
                     android:id="@+id/tvSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="다음 조건에 맞게 외부를 촬영해주세요"
+                    android:text="다음 조건에 맞게 촬영해주세요"
                     android:textSize="14sp"
                     android:textColor="#808080"
                     android:layout_marginTop="8dp" />
-
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/roomRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
+
+            <!-- AI 분석 요청 버튼 -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/NextButton"
+                android:id="@+id/nextButton"
                 android:layout_marginTop="36dp"
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="right"
@@ -98,9 +133,9 @@
                 android:layout_height="56dp"
                 app:cornerRadius="16dp"
                 android:backgroundTint="#8BC455"
-                android:text="다음"
+                android:text="분석 시작"
                 android:textSize="16sp"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/AIFirstFragment">
+
+    <fragment
+        android:id="@+id/AIFirstFragment"
+        android:name="com.winter.happyaging.ai.AIFirstFragment"
+        android:label="AI First Fragment">
+        <action
+            android:id="@+id/action_AIFirstFragment_to_AISecondFragment"
+            app:destination="@id/AISecondFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AISecondFragment"
+        android:name="com.winter.happyaging.ai.AISecondFragment"
+        android:label="AI Second Fragment" >
+        <action
+            android:id="@+id/action_AISecondFragment_to_AIThirdFragment"
+            app:destination="@id/AIThirdFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AIThirdFragment"
+        android:name="com.winter.happyaging.ai.AIThirdFragment"
+        android:label="AI Third Fragment" >
+        <action
+            android:id="@+id/action_AIThirdFragment_to_AIFourthFragment"
+            app:destination="@id/AIFourthFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AIFourthFragment"
+        android:name="com.winter.happyaging.ai.AIFourthFragment"
+        android:label="AI Fourth Fragment" >
+        <action
+            android:id="@+id/action_AIFourthFragment_to_AnalysisResultFragment"
+            app:destination="@id/AnalysisResultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AnalysisResultFragment"
+        android:name="com.winter.happyaging.ai.AIAnalysisFragment"
+        android:label="Analysis Result Fragment" />
+</navigation>

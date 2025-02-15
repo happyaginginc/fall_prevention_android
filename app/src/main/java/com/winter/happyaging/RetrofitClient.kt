@@ -7,21 +7,23 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitClient {
-    fun getInstance(context: Context): Retrofit {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+class RetrofitClient {
+    companion object {
+        private var retrofit: Retrofit? = null
+
+        fun getInstance(context: Context): Retrofit {
+            if (retrofit == null) {
+                val okHttpClient = OkHttpClient.Builder()
+                    .addInterceptor(AuthInterceptor(context))
+                    .build()
+
+                retrofit = Retrofit.Builder()
+                    .baseUrl("http://3.37.58.59/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okHttpClient)
+                    .build()
+            }
+            return retrofit!!
         }
-
-        val client = OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .addInterceptor(AuthInterceptor(context)) // ✅ 자동 토큰 추가 & 갱신
-            .build()
-
-        return Retrofit.Builder()
-            .baseUrl("http://3.37.58.59/") // 서버 주소 확인
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
     }
 }

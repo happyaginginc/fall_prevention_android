@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.winter.happyaging.R
+import com.winter.happyaging.ai.AIAnalysisActivity
 
 class ManageSeniorActivity : AppCompatActivity() {
 
@@ -14,6 +15,7 @@ class ManageSeniorActivity : AppCompatActivity() {
     private lateinit var tvAddress: TextView
     private lateinit var tvAge: TextView
     private lateinit var balanceBtn: LinearLayout
+    private lateinit var cameraBtn: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +25,7 @@ class ManageSeniorActivity : AppCompatActivity() {
         tvAddress = findViewById(R.id.tvSeniorAddress2)
         tvAge = findViewById(R.id.tvSeniorAge2)
         balanceBtn = findViewById(R.id.balanceBtn)
+        cameraBtn = findViewById(R.id.cameraBtn)
 
         val name = intent.getStringExtra("name") ?: "이름 없음"
         val address = intent.getStringExtra("address") ?: "주소 없음"
@@ -37,6 +40,11 @@ class ManageSeniorActivity : AppCompatActivity() {
 
         balanceBtn.setOnClickListener {
             val intent = Intent(this, SurveyReadyActivity::class.java)
+            startActivity(intent)
+        }
+
+        cameraBtn.setOnClickListener {
+            val intent = Intent(this, AIAnalysisActivity::class.java)
             startActivity(intent)
         }
     }
