@@ -2,7 +2,7 @@ package com.winter.happyaging.ai
 
 import com.winter.happyaging.R
 
-class AIThirdFragment : BaseRoomFragment("일반 방", R.id.action_AIThirdFragment_to_AIFourthFragment)
+class AIThirdFragment : BaseRoomFragment(2,"일반 방", R.id.action_AIThirdFragment_to_AIFourthFragment)
 
 //import android.content.Intent
 //import android.graphics.Bitmap

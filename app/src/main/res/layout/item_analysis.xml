@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvRoomCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="방 유형"
+            android:textStyle="bold"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvImageDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이미지 설명"
+            android:paddingTop="4dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvFallSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="낙상 분석"
+            android:paddingTop="4dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvPreventionMeasures"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예방 조치"
+            android:paddingTop="4dp"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

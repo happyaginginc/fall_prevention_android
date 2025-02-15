@@ -1,11 +1,12 @@
 package com.winter.happyaging.ai
 
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.winter.happyaging.R
 import com.winter.happyaging.databinding.ItemRoomBinding
 
 class RoomAdapter(
@@ -21,9 +22,20 @@ class RoomAdapter(
             binding.roomNumber.text = (position + 1).toString()
             binding.roomName.setText(room.name)
 
-            binding.preview1.setImageURI(room.imageUri1 ?: Uri.EMPTY)
-            binding.preview2.setImageURI(room.imageUri2 ?: Uri.EMPTY)
-            binding.preview3.setImageURI(room.imageUri3 ?: Uri.EMPTY)
+            Glide.with(binding.root)
+                .load(room.imageUri1)
+                .placeholder(R.drawable.preview)
+                .into(binding.preview1)
+
+            Glide.with(binding.root)
+                .load(room.imageUri2)
+                .placeholder(R.drawable.preview)
+                .into(binding.preview2)
+
+            Glide.with(binding.root)
+                .load(room.imageUri3)
+                .placeholder(R.drawable.preview)
+                .into(binding.preview3)
 
             binding.DeleteRoomButton.visibility = if (roomList.size > 1) View.VISIBLE else View.GONE
 

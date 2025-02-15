@@ -42,6 +42,6 @@
 
     <fragment
         android:id="@+id/AnalysisResultFragment"
-        android:name="com.winter.happyaging.ai.AIAnalysisFragment"
+        android:name="com.winter.happyaging.ai.AnalysisResultFragment"
         android:label="Analysis Result Fragment" />
 </navigation>

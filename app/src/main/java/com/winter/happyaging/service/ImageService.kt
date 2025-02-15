@@ -9,7 +9,7 @@ import retrofit2.http.Part
 
 interface ImageService {
     @Multipart
-    @POST("storage/images")
+    @POST("/storage/images")
     fun uploadImages(
         @Part image: MultipartBody.Part
     ): Call<ImageResponse>
