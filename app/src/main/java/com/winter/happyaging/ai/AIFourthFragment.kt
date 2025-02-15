@@ -6,13 +6,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import com.winter.happyaging.R
 import com.winter.happyaging.ResDTO.AIAnalysisResponse
 import com.winter.happyaging.ResDTO.RoomRequest
 import com.winter.happyaging.TokenManager
 import com.winter.happyaging.service.AIAnalysisRepository
-import com.google.gson.Gson
+import kotlinx.coroutines.launch
 
 class AIFourthFragment :
     BaseRoomFragment(
@@ -62,10 +64,6 @@ class AIFourthFragment :
             )
         }
 
-        val gson = Gson()
-        val json = gson.toJson(roomRequests)
-        Log.d("AIFourthFragment", "변환된 JSON 데이터: $json")
-
         AIAnalysisRepository.uploadRoomImages(
             context = requireContext(),
             binding = binding.loadingLayout,
@@ -73,7 +71,7 @@ class AIFourthFragment :
             roomRequests = roomRequests,
             onSuccess = { response ->
                 saveAnalysisResponse(response)
-                handleAnalysisSuccess(response)
+                handleAnalysisSuccess()
             },
             onFailure = { error ->
                 Toast.makeText(requireContext(), "분석 실패: $error", Toast.LENGTH_SHORT).show()
@@ -82,26 +80,24 @@ class AIFourthFragment :
     }
 
     private fun saveAnalysisResponse(response: AIAnalysisResponse) {
-        val sharedPreferences = requireContext().getSharedPreferences("AnalysisData", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val gson = Gson()
-        val json = gson.toJson(response)
-        editor.putString("analysisResult", json)
-        editor.apply()
-        Log.d("AIFourthFragment", "분석 결과 저장 완료")
+        lifecycleScope.launch {
+            val sharedPreferences = requireContext().getSharedPreferences("AnalysisData", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            val gson = Gson()
+            val json = gson.toJson(response)
+            editor.putString("analysisResult", json)
+            editor.apply()
+            Log.d("AIFourthFragment", "분석 결과 저장 완료")
+        }
     }
 
-    private fun handleAnalysisSuccess(response: AIAnalysisResponse) {
-        Log.d("AIFourthFragment", "분석 성공: ${response.data}")
-        Toast.makeText(requireContext(), "분석이 완료되었습니다!", Toast.LENGTH_SHORT).show()
+    private fun handleAnalysisSuccess() {
         findNavController().navigate(R.id.action_AIFourthFragment_to_AnalysisResultFragment)
     }
 
     private fun getStoredSeniorId(): Int {
         val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val seniorId = sharedPreferences.getInt("seniorId", -1)
-        Log.d("AIFourthFragment", "Stored seniorId: $seniorId")
-        return seniorId
+        return sharedPreferences.getInt("seniorId", -1)
     }
 
     private fun getRoomCategory(roomName: String): String {

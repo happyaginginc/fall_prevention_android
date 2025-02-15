@@ -42,7 +42,6 @@ class AnalysisResultFragment : Fragment() {
         }
     }
 
-    // 저장된 분석 결과 불러오기
     private fun loadAnalysisResults() {
         val sharedPreferences = requireContext().getSharedPreferences("AnalysisData", Context.MODE_PRIVATE)
         val gson = Gson()
@@ -50,9 +49,9 @@ class AnalysisResultFragment : Fragment() {
 
         if (json != null) {
             val response = gson.fromJson(json, AIAnalysisResponse::class.java)
+            Log.d("AnalysisResultFragment", "불러온 분석 결과 JSON: $json")
             analysisList = response.data.roomAIPrompts
             analysisAdapter.updateData(analysisList)
-            Log.d("AnalysisResultFragment", "분석 결과 불러오기 완료")
         } else {
             Toast.makeText(requireContext(), "저장된 분석 결과가 없습니다.", Toast.LENGTH_SHORT).show()
         }
