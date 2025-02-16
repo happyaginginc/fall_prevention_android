@@ -2,13 +2,12 @@ package com.winter.happyaging
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.winter.happyaging.login.FirstFragment
-import com.winter.happyaging.login.LoginFragment
+import androidx.fragment.app.commit
+import com.winter.happyaging.auth.ui.IntroFragment
+import com.winter.happyaging.auth.ui.login.LoginFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            showFragment(FirstFragment())
+            showFragment(IntroFragment())
         }
 
         val loginLink: TextView = findViewById(R.id.loginLink)

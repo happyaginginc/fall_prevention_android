@@ -10,9 +10,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
-import com.winter.happyaging.databinding.FragmentAnalysisResultBinding
 import com.winter.happyaging.ResDTO.AIAnalysisResponse
 import com.winter.happyaging.ResDTO.RoomAIPrompt
+import com.winter.happyaging.databinding.FragmentAnalysisResultBinding
 
 class AnalysisResultFragment : Fragment() {
     private var _binding: FragmentAnalysisResultBinding? = null

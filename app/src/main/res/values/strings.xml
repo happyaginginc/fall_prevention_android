@@ -1,6 +1,37 @@
 <resources>
+    <!-- App 기본 정보 -->
     <string name="app_name">HappyAging</string>
     <string name="app_logo">HappyAging</string>
 
+    <!-- 회원가입/로그인 공통 -->
+    <string name="fill_all_fields">모든 필드를 채워주세요.</string>
+    <string name="network_error">네트워크 오류가 발생했습니다.</string>
+    <string name="unknown_error">알 수 없는 오류가 발생했습니다.</string>
+
+    <!-- 회원가입(Register) 관련 -->
+    <string name="register_success">회원가입 성공!</string>
+    <string name="register_fail_status">회원가입 실패: 상태 코드 %1$d</string>
+    <string name="register_fail">회원가입 실패: %1$s</string>
+    <string name="register_congrats_message">%s 님, 가입을 축하합니다!</string>
+
+    <!-- 로그인(Login) 관련 -->
+    <string name="login_fill_fields">이메일과 비밀번호를 입력하세요.</string>
+    <string name="login_success">로그인 성공!</string>
+    <string name="login_fail_status">로그인 실패: 상태 코드 %1$d</string>
+    <string name="login_fail_empty_body">로그인 실패: 응답 본문이 없습니다.</string>
+    <string name="login_fail_server">로그인 실패: %1$s</string>
+
+    <!-- "이미 계정이 있으신가요?" 링크 -->
     <string name="sign_up_string"><u>이미 계정이 있으신가요?</u></string>
+
+    <!-- 이메일/비번 찾기(FindAccount) 관련 -->
+    <string name="email_find_success_title">이메일 찾기 완료</string>
+    <string name="email_find_success_message">%1$s 님의 가입 이메일은\n%2$s 입니다.</string>
+    <string name="email_find_fail_title">이메일 찾기 실패</string>
+    <string name="email_find_fail_message">가입 정보를 찾을 수 없습니다.\n이름 또는 전화번호를 다시 확인해주세요.</string>
+
+    <string name="password_send_success_title">비밀번호 발송 완료</string>
+    <string name="password_send_success_message">%1$s\n비밀번호가 메일로 발송되었습니다.</string>
+    <string name="password_send_fail_title">비밀번호 발송 실패</string>
+    <string name="password_send_fail_message">해당 이메일에 대한 정보를 찾을 수 없습니다.</string>
 </resources>

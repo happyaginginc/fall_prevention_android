@@ -1,4 +1,4 @@
-package com.winter.happyaging.ReqDTO
+package com.winter.happyaging.auth.model.request
 
 data class RegisterRequest(
     val email: String,

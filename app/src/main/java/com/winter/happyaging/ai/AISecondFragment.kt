@@ -20,7 +20,7 @@ class AISecondFragment : BaseRoomFragment(1,"화장실", R.id.action_AISecondFra
 //import com.winter.happyaging.ImageManager
 //import com.winter.happyaging.R
 //import com.winter.happyaging.databinding.FragmentAiSecondBinding
-//import com.winter.happyaging.RetrofitClient
+//import com.winter.happyaging.network.RetrofitClient
 //import com.winter.happyaging.ResDTO.ImageResponse
 //import com.winter.happyaging.service.ImageService
 //import okhttp3.MediaType.Companion.toMediaTypeOrNull

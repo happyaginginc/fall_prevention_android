@@ -20,7 +20,7 @@ class AIThirdFragment : BaseRoomFragment(2,"일반 방", R.id.action_AIThirdFrag
 //import com.winter.happyaging.ImageManager
 //import com.winter.happyaging.R
 //import com.winter.happyaging.databinding.FragmentAiThirdBinding
-//import com.winter.happyaging.RetrofitClient
+//import com.winter.happyaging.network.RetrofitClient
 //import com.winter.happyaging.ResDTO.ImageResponse
 //import com.winter.happyaging.service.ImageService
 //import okhttp3.MediaType.Companion.toMediaTypeOrNull

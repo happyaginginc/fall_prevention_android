@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.winter.happyaging.R
-import com.winter.happyaging.ReqDTO.SeniorRequest
 import java.util.Calendar
 
 class SeniorAdapter(

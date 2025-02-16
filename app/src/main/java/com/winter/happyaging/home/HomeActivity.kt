@@ -4,15 +4,13 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.winter.happyaging.R
-import com.winter.happyaging.ReqDTO.SeniorRequest
 import com.winter.happyaging.ResDTO.ApiResponse
-import com.winter.happyaging.ResDTO.SeniorResponse
-import com.winter.happyaging.RetrofitClient
+import com.winter.happyaging.network.RetrofitClient
 import com.winter.happyaging.service.SeniorService
 import retrofit2.Call
 import retrofit2.Callback

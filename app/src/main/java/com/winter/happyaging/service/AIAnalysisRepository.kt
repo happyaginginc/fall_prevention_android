@@ -7,7 +7,7 @@ import com.google.gson.Gson
 import com.winter.happyaging.R
 import com.winter.happyaging.ResDTO.AIAnalysisResponse
 import com.winter.happyaging.ResDTO.RoomRequest
-import com.winter.happyaging.RetrofitClient
+import com.winter.happyaging.network.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

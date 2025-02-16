@@ -1,4 +1,4 @@
-package com.winter.happyaging.login
+package com.winter.happyaging.auth.ui.register
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,28 +9,31 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.winter.happyaging.R
 
-class TermsFragment : Fragment() {
+/**
+ * 약관 동의 화면
+ */
+class TermsAgreementFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // fragment_terms.xml 레이아웃 인플레이션
         return inflater.inflate(R.layout.fragment_terms, container, false)
     }
 
-    // TermsFragment.kt
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val btnBack = view.findViewById<ImageView>(R.id.btnBack)
-        val btnConfirm = view.findViewById<Button>(R.id.btnConfirm)
+        val btnBack: ImageView = view.findViewById(R.id.btnBack)
+        val btnConfirm: Button = view.findViewById(R.id.btnConfirm)
 
+        // 뒤로가기
         btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
+        // 약관 동의 확인 후 뒤로가기
         btnConfirm.setOnClickListener {
             parentFragmentManager.popBackStack()
         }

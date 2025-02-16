@@ -1,8 +1,5 @@
 package com.winter.happyaging.service
 
-import retrofit2.Call
-import retrofit2.http.GET
-
 interface QuestionService {
 
 //    // 전체 질문 조회

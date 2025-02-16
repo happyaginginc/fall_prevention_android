@@ -1,6 +1,5 @@
 package com.winter.happyaging.service
 
-import com.winter.happyaging.ReqDTO.SeniorRequest
 import com.winter.happyaging.ResDTO.ApiResponse
 import com.winter.happyaging.ResDTO.SeniorResponse
 import com.winter.happyaging.home.SeniorData

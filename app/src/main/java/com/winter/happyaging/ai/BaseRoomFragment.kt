@@ -16,9 +16,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.winter.happyaging.ImageManager
 import com.winter.happyaging.R
-import com.winter.happyaging.databinding.FragmentAiRoomBinding
-import com.winter.happyaging.RetrofitClient
 import com.winter.happyaging.ResDTO.ImageResponse
+import com.winter.happyaging.databinding.FragmentAiRoomBinding
+import com.winter.happyaging.network.RetrofitClient
 import com.winter.happyaging.service.ImageService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

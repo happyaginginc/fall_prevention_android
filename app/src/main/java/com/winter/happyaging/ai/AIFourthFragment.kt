@@ -12,7 +12,7 @@ import com.google.gson.Gson
 import com.winter.happyaging.R
 import com.winter.happyaging.ResDTO.AIAnalysisResponse
 import com.winter.happyaging.ResDTO.RoomRequest
-import com.winter.happyaging.TokenManager
+import com.winter.happyaging.network.TokenManager
 import com.winter.happyaging.service.AIAnalysisRepository
 import kotlinx.coroutines.launch
 
