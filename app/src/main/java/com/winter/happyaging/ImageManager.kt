@@ -51,12 +51,12 @@ class ImageManager(private val context: Context) {
         }
     }
 
-    // ✅ 2️⃣ DataStore에서 이미지 불러오기
+    // DataStore에서 이미지 불러오기
     fun getImageData(roomName: String): List<String> {
         return getAllImageData()[roomName]?.imageUrls ?: emptyList()
     }
 
-    // ✅ 3️⃣ DataStore에서 모든 이미지 데이터 불러오기
+    // DataStore에서 모든 이미지 데이터 불러오기
     fun getAllImageData(): Map<String, ImageInfo> {
         return runBlocking {
             context.dataStore.data.map { preferences ->
@@ -66,14 +66,14 @@ class ImageManager(private val context: Context) {
         }
     }
 
-    // ✅ 4️⃣ 데이터를 직렬화하여 DataStore에 저장하기
+    // 데이터를 직렬화하여 DataStore에 저장하기
     private fun serializeImageData(data: Map<String, ImageInfo>): String {
         return data.entries.joinToString("|") { entry ->
             "${entry.key}::${entry.value.imageUrls.joinToString(",")}"
         }
     }
 
-    // ✅ 5️⃣ DataStore에서 가져온 문자열을 다시 변환
+    // DataStore에서 가져온 문자열을 다시 변환
     private fun deserializeImageData(serializedData: String): Map<String, ImageInfo> {
         if (serializedData.isBlank()) return emptyMap()
 
