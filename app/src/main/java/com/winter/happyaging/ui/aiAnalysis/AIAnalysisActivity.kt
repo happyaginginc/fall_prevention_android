@@ -7,6 +7,7 @@ import com.winter.happyaging.R
 import com.winter.happyaging.databinding.ActivityAiAnalysisBinding
 
 class AIAnalysisActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityAiAnalysisBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

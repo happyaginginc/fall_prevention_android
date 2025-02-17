@@ -1,44 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@id/AIFirstFragment">
+    app:startDestination="@id/AIIntroFragment">
 
+    <!-- AI Intro Fragment -->
     <fragment
-        android:id="@+id/AIFirstFragment"
-        android:name="com.winter.happyaging.ui.aiAnalysis.AIFirstFragment"
-        android:label="AI First Fragment">
+        android:id="@+id/AIIntroFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.AIIntroFragment"
+        android:label="AI Intro Fragment">
         <action
-            android:id="@+id/action_AIFirstFragment_to_AISecondFragment"
-            app:destination="@id/AISecondFragment" />
+            android:id="@+id/action_AIIntroFragment_to_AILivingRoomFragment"
+            app:destination="@id/AILivingRoomFragment" />
     </fragment>
 
+    <!-- LIVING_ROOM (거실) Fragment -->
     <fragment
-        android:id="@+id/AISecondFragment"
-        android:name="com.winter.happyaging.ui.aiAnalysis.AISecondFragment"
-        android:label="AI Second Fragment" >
+        android:id="@+id/AILivingRoomFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AI_LivingRoomFragment"
+        android:label="AI Living Room Fragment">
         <action
-            android:id="@+id/action_AISecondFragment_to_AIThirdFragment"
-            app:destination="@id/AIThirdFragment" />
+            android:id="@+id/action_AILivingRoomFragment_to_AIKitchenFragment"
+            app:destination="@id/AIKitchenFragment" />
     </fragment>
 
+    <!-- KITCHEN (주방) Fragment -->
     <fragment
-        android:id="@+id/AIThirdFragment"
-        android:name="com.winter.happyaging.ui.aiAnalysis.AIThirdFragment"
-        android:label="AI Third Fragment" >
+        android:id="@+id/AIKitchenFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AI_KitchenFragment"
+        android:label="AI Kitchen Fragment">
         <action
-            android:id="@+id/action_AIThirdFragment_to_AIFourthFragment"
-            app:destination="@id/AIFourthFragment" />
+            android:id="@+id/action_AIKitchenFragment_to_AIBathroomFragment"
+            app:destination="@id/AIBathroomFragment" />
     </fragment>
 
+    <!-- BATHROOM (욕실) Fragment -->
     <fragment
-        android:id="@+id/AIFourthFragment"
-        android:name="com.winter.happyaging.ui.aiAnalysis.AIFourthFragment"
-        android:label="AI Fourth Fragment" >
+        android:id="@+id/AIBathroomFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AI_BathroomFragment"
+        android:label="AI Bathroom Fragment">
         <action
-            android:id="@+id/action_AIFourthFragment_to_AnalysisResultFragment"
+            android:id="@+id/action_AIBathroomFragment_to_AIGeneralRoomFragment"
+            app:destination="@id/AIGeneralRoomFragment" />
+    </fragment>
+
+    <!-- GENERAL_ROOM (일반방) Fragment -->
+    <fragment
+        android:id="@+id/AIGeneralRoomFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AI_GeneralRoomFragment"
+        android:label="AI General Room Fragment">
+        <action
+            android:id="@+id/action_AIGeneralRoomFragment_to_AIOutdoorFragment"
+            app:destination="@id/AIOutdoorFragment" />
+    </fragment>
+
+    <!-- OUTDOOR (외부) Fragment -->
+    <fragment
+        android:id="@+id/AIOutdoorFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AI_OutdoorFragment"
+        android:label="AI Outdoor Fragment">
+        <action
+            android:id="@+id/action_AIOutdoorFragment_to_AIOtherFragment"
+            app:destination="@id/AIOtherFragment" />
+    </fragment>
+
+    <!-- OTHER (기타) Fragment -->
+    <fragment
+        android:id="@+id/AIOtherFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AI_OtherFragment"
+        android:label="AI Other Fragment">
+        <action
+            android:id="@+id/action_AIOtherFragment_to_AnalysisResultFragment"
             app:destination="@id/AnalysisResultFragment" />
     </fragment>
 
+    <!-- Analysis Result Fragment (최종 결과 화면) -->
     <fragment
         android:id="@+id/AnalysisResultFragment"
         android:name="com.winter.happyaging.ui.aiAnalysis.AnalysisResultFragment"

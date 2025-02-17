@@ -17,11 +17,27 @@ class RoomAdapter(
     private val onDeleteRoomClick: (position: Int) -> Unit
 ) : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
+    companion object {
+        private const val TAG = "RoomAdapter"
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
+        val binding = ItemRoomBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RoomViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
+        holder.bind(roomList[position], position)
+    }
+
+    override fun getItemCount(): Int = roomList.size
+
     inner class RoomViewHolder(private val binding: ItemRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(room: RoomData, position: Int) {
-
+            // 방 이름
             binding.roomName.setText(room.name)
 
+            // 이미지 3개에 Glide로 미리보기
             Glide.with(binding.root)
                 .load(room.imageUri1)
                 .placeholder(R.drawable.preview)
@@ -37,45 +53,36 @@ class RoomAdapter(
                 .placeholder(R.drawable.preview)
                 .into(binding.preview3)
 
+            // 방이 하나뿐이면 삭제 버튼 숨기기
             binding.DeleteRoomButton.visibility = if (roomList.size > 1) View.VISIBLE else View.GONE
 
+            // 카메라 버튼 리스너
             binding.btnCamera1.setOnClickListener {
-                Log.d("RoomAdapter", "btnCamera1 클릭됨 - 방 번호: ${position + 1}")
+                Log.d(TAG, "btnCamera1 클릭됨 - 방 번호: ${position + 1}")
                 onCameraClick(position, 1)
             }
             binding.btnCamera2.setOnClickListener {
-                Log.d("RoomAdapter", "btnCamera2 클릭됨 - 방 번호: ${position + 1}")
+                Log.d(TAG, "btnCamera2 클릭됨 - 방 번호: ${position + 1}")
                 onCameraClick(position, 2)
             }
             binding.btnCamera3.setOnClickListener {
-                Log.d("RoomAdapter", "btnCamera3 클릭됨 - 방 번호: ${position + 1}")
+                Log.d(TAG, "btnCamera3 클릭됨 - 방 번호: ${position + 1}")
                 onCameraClick(position, 3)
             }
 
+            // 방 추가 버튼
             binding.AddRoomButton.setOnClickListener {
-                Log.d("RoomAdapter", "방 추가 버튼 클릭됨 - 현재 방 개수: ${roomList.size}")
+                Log.d(TAG, "방 추가 버튼 클릭됨 - 현재 방 개수: ${roomList.size}")
                 onAddRoomClick(position)
-                notifyDataSetChanged()
             }
 
+            // 방 삭제 버튼
             binding.DeleteRoomButton.setOnClickListener {
-                Log.d("RoomAdapter", "방 삭제 버튼 클릭됨 - 방 번호: ${position + 1}")
+                Log.d(TAG, "방 삭제 버튼 클릭됨 - 방 번호: ${position + 1}")
                 if (roomList.size > 1) {
                     onDeleteRoomClick(position)
-                    notifyDataSetChanged()
                 }
             }
         }
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
-        val binding = ItemRoomBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return RoomViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
-        holder.bind(roomList[position], position)
-    }
-
-    override fun getItemCount(): Int = roomList.size
 }

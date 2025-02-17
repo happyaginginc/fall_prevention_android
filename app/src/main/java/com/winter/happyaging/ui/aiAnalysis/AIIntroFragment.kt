@@ -11,9 +11,12 @@ import com.winter.happyaging.ImageManager
 import com.winter.happyaging.R
 import com.winter.happyaging.databinding.FragmentAiFirstBinding
 
-class AIFirstFragment : Fragment() {
+class AIIntroFragment : Fragment() {
+
     private var _binding: FragmentAiFirstBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var imageManager: ImageManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,29 +28,30 @@ class AIFirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val imageManager = ImageManager(requireContext())
+        imageManager = ImageManager(requireContext())
         imageManager.clearLocalImageData()
 
         binding.btnStartAnalysis.setOnClickListener {
-            view.findNavController().navigate(R.id.action_AIFirstFragment_to_AISecondFragment)
+            view.findNavController().navigate(R.id.action_AIIntroFragment_to_AILivingRoomFragment)
         }
 
         binding.btnBack.setOnClickListener {
             requireActivity().finish()
         }
 
-        setupBackPressedHandler()
+        setupSystemBackPressedHandler()
     }
 
-    private fun setupBackPressedHandler() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().finish()
+    private fun setupSystemBackPressedHandler() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finish()
+                }
             }
-        })
+        )
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

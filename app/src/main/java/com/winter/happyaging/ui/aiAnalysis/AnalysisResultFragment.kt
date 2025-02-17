@@ -17,13 +17,22 @@ import com.winter.happyaging.databinding.FragmentAnalysisResultBinding
 import com.winter.happyaging.ui.aiAnalysis.adapter.AnalysisAdapter
 
 class AnalysisResultFragment : Fragment() {
+
+    companion object {
+        private const val TAG = "AnalysisResultFragment"
+        private const val ANALYSIS_DATA_PREFS = "AnalysisData"
+        private const val ANALYSIS_RESULT_KEY = "analysisResult"
+    }
+
     private var _binding: FragmentAnalysisResultBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var analysisAdapter: AnalysisAdapter
     private var analysisList: List<RoomAIPrompt> = emptyList()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAnalysisResultBinding.inflate(inflater, container, false)
         return binding.root
@@ -34,7 +43,7 @@ class AnalysisResultFragment : Fragment() {
 
         setupRecyclerView()
         loadAnalysisResults()
-        setupBackPressedHandler()
+        setupSystemBackPressedHandler()
         setupBackButtonClick()
     }
 
@@ -47,13 +56,12 @@ class AnalysisResultFragment : Fragment() {
     }
 
     private fun loadAnalysisResults() {
-        val sharedPreferences = requireContext().getSharedPreferences("AnalysisData", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val json = sharedPreferences.getString("analysisResult", null)
+        val sharedPreferences = requireContext().getSharedPreferences(ANALYSIS_DATA_PREFS, Context.MODE_PRIVATE)
+        val json = sharedPreferences.getString(ANALYSIS_RESULT_KEY, null)
 
         if (json != null) {
-            val response = gson.fromJson(json, AiAnalysisResponse::class.java)
-            Log.d("AnalysisResultFragment", "불러온 분석 결과 JSON: $json")
+            val response = Gson().fromJson(json, AiAnalysisResponse::class.java)
+            Log.d(TAG, "불러온 분석 결과 JSON: $json")
             analysisList = response.data.roomAIPrompts
             analysisAdapter.updateData(analysisList)
         } else {
@@ -61,12 +69,15 @@ class AnalysisResultFragment : Fragment() {
         }
     }
 
-    private fun setupBackPressedHandler() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().supportFragmentManager.popBackStack()
+    private fun setupSystemBackPressedHandler() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().supportFragmentManager.popBackStack()
+                }
             }
-        })
+        )
     }
 
     private fun setupBackButtonClick() {
