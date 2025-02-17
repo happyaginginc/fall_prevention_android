@@ -4,10 +4,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.winter.happyaging.R
 import com.winter.happyaging.data.aiAnalysis.model.RoomAIPrompt
 
@@ -15,43 +14,44 @@ class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :
     RecyclerView.Adapter<AnalysisAdapter.AnalysisViewHolder>() {
 
     class AnalysisViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val roomCategoryTextView: TextView = itemView.findViewById(R.id.roomCategoryTextView)
-        val roomNumberTextView: TextView = itemView.findViewById(R.id.roomNumberTextView)
         val roomNameTextView: TextView = itemView.findViewById(R.id.roomNameTextView)
-        val imageView1: ImageView = itemView.findViewById(R.id.imageView1)
-        val imageView2: ImageView = itemView.findViewById(R.id.imageView2)
-        val imageView3: ImageView = itemView.findViewById(R.id.imageView3)
+
+        // 기존에 imageView1, imageView2, imageView3 제거
+        val imagesRecyclerView: RecyclerView = itemView.findViewById(R.id.imagesRecyclerView)
+
         val fallSummaryTextView: TextView = itemView.findViewById(R.id.fallSummaryTextView)
         val fallRiskTextView: TextView = itemView.findViewById(R.id.fallRiskTextView)
 
         fun bind(room: RoomAIPrompt) {
-            roomCategoryTextView.text = room.roomCategory
-            roomNumberTextView.text = room.roomAIPromptId.toString() // `roomNumber`가 없어서 ID로 대체
-            roomNameTextView.text = "분석 ID: ${room.roomAIPromptId}"
+            roomNameTextView.text = room.roomName
 
-            // `responseDto.fallSummaryDescription`을 사용
             fallSummaryTextView.text = room.responseDto.fallSummaryDescription
             fallRiskTextView.text = """
-                장애물: ${room.responseDto.fallAnalysis.obstacles}
-                바닥 상태: ${room.responseDto.fallAnalysis.floorCondition}
-                기타 요인: ${room.responseDto.fallAnalysis.otherFactors}
+                <바닥 상태>
+                 ${room.responseDto.fallAnalysis.floorCondition}
+                
+                <장애물>
+                 ${room.responseDto.fallAnalysis.obstacles}
+                 
+                <기타 요인>
+                 ${room.responseDto.fallAnalysis.otherFactors}
             """.trimIndent()
 
             Log.d("AnalysisAdapter", "🔍 받은 이미지 URL 리스트: ${room.images}")
 
-            // Glide로 이미지 로드
-            val imageUrls = room.images // `images` 리스트 사용
-            val placeholderImage = R.drawable.logo
-
-            if (imageUrls.isNotEmpty()) {
-                Glide.with(itemView.context).load(imageUrls.getOrNull(0)).placeholder(placeholderImage).into(imageView1)
-                Glide.with(itemView.context).load(imageUrls.getOrNull(1)).placeholder(placeholderImage).into(imageView2)
-                Glide.with(itemView.context).load(imageUrls.getOrNull(2)).placeholder(placeholderImage).into(imageView3)
-            } else {
-                imageView1.setImageResource(placeholderImage)
-                imageView2.setImageResource(placeholderImage)
-                imageView3.setImageResource(placeholderImage)
+            // Base URL 붙여서 실제 URL 리스트 만들기
+            val baseUrl = "https://api.happy-aging.co.kr/storage/images/"
+            val fullUrls = room.images.map { imageName ->
+                "$baseUrl$imageName"
             }
+
+            // 가로로 스크롤할 수 있게 LayoutManager 설정
+            imagesRecyclerView.layoutManager =
+                LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+
+            // ImageListAdapter를 이용해 풀 URL 리스트 표시
+            val imageListAdapter = ImageListAdapter(fullUrls)
+            imagesRecyclerView.adapter = imageListAdapter
         }
     }
 
