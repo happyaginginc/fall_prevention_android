@@ -25,7 +25,7 @@ class ImageManager(private val context: Context) {
         val imageUrls: MutableList<String>
     )
 
-    // ✅ 1️⃣ DataStore에 이미지 저장
+    // DataStore에 이미지 저장
     fun saveImageData(roomName: String, cameraIndex: Int, imageUrl: String) {
         GlobalScope.launch {
             context.dataStore.edit { preferences ->
@@ -44,7 +44,7 @@ class ImageManager(private val context: Context) {
                 val newMap = existingData.toMutableMap().apply { put(roomName, roomData) }
                 preferences[IMAGE_MAP_KEY] = serializeImageData(newMap)
 
-                // ✅ 저장된 데이터 확인
+                // 저장된 데이터 확인
                 Log.d("ImageManager", "현재 저장된 이미지 데이터: ${preferences[IMAGE_MAP_KEY]}")
             }
             Log.d("ImageManager", "이미지 저장됨: $roomName ($cameraIndex) -> $imageUrl")
@@ -87,5 +87,14 @@ class ImageManager(private val context: Context) {
                 null
             }
         }.toMap()
+    }
+
+    fun clearLocalImageData() {
+        GlobalScope.launch {
+            context.dataStore.edit { preferences ->
+                preferences.remove(IMAGE_MAP_KEY)  // 기존에 저장된 이미지 데이터 삭제
+            }
+            Log.d("ImageManager", "로컬 이미지 데이터 초기화 완료!")
+        }
     }
 }

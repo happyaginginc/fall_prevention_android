@@ -20,7 +20,6 @@ class RoomAdapter(
     inner class RoomViewHolder(private val binding: ItemRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(room: RoomData, position: Int) {
 
-            binding.roomNumber.text = (position + 1).toString()
             binding.roomName.setText(room.name)
 
             Glide.with(binding.root)

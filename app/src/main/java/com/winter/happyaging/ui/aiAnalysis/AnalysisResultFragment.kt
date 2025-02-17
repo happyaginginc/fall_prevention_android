@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -33,6 +34,8 @@ class AnalysisResultFragment : Fragment() {
 
         setupRecyclerView()
         loadAnalysisResults()
+        setupBackPressedHandler()
+        setupBackButtonClick()
     }
 
     private fun setupRecyclerView() {
@@ -55,6 +58,20 @@ class AnalysisResultFragment : Fragment() {
             analysisAdapter.updateData(analysisList)
         } else {
             Toast.makeText(requireContext(), "저장된 분석 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setupBackPressedHandler() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+        })
+    }
+
+    private fun setupBackButtonClick() {
+        binding.backButton.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
         }
     }
 

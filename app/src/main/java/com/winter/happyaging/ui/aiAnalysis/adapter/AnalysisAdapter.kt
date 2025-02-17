@@ -1,5 +1,6 @@
 package com.winter.happyaging.ui.aiAnalysis.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,46 +15,43 @@ class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :
     RecyclerView.Adapter<AnalysisAdapter.AnalysisViewHolder>() {
 
     class AnalysisViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val roomCategoryTextView: TextView = itemView.findViewById(R.id.roomCategoryTextView)
-        private val roomNumberTextView: TextView = itemView.findViewById(R.id.roomNumberTextView)
-        private val roomNameTextView: TextView = itemView.findViewById(R.id.roomNameTextView)
-        private val imageView1: ImageView = itemView.findViewById(R.id.imageView1)
-        private val imageView2: ImageView = itemView.findViewById(R.id.imageView2)
-        private val imageView3: ImageView = itemView.findViewById(R.id.imageView3)
-        private val fallSummaryTextView: TextView = itemView.findViewById(R.id.fallSummaryTextView)
-        private val fallRiskTextView: TextView = itemView.findViewById(R.id.fallRiskTextView)
+        val roomCategoryTextView: TextView = itemView.findViewById(R.id.roomCategoryTextView)
+        val roomNumberTextView: TextView = itemView.findViewById(R.id.roomNumberTextView)
+        val roomNameTextView: TextView = itemView.findViewById(R.id.roomNameTextView)
+        val imageView1: ImageView = itemView.findViewById(R.id.imageView1)
+        val imageView2: ImageView = itemView.findViewById(R.id.imageView2)
+        val imageView3: ImageView = itemView.findViewById(R.id.imageView3)
+        val fallSummaryTextView: TextView = itemView.findViewById(R.id.fallSummaryTextView)
+        val fallRiskTextView: TextView = itemView.findViewById(R.id.fallRiskTextView)
 
-        fun bind(item: RoomAIPrompt, position: Int) {
-            val responseDto = item.responseDto
+        fun bind(room: RoomAIPrompt) {
+            roomCategoryTextView.text = room.roomCategory
+            roomNumberTextView.text = room.roomAIPromptId.toString() // `roomNumber`가 없어서 ID로 대체
+            roomNameTextView.text = "분석 ID: ${room.roomAIPromptId}"
 
-            fallSummaryTextView.text = responseDto.fallSummaryDescription
-            roomCategoryTextView.text = item.roomCategory
-            roomNumberTextView.text = (position + 1).toString()
-            roomNameTextView.text = item.roomCategory + (position + 1)
-
-            // 이미지 로딩
-            val imageViews = listOf(imageView1, imageView2, imageView3)
-            item.images.forEachIndexed { index, imageUrl ->
-                if (index < imageViews.size) {
-                    Glide.with(itemView.context)
-                        .load(imageUrl)
-                        .placeholder(R.drawable.logo)
-                        .into(imageViews[index])
-                }
-            }
-
-            // 분석 요약
-            fallSummaryTextView.text = item.responseDto.fallSummaryDescription
-
-            // 위험 요소 리스트
-            val fallAnalysis = item.responseDto.fallAnalysis
-            val riskText = """
-                1. ${fallAnalysis.obstacles}
-                2. ${fallAnalysis.floorCondition}
-                3. ${fallAnalysis.otherFactors}
+            // `responseDto.fallSummaryDescription`을 사용
+            fallSummaryTextView.text = room.responseDto.fallSummaryDescription
+            fallRiskTextView.text = """
+                장애물: ${room.responseDto.fallAnalysis.obstacles}
+                바닥 상태: ${room.responseDto.fallAnalysis.floorCondition}
+                기타 요인: ${room.responseDto.fallAnalysis.otherFactors}
             """.trimIndent()
 
-            fallRiskTextView.text = riskText
+            Log.d("AnalysisAdapter", "🔍 받은 이미지 URL 리스트: ${room.images}")
+
+            // Glide로 이미지 로드
+            val imageUrls = room.images // `images` 리스트 사용
+            val placeholderImage = R.drawable.logo
+
+            if (imageUrls.isNotEmpty()) {
+                Glide.with(itemView.context).load(imageUrls.getOrNull(0)).placeholder(placeholderImage).into(imageView1)
+                Glide.with(itemView.context).load(imageUrls.getOrNull(1)).placeholder(placeholderImage).into(imageView2)
+                Glide.with(itemView.context).load(imageUrls.getOrNull(2)).placeholder(placeholderImage).into(imageView3)
+            } else {
+                imageView1.setImageResource(placeholderImage)
+                imageView2.setImageResource(placeholderImage)
+                imageView3.setImageResource(placeholderImage)
+            }
         }
     }
 
@@ -63,7 +61,7 @@ class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :
     }
 
     override fun onBindViewHolder(holder: AnalysisViewHolder, position: Int) {
-        holder.bind(analysisList[position], position)
+        holder.bind(analysisList[position])
     }
 
     override fun getItemCount(): Int = analysisList.size

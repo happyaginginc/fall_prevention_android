@@ -64,6 +64,9 @@ class AIFourthFragment :
             )
         }
 
+        binding.loadingLayout.visibility = View.VISIBLE
+        binding.mainContent.visibility = View.GONE
+
         AiAnalysisRepository.uploadRoomImages(
             context = requireContext(),
             binding = binding.loadingLayout,
@@ -75,6 +78,10 @@ class AIFourthFragment :
             },
             onFailure = { error ->
                 Toast.makeText(requireContext(), "분석 실패: $error", Toast.LENGTH_SHORT).show()
+            },
+            onComplete = {
+                binding.loadingLayout.visibility = View.GONE
+                binding.mainContent.visibility = View.VISIBLE
             }
         )
     }

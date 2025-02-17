@@ -116,7 +116,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="방문이 있는 벽면에서 방 전체가 보이도록"
+                android:text="방문과 마주보는 벽면에서 방 전체가 보이도록"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -157,7 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="방문이 있는 벽면에서 방 전체가 보이도록"
+                android:text="방 밖에서 방문을 향해서"
                 android:textSize="16sp" />
 
             <LinearLayout

@@ -21,7 +21,8 @@ object AiAnalysisRepository {
         seniorId: Int,
         roomRequests: List<RoomRequest>,
         onSuccess: (AiAnalysisResponse) -> Unit,
-        onFailure: (String) -> Unit
+        onFailure: (String) -> Unit,
+        onComplete: () -> Unit
     ) {
         val service = RetrofitClient.getInstance(context).create(AiAnalysisService::class.java)
 
@@ -41,12 +42,14 @@ object AiAnalysisRepository {
                         Log.e("AIAnalysisRepository", "서버 응답 오류: $errorBody")
                         onFailure("서버 응답 오류: $errorBody")
                     }
+                    onComplete()
                 }
 
                 override fun onFailure(call: Call<AiAnalysisResponse>, t: Throwable) {
                     binding.findViewById<View>(R.id.loadingLayout)?.visibility = View.GONE
                     Log.e("AIAnalysisRepository", "네트워크 오류", t)
                     onFailure("네트워크 오류")
+                    onComplete()
                 }
             })
     }
