@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/AIFirstFragment"
-        android:name="com.winter.happyaging.ai.AIFirstFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.AIFirstFragment"
         android:label="AI First Fragment">
         <action
             android:id="@+id/action_AIFirstFragment_to_AISecondFragment"
@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/AISecondFragment"
-        android:name="com.winter.happyaging.ai.AISecondFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.AISecondFragment"
         android:label="AI Second Fragment" >
         <action
             android:id="@+id/action_AISecondFragment_to_AIThirdFragment"
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/AIThirdFragment"
-        android:name="com.winter.happyaging.ai.AIThirdFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.AIThirdFragment"
         android:label="AI Third Fragment" >
         <action
             android:id="@+id/action_AIThirdFragment_to_AIFourthFragment"
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/AIFourthFragment"
-        android:name="com.winter.happyaging.ai.AIFourthFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.AIFourthFragment"
         android:label="AI Fourth Fragment" >
         <action
             android:id="@+id/action_AIFourthFragment_to_AnalysisResultFragment"
@@ -41,6 +41,6 @@
 
     <fragment
         android:id="@+id/AnalysisResultFragment"
-        android:name="com.winter.happyaging.ai.AnalysisResultFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.AnalysisResultFragment"
         android:label="Analysis Result Fragment" />
 </navigation>
