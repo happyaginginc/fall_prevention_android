@@ -18,37 +18,33 @@ object AiAnalysisRepository {
     fun uploadRoomImages(
         context: Context,
         binding: View,
-        seniorId: Int,
+        seniorId: Long,
         roomRequests: List<RoomRequest>,
         onSuccess: (AiAnalysisResponse) -> Unit,
         onFailure: (String) -> Unit,
         onComplete: () -> Unit
     ) {
         val service = RetrofitClient.getInstance(context).create(AiAnalysisService::class.java)
-
-        val gson = Gson()
-        val json = gson.toJson(roomRequests) // JSON 변환
+        val json = Gson().toJson(roomRequests)
 
         service.analysisImages(seniorId, roomRequests)
             .enqueue(object : Callback<AiAnalysisResponse> {
-                override fun onResponse(call: Call<AiAnalysisResponse>, response: Response<AiAnalysisResponse>) {
+                override fun onResponse(
+                    call: Call<AiAnalysisResponse>,
+                    response: Response<AiAnalysisResponse>
+                ) {
                     binding.findViewById<View>(R.id.loadingLayout)?.visibility = View.GONE
-                    Log.d("AIAnalysisRepository", "서버로 보낼 최종 JSON 데이터: $json")
-                    Log.d("AIAnalysisRepository", "서버로 보낼 데이터: $roomRequests")
-                    if (response.isSuccessful) {
-                        onSuccess(response.body()!!)
-                    } else {
-                        val errorBody = response.errorBody()?.string()
-                        Log.e("AIAnalysisRepository", "서버 응답 오류: $errorBody")
-                        onFailure("서버 응답 오류: $errorBody")
+                    response.body()?.let { onSuccess(it) } ?: run {
+                        val error = response.errorBody()?.string() ?: "Unknown error"
+                        onFailure("Server error: $error")
                     }
                     onComplete()
                 }
 
                 override fun onFailure(call: Call<AiAnalysisResponse>, t: Throwable) {
                     binding.findViewById<View>(R.id.loadingLayout)?.visibility = View.GONE
-                    Log.e("AIAnalysisRepository", "네트워크 오류", t)
-                    onFailure("네트워크 오류")
+                    Log.e("AiAnalysisRepository", "Network error", t)
+                    onFailure("Network error")
                     onComplete()
                 }
             })

@@ -8,9 +8,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-/**
- * RetrofitClient 싱글턴
- */
 class RetrofitClient private constructor() {
 
     companion object {
@@ -18,20 +15,19 @@ class RetrofitClient private constructor() {
         @Volatile
         private var retrofit: Retrofit? = null
 
-        fun getInstance(context: Context): Retrofit {
-            return retrofit ?: synchronized(this) {
+        fun getInstance(context: Context): Retrofit =
+            retrofit ?: synchronized(this) {
                 retrofit ?: buildRetrofit(context).also { retrofit = it }
             }
-        }
 
         private fun buildRetrofit(context: Context): Retrofit {
-            val logging = HttpLoggingInterceptor().apply {
+            val loggingInterceptor = HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             }
 
             val client = OkHttpClient.Builder()
                 .addInterceptor(AuthInterceptor(context))
-                .addInterceptor(logging)
+                .addInterceptor(loggingInterceptor)
                 .connectTimeout(100, TimeUnit.SECONDS)
                 .readTimeout(100, TimeUnit.SECONDS)
                 .writeTimeout(100, TimeUnit.SECONDS)

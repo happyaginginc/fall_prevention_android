@@ -1,56 +1,45 @@
 package com.winter.happyaging.ui.home.adapter
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.winter.happyaging.R
-import com.winter.happyaging.data.senior.model.SeniorData
+import com.winter.happyaging.data.senior.model.SeniorReadResponse
+import com.winter.happyaging.databinding.ItemSeniorBinding
 import com.winter.happyaging.ui.home.ManageSeniorActivity
 import java.util.Calendar
 
-class SeniorAdapter(
-    private var seniorList: List<SeniorData>,
-    private val onItemClick: (SeniorData) -> Unit
-) : RecyclerView.Adapter<SeniorAdapter.SeniorViewHolder>() {
+class SeniorAdapter(private var seniorList: List<SeniorReadResponse>) : RecyclerView.Adapter<SeniorAdapter.SeniorViewHolder>() {
 
-    class SeniorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val nameTextView: TextView = view.findViewById(R.id.tvSeniorName2)
-        val addressTextView: TextView = view.findViewById(R.id.tvSeniorAddress2)
-        val ageTextView: TextView = view.findViewById(R.id.tvSeniorAge2)
-        val manageButton: Button = view.findViewById(R.id.btnManage2)
+    inner class SeniorViewHolder(private val binding: ItemSeniorBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(senior: SeniorReadResponse) {
+            binding.tvSeniorName2.text = senior.name
+            binding.tvSeniorAddress2.text = senior.address
+            binding.tvSeniorAge2.text = "${calculateAge(senior.birthYear)}세"
+            binding.btnManage2.setOnClickListener {
+                val context = binding.root.context
+                val intent = Intent(context, ManageSeniorActivity::class.java).apply {
+                    putExtra("name", senior.name)
+                    putExtra("address", senior.address)
+                    putExtra("birthYear", senior.birthYear)
+                    putExtra("sex", senior.sex)
+                    putExtra("phoneNumber", senior.phoneNumber)
+                    putExtra("relationship", senior.relationship)
+                    putExtra("memo", senior.memo)
+                    putExtra("seniorId", senior.seniorId)
+                }
+                context.startActivity(intent)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeniorViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_senior, parent, false)
-        return SeniorViewHolder(view)
+        val binding = ItemSeniorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SeniorViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SeniorViewHolder, position: Int) {
-        val senior = seniorList[position]
-        holder.nameTextView.text = senior.name
-        holder.addressTextView.text = "${senior.address}"
-        holder.ageTextView.text = "${calculateAge(senior.birthYear)}세"
-
-        holder.manageButton.setOnClickListener {
-            val context = holder.itemView.context
-            val intent = Intent(context, ManageSeniorActivity::class.java).apply {
-                putExtra("name", senior.name)
-                putExtra("address", senior.address)
-                putExtra("birthYear", senior.birthYear)
-                putExtra("sex", senior.sex)
-                putExtra("phoneNumber", senior.phoneNumber)
-                putExtra("relationship", senior.relationship)
-                putExtra("memo", senior.memo)
-            }
-            Log.d("SeniorAdapter", "🚀 ManageSeniorActivity 실행: $senior")
-            context.startActivity(intent)
-        }
-
+        holder.bind(seniorList[position])
     }
 
     override fun getItemCount(): Int = seniorList.size
@@ -60,8 +49,8 @@ class SeniorAdapter(
         return currentYear - birthYear
     }
 
-    fun updateData(newList: List<SeniorData>) {
+    fun updateData(newList: List<SeniorReadResponse>) {
         seniorList = newList
-        notifyDataSetChanged() // 🚀 데이터 변경 후 UI 갱신
+        notifyDataSetChanged() // 데이터 변경 후 UI 갱신
     }
 }

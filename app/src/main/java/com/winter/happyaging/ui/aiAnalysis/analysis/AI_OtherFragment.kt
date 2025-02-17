@@ -58,24 +58,31 @@ class AI_OtherFragment : BaseRoomFragment(
     private fun sendAnalysisRequest() {
         val token = tokenManager.getAccessToken() ?: ""
         val seniorId = getStoredSeniorId()
-        if (token.isEmpty() || seniorId == -1) {
+
+        if (token.isEmpty() || seniorId == -1L) {
             Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
             return
         }
 
         // 각 방의 모든 가이드 이미지들을 합쳐서 RoomRequest 생성
         val allRooms = imageManager.getAllImageData()
+        Log.d("sendAnalysisRequest", "모든 방의 이미지 데이터: $allRooms")
+
         val roomRequests: List<RoomRequest> = allRooms.values.map { info ->
             val allImages = mutableListOf<String>()
             allImages.addAll(info.guide1.filter { it.isNotEmpty() })
             allImages.addAll(info.guide2.filter { it.isNotEmpty() })
             allImages.addAll(info.guide3.filter { it.isNotEmpty() })
+            Log.d("sendAnalysisRequest", "방: ${info.roomName}, 합쳐진 이미지 리스트: $allImages")
+
             RoomRequest(
                 roomName = info.roomName,
                 roomCategory = getRoomCategory(info.roomName),
                 roomImages = allImages
             )
         }
+
+        Log.d("sendAnalysisRequest", "생성된 RoomRequest 리스트: $roomRequests")
 
         binding.loadingLayout.visibility = View.VISIBLE
         binding.mainContent.visibility = View.GONE
@@ -114,9 +121,9 @@ class AI_OtherFragment : BaseRoomFragment(
         findNavController().navigate(R.id.action_AIOtherFragment_to_AnalysisResultFragment)
     }
 
-    private fun getStoredSeniorId(): Int {
+    private fun getStoredSeniorId(): Long {
         val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getInt("seniorId", -1)
+        return sharedPreferences.getLong("seniorId", -1L)
     }
 
     private fun getRoomCategory(roomName: String): String {

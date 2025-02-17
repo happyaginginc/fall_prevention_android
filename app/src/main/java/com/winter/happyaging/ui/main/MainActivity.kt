@@ -14,7 +14,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.statusBarColor = Color.parseColor("#B8660E")
-//        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {

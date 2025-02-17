@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.winter.happyaging.ImageManager
 import com.winter.happyaging.R
 import com.winter.happyaging.databinding.FragmentAiFirstBinding
+import com.winter.happyaging.network.ImageManager
 
 class AIIntroFragment : Fragment() {
 

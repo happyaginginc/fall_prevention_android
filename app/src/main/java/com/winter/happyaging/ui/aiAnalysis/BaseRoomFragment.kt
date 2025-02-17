@@ -18,12 +18,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.winter.happyaging.ImageManager
 import com.winter.happyaging.R
 import com.winter.happyaging.data.aiAnalysis.model.RoomData
 import com.winter.happyaging.data.image.model.ImageResponse
 import com.winter.happyaging.data.image.service.ImageService
 import com.winter.happyaging.databinding.FragmentAiRoomBinding
+import com.winter.happyaging.network.ImageManager
 import com.winter.happyaging.network.RetrofitClient
 import com.winter.happyaging.ui.aiAnalysis.adapter.RoomAdapter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -245,7 +245,10 @@ abstract class BaseRoomFragment(
     }
 
     private fun saveImageToLocalDataStore(imageUrl: String) {
+
+        Log.d("Save Image Logggg", "$selectedRoomIndex")
         val roomName = roomList[selectedRoomIndex].name
+        Log.d("Save Image Logggg", roomName)
         // 저장: 선택된 가이드(selectedGuideIndex)에 이미지 추가
         imageManager.saveImageData(roomName, selectedGuideIndex, imageUrl)
         // 해당 방 데이터 업데이트

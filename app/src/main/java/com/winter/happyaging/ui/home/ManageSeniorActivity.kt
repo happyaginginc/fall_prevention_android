@@ -1,5 +1,6 @@
 package com.winter.happyaging.ui.home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -31,6 +32,7 @@ class ManageSeniorActivity : AppCompatActivity() {
         cameraBtn = findViewById(R.id.cameraBtn)
         backBtn = findViewById(R.id.btnBack)
 
+        val seniorId = intent.getLongExtra("seniorId", -1L)
         val name = intent.getStringExtra("name") ?: "이름 없음"
         val address = intent.getStringExtra("address") ?: "주소 없음"
         val birthYear = intent.getIntExtra("birthYear", -1)
@@ -41,6 +43,11 @@ class ManageSeniorActivity : AppCompatActivity() {
         tvAge.text = if (birthYear > 1900) "나이: ${calculateAge(birthYear)}세" else "나이 정보 없음"
 
         Log.d("ManageSeniorActivity", "관리하기 버튼 클릭됨 - $name")
+
+        getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            .edit()
+            .putLong("seniorId", seniorId)
+            .apply()
 
         balanceBtn.setOnClickListener {
             val intent = Intent(this, SurveyReadyActivity::class.java)

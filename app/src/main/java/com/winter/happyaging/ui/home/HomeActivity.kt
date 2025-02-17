@@ -1,16 +1,14 @@
 package com.winter.happyaging.ui.home
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.winter.happyaging.R
-import com.winter.happyaging.data.senior.SeniorService
-import com.winter.happyaging.data.senior.model.SeniorData
+import com.winter.happyaging.data.senior.model.SeniorReadResponse
+import com.winter.happyaging.data.senior.service.SeniorService
+import com.winter.happyaging.databinding.ActivityHomeBinding
 import com.winter.happyaging.network.RetrofitClient
 import com.winter.happyaging.network.model.ApiResponse
 import com.winter.happyaging.ui.home.adapter.SeniorAdapter
@@ -20,61 +18,46 @@ import retrofit2.Response
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var seniorAdapter: SeniorAdapter
-    private lateinit var btnRegisterSenior: Button
+    private lateinit var binding: ActivityHomeBinding
+    private val seniorAdapter = SeniorAdapter(emptyList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.statusBarColor = Color.parseColor("#B8660E")
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        recyclerView = findViewById(R.id.recyclerSenior)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        seniorAdapter = SeniorAdapter(emptyList()) { selectedSenior ->
-            val intent = Intent(this, ManageSeniorActivity::class.java).apply {
-                putExtra("name", selectedSenior.name)
-                putExtra("address", selectedSenior.address)
-                putExtra("birthYear", selectedSenior.birthYear)
-                putExtra("sex", selectedSenior.sex)
-                putExtra("phoneNumber", selectedSenior.phoneNumber)
-                putExtra("relationship", selectedSenior.relationship)
-                putExtra("memo", selectedSenior.memo)
-            }
-            startActivity(intent)
+        with(binding.recyclerSenior) {
+            layoutManager = LinearLayoutManager(this@HomeActivity)
+            adapter = seniorAdapter
         }
-        recyclerView.adapter = seniorAdapter
 
         fetchSeniorData()
 
-        btnRegisterSenior = findViewById(R.id.btnRegisterSenior)
-
-        btnRegisterSenior.setOnClickListener {
-            val fragment = RegisterSeniorFragment()
+        binding.btnRegisterSenior.setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer2, fragment) // 프래그먼트 교체
-                .addToBackStack(null) // 뒤로 가기 가능하게 설정
+                .replace(R.id.fragmentContainer2, RegisterSeniorFragment())
+                .addToBackStack(null)
                 .commit()
         }
     }
 
     fun fetchSeniorData() {
         val seniorService = RetrofitClient.getInstance(this).create(SeniorService::class.java)
-        seniorService.getSeniorAllList().enqueue(object : Callback<ApiResponse<List<SeniorData>>> {
-            override fun onResponse(call: Call<ApiResponse<List<SeniorData>>>, response: Response<ApiResponse<List<SeniorData>>>) {
+        seniorService.getSeniorAllList().enqueue(object : Callback<ApiResponse<List<SeniorReadResponse>>> {
+            override fun onResponse(
+                call: Call<ApiResponse<List<SeniorReadResponse>>>,
+                response: Response<ApiResponse<List<SeniorReadResponse>>>
+            ) {
                 if (response.isSuccessful) {
-                    val apiResponse = response.body()
-                    val seniorList = apiResponse?.data ?: emptyList()
-
+                    val seniorList = response.body()?.data.orEmpty()
                     Log.d("HomeActivity", "받아온 시니어 리스트: $seniorList")
                     seniorAdapter.updateData(seniorList)
                 } else {
                     Log.e("HomeActivity", "API 호출 실패 - 상태 코드: ${response.code()}")
                 }
             }
-
-            override fun onFailure(call: Call<ApiResponse<List<SeniorData>>>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponse<List<SeniorReadResponse>>>, t: Throwable) {
                 Log.e("HomeActivity", "네트워크 오류: ${t.message}")
             }
         })

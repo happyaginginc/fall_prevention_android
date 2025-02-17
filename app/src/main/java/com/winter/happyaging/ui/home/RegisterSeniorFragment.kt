@@ -1,20 +1,16 @@
 package com.winter.happyaging.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.winter.happyaging.R
-import com.winter.happyaging.data.senior.SeniorService
-import com.winter.happyaging.data.senior.model.SeniorData
-import com.winter.happyaging.data.senior.model.SeniorResponse
+import com.winter.happyaging.data.senior.model.SeniorCreateRequest
+import com.winter.happyaging.data.senior.model.SeniorCreateResponse
+import com.winter.happyaging.data.senior.service.SeniorService
+import com.winter.happyaging.databinding.FragmentRegisterSeniorBinding
 import com.winter.happyaging.network.RetrofitClient
 import com.winter.happyaging.network.TokenManager
 import retrofit2.Call
@@ -23,121 +19,87 @@ import retrofit2.Response
 
 class RegisterSeniorFragment : Fragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_register_senior, container, false)
+    private var _binding: FragmentRegisterSeniorBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentRegisterSeniorBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val edtName = view.findViewById<EditText>(R.id.edtName)
-        val edtAddress = view.findViewById<EditText>(R.id.edtAddress)
-        val edtBirthYear = view.findViewById<EditText>(R.id.edtBirthYear)
-        val edtPhoneNumber = view.findViewById<EditText>(R.id.edtPhone)
-        val edtMemo = view.findViewById<EditText>(R.id.edtMemo)
-
-        val spinnerSex = view.findViewById<Spinner>(R.id.spinnerSex)
-        val spinnerRelationship = view.findViewById<Spinner>(R.id.spinnerRelationship)
-        val fabRegister = view.findViewById<ExtendedFloatingActionButton>(R.id.fabRegister)
-
         val sexOptions = listOf("MALE", "FEMALE")
         val relationshipOptions = listOf("SELF", "FAMILY", "ETC")
+        binding.spinnerSex.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, sexOptions)
+        binding.spinnerRelationship.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, relationshipOptions)
 
-        val sexAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, sexOptions)
-        spinnerSex.adapter = sexAdapter
+        binding.fabRegister.setOnClickListener {
+            val name = binding.edtName.text.toString().trim()
+            val address = binding.edtAddress.text.toString().trim()
+            val birthYearText = binding.edtBirthYear.text.toString().trim()
+            val phoneNumber = binding.edtPhone.text.toString().trim()
+            val memo = binding.edtMemo.text.toString().trim()
+            val sex = binding.spinnerSex.selectedItem.toString().trim()
+            val relationship = binding.spinnerRelationship.selectedItem.toString().trim()
 
-        val relationshipAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, relationshipOptions)
-        spinnerRelationship.adapter = relationshipAdapter
-
-        // 등록 버튼 클릭 이벤트
-        fabRegister.setOnClickListener {
-            val name = edtName.text?.toString()?.trim() ?: ""
-            val address = edtAddress.text?.toString()?.trim() ?: ""
-            val birthYearText = edtBirthYear.text?.toString()?.trim() ?: ""
-            val phoneNumber = edtPhoneNumber.text?.toString()?.trim() ?: ""
-            val memo = edtMemo.text?.toString()?.trim() ?: ""
-
-            val formattedPhoneNumber = formatPhoneNumber(phoneNumber)
-
-            val sex = spinnerSex.selectedItem?.toString()?.trim() ?: "MALE"
-            val relationship = spinnerRelationship.selectedItem?.toString()?.trim() ?: "SELF"
-
-            // 필수 값 검증 (이름, 주소, 출생년도, 성별, 관계, 전화번호)
-            if (name.isEmpty() || address.isEmpty() || birthYearText.isEmpty() || phoneNumber.isEmpty() || sex.isEmpty() || relationship.isEmpty()) {
+            if (name.isEmpty() || address.isEmpty() || birthYearText.isEmpty() || phoneNumber.isEmpty()) {
                 Toast.makeText(requireContext(), "모든 필수 정보를 입력해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // 출생년도 숫자 변환 검증
             val birthYear = birthYearText.toIntOrNull()
             if (birthYear == null || birthYear < 1900 || birthYear > 2100) {
                 Toast.makeText(requireContext(), "올바른 출생년도를 입력해주세요 (예: 2000)", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            Log.d("RegisterSeniorFragment", "보내는 데이터 - name: $name, address: $address, birthYear: $birthYear, sex: $sex, phoneNumber: $formattedPhoneNumber, relationship: $relationship, memo: $memo")
-
-            // SeniorRequest 객체 생성 (Sex & Relationship을 String으로 저장)
-            val data = SeniorData(
+            val formattedPhoneNumber = formatPhoneNumber(phoneNumber)
+            val requestData = SeniorCreateRequest(
                 name = name,
                 address = address,
                 birthYear = birthYear,
-                sex = sex, // String으로 저장
+                sex = sex,
                 phoneNumber = formattedPhoneNumber,
-                relationship = relationship, // String으로 저장
+                relationship = relationship,
                 memo = memo
             )
-
-            sendSeniorRequest(data)
+            sendSeniorRequest(requestData)
         }
     }
 
-    private fun sendSeniorRequest(request: SeniorData) { // 서버로 데이터 보내기
+    private fun sendSeniorRequest(request: SeniorCreateRequest) {
         val seniorService = RetrofitClient.getInstance(requireContext()).create(SeniorService::class.java)
-
         val tokenManager = TokenManager(requireContext())
-        val accessToken = tokenManager.getAccessToken()
-        Log.d("RegisterSeniorFragment", "사용자 Access Token: $accessToken")
-
-        seniorService.registerSenior(request).enqueue(object : Callback<SeniorResponse> {
-            override fun onResponse(call: Call<SeniorResponse>, response: Response<SeniorResponse>) {
-                Log.d("RegisterSeniorFragment", "서버 응답 코드: ${response.code()}")
-                Log.d("RegisterSeniorFragment", "서버 응답 바디: ${response.body()?.toString()}")
-                Log.d("RegisterSeniorFragment", "서버 에러 바디: ${response.errorBody()?.string()}")
-
+        // 로그를 통해 토큰 확인 가능
+        seniorService.registerSenior(request).enqueue(object : Callback<SeniorCreateResponse> {
+            override fun onResponse(call: Call<SeniorCreateResponse>, response: Response<SeniorCreateResponse>) {
                 if (response.isSuccessful) {
                     Toast.makeText(requireContext(), "시니어 등록 성공!", Toast.LENGTH_SHORT).show()
                     requireActivity().supportFragmentManager.popBackStack()
-
-                    // 데이터 갱신 요청
                     (requireActivity() as? HomeActivity)?.fetchSeniorData()
                 } else {
                     Toast.makeText(requireContext(), "등록 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
             }
-
-            override fun onFailure(call: Call<SeniorResponse>, t: Throwable) {
-                Log.e("RegisterSeniorFragment", "네트워크 오류 발생: ${t.message}")
+            override fun onFailure(call: Call<SeniorCreateResponse>, t: Throwable) {
                 Toast.makeText(requireContext(), "네트워크 오류 발생", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
     private fun formatPhoneNumber(input: String): String {
-        val cleaned = input.replace(Regex("[^0-9]"), "") // 숫자만 남김
-        return when {
-            cleaned.length == 10 -> cleaned.replace(Regex("(\\d{3})(\\d{3})(\\d{4})"), "$1-$2-$3")
-            cleaned.length == 11 -> cleaned.replace(Regex("(\\d{3})(\\d{4})(\\d{4})"), "$1-$2-$3")
-            else -> input // 올바르지 않은 경우 원본 유지
+        val cleaned = input.replace(Regex("[^0-9]"), "")
+        return when (cleaned.length) {
+            10 -> cleaned.replace(Regex("(\\d{3})(\\d{3})(\\d{4})"), "$1-$2-$3")
+            11 -> cleaned.replace(Regex("(\\d{3})(\\d{4})(\\d{4})"), "$1-$2-$3")
+            else -> input
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("RegisterSeniorFragment", "RegisterSeniorFragment 제거됨")
+        _binding = null
     }
-
 }

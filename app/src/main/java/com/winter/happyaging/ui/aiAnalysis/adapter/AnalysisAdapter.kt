@@ -1,10 +1,13 @@
 package com.winter.happyaging.ui.aiAnalysis.adapter
 
+import android.os.Build
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.winter.happyaging.R
@@ -24,6 +27,7 @@ class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :
         return AnalysisViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: AnalysisViewHolder, position: Int) {
         holder.bind(analysisList[position])
     }
@@ -41,31 +45,26 @@ class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :
         private val fallSummaryTextView: TextView = itemView.findViewById(R.id.fallSummaryTextView)
         private val fallRiskTextView: TextView = itemView.findViewById(R.id.fallRiskTextView)
 
+        @RequiresApi(Build.VERSION_CODES.N)
         fun bind(room: RoomAIPrompt) {
             roomNameTextView.text = room.roomName
 
             fallSummaryTextView.text = room.responseDto.fallSummaryDescription
-            fallRiskTextView.text = """
-                <바닥 상태>
-                ${room.responseDto.fallAnalysis.floorCondition}
 
-                <장애물>
-                ${room.responseDto.fallAnalysis.obstacles}
-
-                <기타 요인>
-                ${room.responseDto.fallAnalysis.otherFactors}
+            val riskDetails = """
+                <b>바닥 상태:</b> ${room.responseDto.fallAnalysis.floorCondition}<br><br>
+                <b>장애물:</b> ${room.responseDto.fallAnalysis.obstacles}<br><br>
+                <b>기타 요인:</b> ${room.responseDto.fallAnalysis.otherFactors}
             """.trimIndent()
+            fallRiskTextView.text = Html.fromHtml(riskDetails, Html.FROM_HTML_MODE_LEGACY)
 
             Log.d(TAG, "🔍 받은 이미지 이름 리스트: ${room.images}")
 
-            // Base URL과 합쳐 최종 이미지 URL 리스트 생성
             val fullUrls = room.images.map { imageName -> "$BASE_IMAGE_URL$imageName" }
 
-            // RecyclerView를 가로로 스크롤 가능하도록 설정
             imagesRecyclerView.layoutManager =
                 LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
-            // ImageListAdapter를 이용해 가로 스크롤 이미지들 표시
             imagesRecyclerView.adapter = ImageListAdapter(fullUrls)
         }
     }
