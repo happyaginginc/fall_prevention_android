@@ -1,7 +1,6 @@
 package com.winter.happyaging.ui.aiAnalysis.analysis
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -34,26 +33,24 @@ class AI_OtherFragment : BaseRoomFragment(
         super.onViewCreated(view, savedInstanceState)
         tokenManager = TokenManager(requireContext())
 
-        // "기타"는 마지막 단계이므로 '다음' 대신 '분석 시작'으로 텍스트 변경
         binding.nextButton.text = "분석 시작"
-        binding.nextButton.setOnClickListener {
-            sendAnalysisRequest()
-        }
+        binding.nextButton.setOnClickListener { sendAnalysisRequest() }
 
         loadStoredImages()
     }
 
-    /**
-     * BaseRoomFragment의 기본 기능(방/이미지) + 서버 분석 요청 로직
-     */
-
     private fun loadStoredImages() {
-        // 기존에 저장된 로컬 이미지를 복원하여 미리보기 갱신
+        // 각 방에 대해 ImageManager에서 RoomImageInfo를 가져와 복원
         for (room in roomList) {
             val storedImages = imageManager.getImageData(room.name)
-            room.imageUri1 = storedImages.getOrNull(0)?.takeIf { it.isNotEmpty() }?.let { Uri.parse(it) }
-            room.imageUri2 = storedImages.getOrNull(1)?.takeIf { it.isNotEmpty() }?.let { Uri.parse(it) }
-            room.imageUri3 = storedImages.getOrNull(2)?.takeIf { it.isNotEmpty() }?.let { Uri.parse(it) }
+            storedImages?.let { info ->
+                room.guide1Images.clear()
+                room.guide1Images.addAll(info.guide1.filter { it.isNotEmpty() })
+                room.guide2Images.clear()
+                room.guide2Images.addAll(info.guide2.filter { it.isNotEmpty() })
+                room.guide3Images.clear()
+                room.guide3Images.addAll(info.guide3.filter { it.isNotEmpty() })
+            }
         }
         binding.roomRecyclerView.adapter?.notifyDataSetChanged()
     }
@@ -61,22 +58,25 @@ class AI_OtherFragment : BaseRoomFragment(
     private fun sendAnalysisRequest() {
         val token = tokenManager.getAccessToken() ?: ""
         val seniorId = getStoredSeniorId()
-
         if (token.isEmpty() || seniorId == -1) {
             Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
             return
         }
 
+        // 각 방의 모든 가이드 이미지들을 합쳐서 RoomRequest 생성
         val allRooms = imageManager.getAllImageData()
-        val roomRequests: List<RoomRequest> = allRooms.values.map { room ->
+        val roomRequests: List<RoomRequest> = allRooms.values.map { info ->
+            val allImages = mutableListOf<String>()
+            allImages.addAll(info.guide1.filter { it.isNotEmpty() })
+            allImages.addAll(info.guide2.filter { it.isNotEmpty() })
+            allImages.addAll(info.guide3.filter { it.isNotEmpty() })
             RoomRequest(
-                roomName = room.roomName,
-                roomCategory = getRoomCategory(room.roomName),
-                roomImages = room.imageUrls.filter { it.isNotEmpty() }
+                roomName = info.roomName,
+                roomCategory = getRoomCategory(info.roomName),
+                roomImages = allImages
             )
         }
 
-        // 로딩 표시
         binding.loadingLayout.visibility = View.VISIBLE
         binding.mainContent.visibility = View.GONE
 
@@ -93,7 +93,6 @@ class AI_OtherFragment : BaseRoomFragment(
                 Toast.makeText(requireContext(), "분석 실패: $error", Toast.LENGTH_SHORT).show()
             },
             onComplete = {
-                // 로딩 해제
                 binding.loadingLayout.visibility = View.GONE
                 binding.mainContent.visibility = View.VISIBLE
             }
@@ -112,7 +111,6 @@ class AI_OtherFragment : BaseRoomFragment(
     }
 
     private fun handleAnalysisSuccess() {
-        // 분석 완료 시 결과 화면으로 이동
         findNavController().navigate(R.id.action_AIOtherFragment_to_AnalysisResultFragment)
     }
 
@@ -133,9 +131,7 @@ class AI_OtherFragment : BaseRoomFragment(
         }
     }
 
-    // BaseRoomFragment의 onNextButtonClick은 사용하지 않음
     override fun onNextButtonClick() {
-        // 마지막 스텝이므로 별도 처리
         sendAnalysisRequest()
     }
 }

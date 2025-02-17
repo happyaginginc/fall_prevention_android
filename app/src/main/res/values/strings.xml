@@ -34,4 +34,6 @@
     <string name="password_send_success_message">%1$s\n비밀번호가 메일로 발송되었습니다.</string>
     <string name="password_send_fail_title">비밀번호 발송 실패</string>
     <string name="password_send_fail_message">해당 이메일에 대한 정보를 찾을 수 없습니다.</string>
+    <string name="image_preview">업로드된 이미지 미리보기</string>
+    <string name="base_image_url">https://api.happy-aging.co.kr/storage/images/</string>
 </resources>

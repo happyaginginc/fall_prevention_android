@@ -2,23 +2,27 @@ package com.winter.happyaging.ui.aiAnalysis.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.winter.happyaging.R
 import com.winter.happyaging.data.aiAnalysis.model.RoomData
 import com.winter.happyaging.databinding.ItemRoomBinding
 
 class RoomAdapter(
     private val roomList: MutableList<RoomData>,
-    private val onCameraClick: (position: Int, cameraNumber: Int) -> Unit,
+    // 콜백: 각 가이드별 이미지 추가 시 (방 인덱스, 가이드 인덱스)
+    private val onAddImageClick: (roomPosition: Int, guideIndex: Int) -> Unit,
+    // 콜백: 각 가이드별 이미지 삭제 시 (방 인덱스, 가이드 인덱스, imagePosition)
+    private val onDeleteImageClick: (roomPosition: Int, guideIndex: Int, imagePosition: Int) -> Unit,
+    // 방 추가 및 삭제
     private val onAddRoomClick: (position: Int) -> Unit,
     private val onDeleteRoomClick: (position: Int) -> Unit
 ) : RecyclerView.Adapter<RoomAdapter.RoomViewHolder>() {
 
     companion object {
         private const val TAG = "RoomAdapter"
+        // BASE_IMAGE_URL는 RoomImageAdapter 내부에서 사용하므로 RoomAdapter는 단순 전달
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
@@ -34,54 +38,46 @@ class RoomAdapter(
 
     inner class RoomViewHolder(private val binding: ItemRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(room: RoomData, position: Int) {
-            // 방 이름
             binding.roomName.setText(room.name)
 
-            // 이미지 3개에 Glide로 미리보기
-            Glide.with(binding.root)
-                .load(room.imageUri1)
-                .placeholder(R.drawable.preview)
-                .into(binding.preview1)
-
-            Glide.with(binding.root)
-                .load(room.imageUri2)
-                .placeholder(R.drawable.preview)
-                .into(binding.preview2)
-
-            Glide.with(binding.root)
-                .load(room.imageUri3)
-                .placeholder(R.drawable.preview)
-                .into(binding.preview3)
-
-            // 방이 하나뿐이면 삭제 버튼 숨기기
-            binding.DeleteRoomButton.visibility = if (roomList.size > 1) View.VISIBLE else View.GONE
-
-            // 카메라 버튼 리스너
-            binding.btnCamera1.setOnClickListener {
-                Log.d(TAG, "btnCamera1 클릭됨 - 방 번호: ${position + 1}")
-                onCameraClick(position, 1)
+            // 설정: 각 가이드별 RecyclerView 초기화
+            // (가이드1: 방문이 있는 벽면에서…, 가이드2: 방문과 마주보는 벽면에서…, 가이드3: 방 밖에서 방문을 향해서)
+            binding.rvGuide1.apply {
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = RoomImageAdapter(
+                    imageList = room.guide1Images,
+                    baseImageUrl = context.getString(R.string.base_image_url),
+                    onAddClick = { onAddImageClick(adapterPosition, 1) },
+                    onDeleteClick = { imagePos -> onDeleteImageClick(adapterPosition, 1, imagePos) }
+                )
             }
-            binding.btnCamera2.setOnClickListener {
-                Log.d(TAG, "btnCamera2 클릭됨 - 방 번호: ${position + 1}")
-                onCameraClick(position, 2)
+            binding.rvGuide2.apply {
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = RoomImageAdapter(
+                    imageList = room.guide2Images,
+                    baseImageUrl = context.getString(R.string.base_image_url),
+                    onAddClick = { onAddImageClick(adapterPosition, 2) },
+                    onDeleteClick = { imagePos -> onDeleteImageClick(adapterPosition, 2, imagePos) }
+                )
             }
-            binding.btnCamera3.setOnClickListener {
-                Log.d(TAG, "btnCamera3 클릭됨 - 방 번호: ${position + 1}")
-                onCameraClick(position, 3)
+            binding.rvGuide3.apply {
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = RoomImageAdapter(
+                    imageList = room.guide3Images,
+                    baseImageUrl = context.getString(R.string.base_image_url),
+                    onAddClick = { onAddImageClick(adapterPosition, 3) },
+                    onDeleteClick = { imagePos -> onDeleteImageClick(adapterPosition, 3, imagePos) }
+                )
             }
 
-            // 방 추가 버튼
+            // 방 추가/삭제 버튼
             binding.AddRoomButton.setOnClickListener {
                 Log.d(TAG, "방 추가 버튼 클릭됨 - 현재 방 개수: ${roomList.size}")
                 onAddRoomClick(position)
             }
-
-            // 방 삭제 버튼
             binding.DeleteRoomButton.setOnClickListener {
                 Log.d(TAG, "방 삭제 버튼 클릭됨 - 방 번호: ${position + 1}")
-                if (roomList.size > 1) {
-                    onDeleteRoomClick(position)
-                }
+                if (roomList.size > 1) onDeleteRoomClick(position)
             }
         }
     }
