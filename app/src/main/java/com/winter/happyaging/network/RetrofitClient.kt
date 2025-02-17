@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 class RetrofitClient private constructor() {
 
     companion object {
-        private const val BASE_URL = "http://3.37.58.59/"
+        private const val BASE_URL = "https://api.happy-aging.co.kr/"
         @Volatile
         private var retrofit: Retrofit? = null
 
@@ -32,9 +32,9 @@ class RetrofitClient private constructor() {
             val client = OkHttpClient.Builder()
                 .addInterceptor(AuthInterceptor(context))
                 .addInterceptor(logging)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(100, TimeUnit.SECONDS)
+                .writeTimeout(100, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .build()
 

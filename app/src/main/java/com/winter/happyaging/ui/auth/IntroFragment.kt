@@ -12,9 +12,6 @@ import com.winter.happyaging.ui.auth.login.LoginFragment
 import com.winter.happyaging.ui.auth.register.RegisterFragment
 import com.winter.happyaging.ui.main.MainActivity
 
-/**
- * 앱 첫 화면 (로그인/회원가입 선택) 담당
- */
 class IntroFragment : Fragment() {
 
     override fun onCreateView(

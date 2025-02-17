@@ -27,6 +27,10 @@ class AIFirstFragment : Fragment() {
         binding.btnStartAnalysis.setOnClickListener {
             view.findNavController().navigate(R.id.action_AIFirstFragment_to_AISecondFragment)
         }
+
+        binding.btnBack.setOnClickListener {
+            view.findNavController().popBackStack()
+        }
     }
 
     override fun onDestroyView() {

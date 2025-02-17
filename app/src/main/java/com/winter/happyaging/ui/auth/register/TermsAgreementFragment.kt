@@ -9,9 +9,6 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.winter.happyaging.R
 
-/**
- * 약관 동의 화면
- */
 class TermsAgreementFragment : Fragment() {
 
     override fun onCreateView(

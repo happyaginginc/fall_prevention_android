@@ -9,9 +9,6 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.winter.happyaging.R
 
-/**
- * 이메일/비밀번호 찾기 화면 (Mock 예제)
- */
 class FindAccountFragment : Fragment() {
 
     private lateinit var edtFindEmailName: EditText

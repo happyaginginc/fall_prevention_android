@@ -3,6 +3,7 @@ package com.winter.happyaging.ui.home
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,7 @@ class ManageSeniorActivity : AppCompatActivity() {
     private lateinit var tvAge: TextView
     private lateinit var balanceBtn: LinearLayout
     private lateinit var cameraBtn: LinearLayout
+    private lateinit var backBtn: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,7 @@ class ManageSeniorActivity : AppCompatActivity() {
         tvAge = findViewById(R.id.tvSeniorAge2)
         balanceBtn = findViewById(R.id.balanceBtn)
         cameraBtn = findViewById(R.id.cameraBtn)
+        backBtn = findViewById(R.id.btnBack)
 
         val name = intent.getStringExtra("name") ?: "이름 없음"
         val address = intent.getStringExtra("address") ?: "주소 없음"
@@ -47,6 +50,10 @@ class ManageSeniorActivity : AppCompatActivity() {
         cameraBtn.setOnClickListener {
             val intent = Intent(this, AIAnalysisActivity::class.java)
             startActivity(intent)
+        }
+
+        backBtn.setOnClickListener{
+            finish()
         }
     }
 
