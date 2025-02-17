@@ -14,8 +14,8 @@ import com.winter.happyaging.R
 import com.winter.happyaging.data.auth.model.request.RegisterRequest
 import com.winter.happyaging.data.auth.model.response.RegisterResponse
 import com.winter.happyaging.data.auth.service.AuthService
-import com.winter.happyaging.ui.auth.login.LoginFragment
 import com.winter.happyaging.network.RetrofitClient
+import com.winter.happyaging.ui.auth.login.LoginFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

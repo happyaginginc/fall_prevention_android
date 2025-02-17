@@ -18,9 +18,9 @@ import com.winter.happyaging.ImageManager
 import com.winter.happyaging.R
 import com.winter.happyaging.data.aiAnalysis.model.RoomData
 import com.winter.happyaging.data.image.model.ImageResponse
+import com.winter.happyaging.data.image.service.ImageService
 import com.winter.happyaging.databinding.FragmentAiRoomBinding
 import com.winter.happyaging.network.RetrofitClient
-import com.winter.happyaging.data.image.service.ImageService
 import com.winter.happyaging.ui.aiAnalysis.adapter.RoomAdapter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

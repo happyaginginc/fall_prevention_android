@@ -1,9 +1,9 @@
 package com.winter.happyaging.data.senior
 
-import com.winter.happyaging.network.model.ApiResponse
-import com.winter.happyaging.data.senior.model.SeniorResponse
 import com.winter.happyaging.data.senior.model.SeniorData
 import com.winter.happyaging.data.senior.model.SeniorData2
+import com.winter.happyaging.data.senior.model.SeniorResponse
+import com.winter.happyaging.network.model.ApiResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

@@ -12,11 +12,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.winter.happyaging.R
-import com.winter.happyaging.data.senior.model.SeniorResponse
+import com.winter.happyaging.data.senior.SeniorService
 import com.winter.happyaging.data.senior.model.SeniorData
+import com.winter.happyaging.data.senior.model.SeniorResponse
 import com.winter.happyaging.network.RetrofitClient
 import com.winter.happyaging.network.TokenManager
-import com.winter.happyaging.data.senior.SeniorService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

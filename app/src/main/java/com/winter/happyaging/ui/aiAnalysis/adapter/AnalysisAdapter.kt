@@ -8,8 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.winter.happyaging.R
-import com.winter.happyaging.data.aiAnalysis.model.FallAnalysis
-import com.winter.happyaging.data.aiAnalysis.model.ResponseDto
 import com.winter.happyaging.data.aiAnalysis.model.RoomAIPrompt
 
 class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :

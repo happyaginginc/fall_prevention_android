@@ -1,11 +1,11 @@
 package com.winter.happyaging.data.auth.service
 
-import com.winter.happyaging.network.security.model.RefreshTokenResponse
-import com.winter.happyaging.data.auth.model.response.UserInfoResponse
 import com.winter.happyaging.data.auth.model.request.LoginRequest
 import com.winter.happyaging.data.auth.model.request.RegisterRequest
 import com.winter.happyaging.data.auth.model.response.LoginResponse
 import com.winter.happyaging.data.auth.model.response.RegisterResponse
+import com.winter.happyaging.data.auth.model.response.UserInfoResponse
+import com.winter.happyaging.network.security.model.RefreshTokenResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

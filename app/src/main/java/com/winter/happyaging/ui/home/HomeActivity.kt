@@ -9,11 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.winter.happyaging.R
-import com.winter.happyaging.network.model.ApiResponse
-import com.winter.happyaging.ui.home.adapter.SeniorAdapter
+import com.winter.happyaging.data.senior.SeniorService
 import com.winter.happyaging.data.senior.model.SeniorData
 import com.winter.happyaging.network.RetrofitClient
-import com.winter.happyaging.data.senior.SeniorService
+import com.winter.happyaging.network.model.ApiResponse
+import com.winter.happyaging.ui.home.adapter.SeniorAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

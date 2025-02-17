@@ -12,8 +12,8 @@ import com.google.gson.Gson
 import com.winter.happyaging.R
 import com.winter.happyaging.data.aiAnalysis.model.AiAnalysisResponse
 import com.winter.happyaging.data.aiAnalysis.model.RoomRequest
-import com.winter.happyaging.network.TokenManager
 import com.winter.happyaging.data.aiAnalysis.repository.AiAnalysisRepository
+import com.winter.happyaging.network.TokenManager
 import kotlinx.coroutines.launch
 
 class AIFourthFragment :

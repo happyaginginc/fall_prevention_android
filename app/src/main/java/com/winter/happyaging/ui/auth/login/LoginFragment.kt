@@ -15,11 +15,11 @@ import com.winter.happyaging.R
 import com.winter.happyaging.data.auth.model.request.LoginRequest
 import com.winter.happyaging.data.auth.model.response.LoginResponse
 import com.winter.happyaging.data.auth.service.AuthService
+import com.winter.happyaging.network.RetrofitClient
+import com.winter.happyaging.network.TokenManager
 import com.winter.happyaging.ui.auth.findAccount.FindAccountFragment
 import com.winter.happyaging.ui.auth.register.RegisterFragment
 import com.winter.happyaging.ui.home.HomeActivity
-import com.winter.happyaging.network.RetrofitClient
-import com.winter.happyaging.network.TokenManager
 import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
