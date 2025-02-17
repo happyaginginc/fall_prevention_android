@@ -13,6 +13,7 @@ data class RoomAIData(
 data class RoomAIPrompt(
     val roomAIPromptId: Int,
     val responseDto: ResponseDto,
+    val roomName: String,
     val roomCategory: String,
     val images: List<String>
 )
