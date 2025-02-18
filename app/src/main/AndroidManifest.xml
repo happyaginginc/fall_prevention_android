@@ -40,7 +40,7 @@
             android:exported="false"
             android:label="Home" />
 
-        <activity android:name=".ui.home.ManageSeniorActivity"
+        <activity android:name=".ui.home.senior.ManageSeniorActivity"
             android:exported="false"/>
         <activity
             android:name=".ui.aiAnalysis.AIAnalysisActivity"

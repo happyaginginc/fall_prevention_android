@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.home
+package com.winter.happyaging.ui.home.senior
 
 import android.os.Bundle
 import android.text.Editable
@@ -43,7 +43,7 @@ class RegisterSeniorFragment : Fragment() {
         binding.spinnerRelationship.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, relationshipOptions)
 
         val headerTitle: TextView = view.findViewById(R.id.tvHeader)
-        headerTitle.text = "시니어 등록하기"
+        headerTitle.text = "시니어 관리"
 
         binding.header.btnBack.setOnClickListener {
 //            requireActivity().finish()

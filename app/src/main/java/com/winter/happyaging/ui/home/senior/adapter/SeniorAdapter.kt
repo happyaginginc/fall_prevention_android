@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.home.adapter
+package com.winter.happyaging.ui.home.senior.adapter
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.winter.happyaging.data.senior.model.SeniorReadResponse
 import com.winter.happyaging.databinding.ItemSeniorBinding
-import com.winter.happyaging.ui.home.ManageSeniorActivity
+import com.winter.happyaging.ui.home.senior.ManageSeniorActivity
 import java.util.Calendar
 
 class SeniorAdapter(private var seniorList: List<SeniorReadResponse>) : RecyclerView.Adapter<SeniorAdapter.SeniorViewHolder>() {

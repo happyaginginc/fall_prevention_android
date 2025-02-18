@@ -1,5 +1,4 @@
-// ManageSeniorActivity.kt
-package com.winter.happyaging.ui.home
+package com.winter.happyaging.ui.home.senior
 
 import android.content.Context
 import android.content.Intent

@@ -5,9 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.winter.happyaging.R
 import com.winter.happyaging.data.product.model.ProductResponse
 import com.winter.happyaging.data.product.service.ProductService
 import com.winter.happyaging.databinding.FragmentPreventionGoodsBinding
@@ -37,6 +40,10 @@ class PreventionGoodsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        view.findViewById<ImageView>(R.id.btnBack)?.visibility = View.GONE
+        val headerTitle: TextView = view.findViewById(R.id.tvHeader)
+        headerTitle.text = "낙상 예방 물품"
 
         // RecyclerView 설정
         binding.recyclerProduct.apply {

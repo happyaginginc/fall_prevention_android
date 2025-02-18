@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,8 +16,7 @@ import com.winter.happyaging.data.senior.service.SeniorService
 import com.winter.happyaging.databinding.FragmentSeniorListBinding
 import com.winter.happyaging.network.RetrofitClient
 import com.winter.happyaging.network.model.ApiResponse
-import com.winter.happyaging.ui.home.RegisterSeniorFragment
-import com.winter.happyaging.ui.home.adapter.SeniorAdapter
+import com.winter.happyaging.ui.home.senior.adapter.SeniorAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,6 +40,10 @@ class SeniorListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        view.findViewById<ImageView>(R.id.btnBack)?.visibility = View.GONE
+        val headerTitle: TextView = view.findViewById(R.id.tvHeader)
+        headerTitle.text = "낙상 위험 분석 시작하기"
 
         // RecyclerView 설정
         with(binding.recyclerSenior) {
