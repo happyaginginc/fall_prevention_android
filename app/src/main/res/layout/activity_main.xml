@@ -35,7 +35,7 @@
         android:id="@+id/loginLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="이미 계정이 있으신가요?"
+        android:text="이미 계정이 있으신가요? 로그인"
         android:layout_above="@id/signupButton"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"

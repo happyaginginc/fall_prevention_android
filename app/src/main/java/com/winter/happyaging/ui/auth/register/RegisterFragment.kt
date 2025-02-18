@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
@@ -93,6 +94,14 @@ class RegisterFragment : Fragment() {
 
         val tvPasswordConfirmLabel: TextView = view.findViewById(R.id.tvPasswordConfirmLabel)
         tvPasswordConfirmLabel.text = Html.fromHtml(getString(R.string.password_confirm_label), Html.FROM_HTML_MODE_LEGACY)
+
+        val headerTitle: TextView = view.findViewById(R.id.tvHeader)
+        headerTitle.text = "회원가입"
+
+        val headerBackBtn: ImageView = view.findViewById(R.id.btnBack)
+        headerBackBtn.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
 
         // TextWatcher를 통해 실시간 유효성 검사 적용
         etName.addTextChangedListener(object : TextWatcher {
