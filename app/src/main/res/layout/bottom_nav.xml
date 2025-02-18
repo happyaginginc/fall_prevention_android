@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_nav"
     android:layout_width="match_parent"
     android:layout_height="56dp"
@@ -9,7 +10,7 @@
     android:paddingHorizontal="24dp"
     android:gravity="center">
 
-    <!-- 시니어 목록: 활성화된 메뉴로 처리 (콜백으로 처리 가능) -->
+    <!-- 시니어 목록 -->
     <LinearLayout
         android:id="@+id/nav_senior_list"
         android:layout_width="0dp"
@@ -18,18 +19,19 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_senior_list"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/home_color" />
+            app:srcCompat="@drawable/ic_senior"
+            app:tint="@color/bottom_nav_color" />
 
         <TextView
             android:id="@+id/tv_senior_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="시니어 목록"
-            android:textColor="@color/orange"
+            android:textColor="@color/bottom_nav_color"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -42,17 +44,19 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_knowledge"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/video_emoji" />
+            app:srcCompat="@drawable/ic_knowledge"
+            app:tint="@color/bottom_nav_color" />
 
         <TextView
             android:id="@+id/tv_knowledge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="관련 지식"
+            android:textColor="@color/bottom_nav_color"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -65,17 +69,19 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_prevention_goods"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/shopping_emoji" />
+            app:srcCompat="@drawable/ic_prevention_goods"
+            app:tint="@color/bottom_nav_color" />
 
         <TextView
             android:id="@+id/tv_prevention_goods"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="예방 물품"
+            android:textColor="@color/bottom_nav_color"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -88,17 +94,19 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_prevention_exercise"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/dumbell_emoji" />
+            app:srcCompat="@drawable/ic_prevention_exercise"
+            app:tint="@color/bottom_nav_color" />
 
         <TextView
             android:id="@+id/tv_prevention_exercise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="예방 운동"
+            android:textColor="@color/bottom_nav_color"
             android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>
