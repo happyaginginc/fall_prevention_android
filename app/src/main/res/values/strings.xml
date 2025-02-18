@@ -22,7 +22,7 @@
     <string name="login_fail_server">로그인 실패: %1$s</string>
 
     <!-- "이미 계정이 있으신가요?" 링크 -->
-    <string name="sign_up_string"><u>이미 계정이 있으신가요?</u></string>
+    <string name="sign_up_string">이미 계정이 있으신가요? 로그인</string>
 
     <!-- 이메일/비번 찾기(FindAccount) 관련 -->
     <string name="email_find_success_title">이메일 찾기 완료</string>
@@ -36,4 +36,12 @@
     <string name="password_send_fail_message">해당 이메일에 대한 정보를 찾을 수 없습니다.</string>
     <string name="image_preview">업로드된 이미지 미리보기</string>
     <string name="base_image_url">https://api.happy-aging.co.kr/storage/images/</string>
+
+    <string name="required_note"><![CDATA[<font color="#FF0000">*</font>은 필수 문항입니다.]]></string>
+    <string name="name_label"><![CDATA[이름 <font color="#FF0000">*</font>]]></string>
+    <string name="phone_label"><![CDATA[전화번호 <font color="#FF0000">*</font>]]></string>
+    <string name="email_label"><![CDATA[이메일 <font color="#FF0000">*</font>]]></string>
+    <string name="password_label"><![CDATA[비밀번호 <font color="#FF0000">*</font>]]></string>
+    <string name="password_confirm_label"><![CDATA[비밀번호 확인 <font color="#FF0000">*</font>]]></string>
+
 </resources>

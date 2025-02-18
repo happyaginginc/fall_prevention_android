@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
     <!-- 배경색 -->
-    <solid android:color="#F5F5F5" />
+    <solid android:color="#F9F9F9" />
 
     <!-- 모서리 둥글게 -->
     <corners android:radius="8dp" />
@@ -13,10 +12,10 @@
         android:width="1dp"
         android:color="#DDDDDD" />
 
-    <!-- 패딩 -->
+    <!-- 내부 패딩 (간격 늘리기) -->
     <padding
-        android:left="8dp"
-        android:right="8dp"
-        android:top="4dp"
-        android:bottom="4dp" />
+        android:left="12dp"
+        android:right="12dp"
+        android:top="8dp"
+        android:bottom="8dp" />
 </shape>
