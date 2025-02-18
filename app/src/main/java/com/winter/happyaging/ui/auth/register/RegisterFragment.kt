@@ -56,18 +56,19 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 뷰 초기화
+        // 클래스 프로퍼티에 뷰 할당
+        etName = view.findViewById(R.id.etName)
+        tvNameError = view.findViewById(R.id.tvNameError)
+        etPhoneNumber = view.findViewById(R.id.etPhoneNumber)
+        tvPhoneError = view.findViewById(R.id.tvPhoneError)
+        etEmail = view.findViewById(R.id.etEmail)
+        tvEmailError = view.findViewById(R.id.tvEmailError)
+        etPassword = view.findViewById(R.id.etPassword)
+        tvPasswordError = view.findViewById(R.id.tvPasswordError)
+        etPasswordConfirm = view.findViewById(R.id.etPasswordConfirm)
+        tvPasswordConfirmError = view.findViewById(R.id.tvPasswordConfirmError)
+
         val scrollView: ScrollView = view.findViewById(R.id.scrollView)
-        val etName: EditText = view.findViewById(R.id.etName)
-        val tvNameError: TextView = view.findViewById(R.id.tvNameError)
-        val etPhoneNumber: EditText = view.findViewById(R.id.etPhoneNumber)
-        val tvPhoneError: TextView = view.findViewById(R.id.tvPhoneError)
-        val etEmail: EditText = view.findViewById(R.id.etEmail)
-        val tvEmailError: TextView = view.findViewById(R.id.tvEmailError)
-        val etPassword: EditText = view.findViewById(R.id.etPassword)
-        val tvPasswordError: TextView = view.findViewById(R.id.tvPasswordError)
-        val etPasswordConfirm: EditText = view.findViewById(R.id.etPasswordConfirm)
-        val tvPasswordConfirmError: TextView = view.findViewById(R.id.tvPasswordConfirmError)
         val privacyCheckBox: CheckBox = view.findViewById(R.id.privacyCheckBox)
         val tvPrivacyError: TextView = view.findViewById(R.id.tvPrivacyError)
         val btnSignUp: Button = view.findViewById(R.id.btnSignUp)
@@ -92,8 +93,6 @@ class RegisterFragment : Fragment() {
 
         val tvPasswordConfirmLabel: TextView = view.findViewById(R.id.tvPasswordConfirmLabel)
         tvPasswordConfirmLabel.text = Html.fromHtml(getString(R.string.password_confirm_label), Html.FROM_HTML_MODE_LEGACY)
-
-
 
         // TextWatcher를 통해 실시간 유효성 검사 적용
         etName.addTextChangedListener(object : TextWatcher {

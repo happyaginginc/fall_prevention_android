@@ -6,8 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@android:color/white"
     tools:context=".ui.aiAnalysis.AnalysisResultFragment">
-    <!-- 공통 헤더 include -->
+
+
     <include
         android:id="@+id/header"
         layout="@layout/header"
@@ -15,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 안내 메시지 -->
+
     <TextView
         android:id="@+id/infoMessage"
         android:layout_width="0dp"
@@ -33,7 +35,6 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="8dp" />
 
-    <!-- 콘텐츠 영역 -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="0dp"
@@ -51,7 +52,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- 메인 설명 부분 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,7 +91,6 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <!-- 분석 결과 RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/analysisRecyclerView"
                 android:layout_width="match_parent"
