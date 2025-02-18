@@ -1,11 +1,13 @@
 package com.winter.happyaging.ui.aiAnalysis
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -15,8 +17,10 @@ import com.google.gson.Gson
 import com.winter.happyaging.R
 import com.winter.happyaging.data.aiAnalysis.model.AiAnalysisResponse
 import com.winter.happyaging.data.aiAnalysis.model.RoomAIPrompt
+import com.winter.happyaging.data.senior.SeniorManager
 import com.winter.happyaging.databinding.FragmentAnalysisResultBinding
 import com.winter.happyaging.ui.aiAnalysis.adapter.AnalysisAdapter
+import com.winter.happyaging.ui.home.senior.ManageSeniorActivity
 
 class AnalysisResultFragment : Fragment() {
 
@@ -46,10 +50,35 @@ class AnalysisResultFragment : Fragment() {
         val headerTitle: TextView = view.findViewById(R.id.tvHeader)
         headerTitle.text = "낙상 위험 분석 결과지"
 
+        val confirmButton: View = view.findViewById(R.id.confirmButton)
+
         setupRecyclerView()
         loadAnalysisResults()
         setupSystemBackPressedHandler()
         setupBackButtonClick()
+
+        view.findViewById<ImageView>(R.id.btnBack)?.visibility = View.GONE
+
+        confirmButton.setOnClickListener{
+            // 예시 값 테스트
+            val seniorId = getStoredSeniorId()
+            val name = "홍길동"
+            val address = "서울시 강남구"
+            val birthYear = 1950
+
+            SeniorManager.saveSeniorData(requireContext(), seniorId, name, address, birthYear)
+
+            val intent = Intent(requireContext(), ManageSeniorActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(intent)
+
+            requireActivity().finish()
+        }
+    }
+
+    private fun getStoredSeniorId(): Long {
+        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getLong("seniorId", -1L)
     }
 
     private fun setupRecyclerView() {

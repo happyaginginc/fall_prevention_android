@@ -3,12 +3,14 @@ package com.winter.happyaging.ui.home.senior
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.winter.happyaging.R
+import com.winter.happyaging.data.senior.SeniorManager
 import com.winter.happyaging.ui.aiAnalysis.AIAnalysisActivity
 import com.winter.happyaging.ui.aiAnalysis.AnalysisRecordListActivity
 
@@ -36,21 +38,32 @@ class ManageSeniorActivity : AppCompatActivity() {
         resultBtn = findViewById(R.id.resultBtn)
         backBtn = findViewById(R.id.btnBack)
 
-        val seniorId = intent.getLongExtra("seniorId", -1L)
-        val name = intent.getStringExtra("name") ?: "이름 없음"
-        val address = intent.getStringExtra("address") ?: "주소 없음"
-        val birthYear = intent.getIntExtra("birthYear", -1)
+        var seniorId = intent.getLongExtra("seniorId", -1L)
+        var name = intent.getStringExtra("name") ?: "이름 없음"
+        var address = intent.getStringExtra("address") ?: "주소 없음"
+        var birthYear = intent.getIntExtra("birthYear", -1)
 
-        // 데이터 표시
+        if (seniorId == -1L) {
+            val sharedPrefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            seniorId = sharedPrefs.getLong("seniorId", -1L)
+            name = sharedPrefs.getString("seniorName", "이름 없음").toString()
+            address = sharedPrefs.getString("seniorAddress", "주소 없음").toString()
+            birthYear = sharedPrefs.getInt("seniorBirthYear", -1)
+        }
+
         tvName.text = name
         tvAddress.text = address
         tvAge.text = if (birthYear > 1900) "나이: ${calculateAge(birthYear)}세" else "나이 정보 없음"
 
-        // seniorId를 SharedPreferences에 저장
-        getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            .edit()
-            .putLong("seniorId", seniorId)
-            .apply()
+        getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).edit().apply {
+            putLong("seniorId", seniorId)
+            putString("seniorName", name)
+            putString("seniorAddress", address)
+            putInt("seniorBirthYear", birthYear)
+            apply()
+        }
+
+        Log.d("ManageSeniorActivity", "불러온 Senior 정보 - ID: $seniorId, 이름: $name, 주소: $address, 출생년도: $birthYear")
 
         // 낙상 위험등급 측정 버튼 (준비 중)
         balanceBtn.setOnClickListener {
