@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -93,6 +94,9 @@ abstract class BaseRoomFragment(
         _binding = FragmentAiRoomBinding.bind(view)
         imageManager = ImageManager(requireContext())
 
+        val headerTitle: TextView = view.findViewById(R.id.tvHeader)
+        headerTitle.text = "낙상 위험 분석"
+
         setupUI()
         setupRecyclerView()
         setupBackButton()
@@ -160,7 +164,7 @@ abstract class BaseRoomFragment(
     }
 
     private fun setupBackButton() {
-        binding.btnBack.setOnClickListener { requireActivity().supportFragmentManager.popBackStack() }
+        binding.header.btnBack.setOnClickListener { requireActivity().supportFragmentManager.popBackStack() }
     }
 
     private fun setupSystemBackPressedHandler() {

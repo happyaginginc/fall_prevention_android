@@ -73,6 +73,12 @@
             app:destination="@id/AnalysisResultFragment" />
     </fragment>
 
+    <!-- 기타(기록 목록) Fragment -->
+    <fragment
+        android:id="@+id/AnalysisRecordListFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.AnalysisRecordListFragment"
+        android:label="분석 기록 목록" />
+
     <!-- Analysis Result Fragment (최종 결과 화면) -->
     <fragment
         android:id="@+id/AnalysisResultFragment"

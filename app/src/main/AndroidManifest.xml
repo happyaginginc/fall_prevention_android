@@ -47,6 +47,8 @@
             android:exported="false">
         </activity>
 
+        <activity android:name="com.winter.happyaging.ui.aiAnalysis.AnalysisRecordListActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.winter.happyaging"
