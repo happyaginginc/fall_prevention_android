@@ -16,7 +16,6 @@ import com.winter.happyaging.data.senior.model.SeniorCreateResponse
 import com.winter.happyaging.data.senior.service.SeniorService
 import com.winter.happyaging.databinding.FragmentRegisterSeniorBinding
 import com.winter.happyaging.network.RetrofitClient
-import com.winter.happyaging.network.TokenManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,7 +46,8 @@ class RegisterSeniorFragment : Fragment() {
         headerTitle.text = "시니어 등록하기"
 
         binding.header.btnBack.setOnClickListener {
-            requireActivity().finish()
+//            requireActivity().finish()
+            requireActivity().supportFragmentManager.popBackStack()
         }
 
         // 실시간 입력 검증 TextWatcher 등록
@@ -196,13 +196,12 @@ class RegisterSeniorFragment : Fragment() {
 
     private fun sendSeniorRequest(request: SeniorCreateRequest) {
         val seniorService = RetrofitClient.getInstance(requireContext()).create(SeniorService::class.java)
-        val tokenManager = TokenManager(requireContext())
         seniorService.registerSenior(request).enqueue(object : Callback<SeniorCreateResponse> {
             override fun onResponse(call: Call<SeniorCreateResponse>, response: Response<SeniorCreateResponse>) {
                 if (response.isSuccessful) {
                     Toast.makeText(requireContext(), "시니어 등록 성공!", Toast.LENGTH_SHORT).show()
-                    requireActivity().supportFragmentManager.popBackStack()
-                    (requireActivity() as? HomeActivity)?.fetchSeniorData()
+                    parentFragmentManager.setFragmentResult("refreshSeniorList", Bundle())
+                    parentFragmentManager.popBackStack()
                 } else {
                     Toast.makeText(requireContext(), "등록 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottom_nav"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="#FFFFFF"
+    android:orientation="horizontal"
+    android:paddingHorizontal="24dp"
+    android:gravity="center">
+
+    <!-- 시니어 목록: 활성화된 메뉴로 처리 (콜백으로 처리 가능) -->
+    <LinearLayout
+        android:id="@+id/nav_senior_list"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_senior_list"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/home_color" />
+
+        <TextView
+            android:id="@+id/tv_senior_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시니어 목록"
+            android:textColor="@color/orange"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- 관련 지식 -->
+    <LinearLayout
+        android:id="@+id/nav_knowledge"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_knowledge"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/video_emoji" />
+
+        <TextView
+            android:id="@+id/tv_knowledge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="관련 지식"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- 예방 물품 -->
+    <LinearLayout
+        android:id="@+id/nav_prevention_goods"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_prevention_goods"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/shopping_emoji" />
+
+        <TextView
+            android:id="@+id/tv_prevention_goods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예방 물품"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- 예방 운동 -->
+    <LinearLayout
+        android:id="@+id/nav_prevention_exercise"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_prevention_exercise"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/dumbell_emoji" />
+
+        <TextView
+            android:id="@+id/tv_prevention_exercise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예방 운동"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>
