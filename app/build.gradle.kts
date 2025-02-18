@@ -66,6 +66,7 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.12.0" )
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
+    implementation(libs.androidx.swiperefreshlayout)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
     testImplementation("junit:junit:4.13.2")
