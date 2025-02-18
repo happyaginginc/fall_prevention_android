@@ -11,9 +11,14 @@ import kotlin.coroutines.resume
 class AuthInterceptor(private val context: Context) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
+        val originalRequest = chain.request()
+
+        if (originalRequest.header("Authorization") != null) {
+            return chain.proceed(originalRequest)
+        }
+
         val tokenManager = TokenManager(context)
         var accessToken = tokenManager.getAccessToken()
-        val originalRequest = chain.request()
         val requestWithToken = originalRequest.newBuilder()
             .addHeader("Authorization", "Bearer $accessToken")
             .build()
@@ -21,7 +26,6 @@ class AuthInterceptor(private val context: Context) : Interceptor {
         var response = chain.proceed(requestWithToken)
         if (response.code == 401) {
             synchronized(this) {
-                // 만약 최신 토큰이 아직 갱신되지 않았다면 refresh 시도
                 if (tokenManager.getAccessToken() == accessToken) {
                     runBlocking {
                         if (refreshTokenBlocking(tokenManager)) {

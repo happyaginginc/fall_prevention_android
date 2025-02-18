@@ -1,7 +1,6 @@
 package com.winter.happyaging.ui.home.senior
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +62,7 @@ class SeniorListFragment : Fragment() {
         }
         
         seniorViewModel.fetchSeniorList()
-        
+
         binding.btnRegisterSenior.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, RegisterSeniorFragment())
