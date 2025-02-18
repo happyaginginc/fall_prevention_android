@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.winter.happyaging.R
@@ -24,6 +25,8 @@ class SeniorListFragment : Fragment() {
     private var _binding: FragmentSeniorListBinding? = null
     private val binding get() = _binding!!
 
+    // 전체 시니어 리스트를 저장할 변수
+    private var fullSeniorList: List<SeniorReadResponse> = emptyList()
     private val seniorAdapter = SeniorAdapter(emptyList())
 
     override fun onCreateView(
@@ -36,10 +39,17 @@ class SeniorListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         // RecyclerView 설정
         with(binding.recyclerSenior) {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = seniorAdapter
+        }
+
+        // 검색어 입력 시 텍스트 변화 감지
+        binding.edtSearchSenior.addTextChangedListener { text ->
+            val query = text.toString().trim()
+            filterSeniorList(query)
         }
 
         // FragmentResult를 수신하여 데이터 갱신
@@ -58,6 +68,7 @@ class SeniorListFragment : Fragment() {
         }
     }
 
+    // 서버에서 시니어 데이터를 가져와 전체 리스트와 어댑터 업데이트
     private fun fetchSeniorData() {
         val seniorService = RetrofitClient.getInstance(requireContext()).create(SeniorService::class.java)
         seniorService.getSeniorAllList().enqueue(object : Callback<ApiResponse<List<SeniorReadResponse>>> {
@@ -66,9 +77,11 @@ class SeniorListFragment : Fragment() {
                 response: Response<ApiResponse<List<SeniorReadResponse>>>,
             ) {
                 if (response.isSuccessful) {
-                    val seniorList = response.body()?.data.orEmpty()
-                    Log.d("SeniorListFragment", "받아온 시니어 리스트: $seniorList")
-                    seniorAdapter.updateData(seniorList)
+                    fullSeniorList = response.body()?.data.orEmpty()
+                    Log.d("SeniorListFragment", "받아온 시니어 리스트: $fullSeniorList")
+                    // 현재 검색어가 있을 경우 필터링 적용
+                    val currentQuery = binding.edtSearchSenior.text.toString().trim()
+                    filterSeniorList(currentQuery)
                 } else {
                     Log.e("SeniorListFragment", "API 호출 실패 - 상태 코드: ${response.code()}")
                 }
@@ -77,6 +90,16 @@ class SeniorListFragment : Fragment() {
                 Log.e("SeniorListFragment", "네트워크 오류: ${t.message}")
             }
         })
+    }
+
+    // 검색어에 따라 리스트 필터링 및 어댑터 업데이트
+    private fun filterSeniorList(query: String) {
+        val filteredList = if (query.isEmpty()) {
+            fullSeniorList
+        } else {
+            fullSeniorList.filter { it.name.contains(query, ignoreCase = true) }
+        }
+        seniorAdapter.updateData(filteredList)
     }
 
     override fun onResume() {
