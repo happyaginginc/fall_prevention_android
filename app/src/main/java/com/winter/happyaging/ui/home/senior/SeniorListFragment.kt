@@ -37,7 +37,7 @@ class SeniorListFragment : Fragment() {
 
         view.findViewById<ImageView>(R.id.btnBack)?.visibility = View.GONE
         val headerTitle: TextView = view.findViewById(R.id.tvHeader)
-        headerTitle.text = "낙상 위험 분석 시작하기"
+        headerTitle.text = "시니어 목록"
 
         binding.recyclerSenior.apply {
             layoutManager = LinearLayoutManager(requireContext())

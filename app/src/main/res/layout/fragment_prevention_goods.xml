@@ -9,7 +9,6 @@
     android:background="@color/white"
     tools:context=".ui.home.product.PreventionGoodsFragment">
 
-    <!-- 헤더 -->
     <include
         android:id="@+id/header"
         layout="@layout/header"
@@ -17,28 +16,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 검색바: 헤더 아래에 배치 -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/searchInputLayoutProduct"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:hint="상품명을 입력해주세요"
         app:boxBackgroundMode="outline"
         app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp">
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        app:endIconDrawable="@drawable/ic_search"
+        app:endIconMode="custom">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtSearchProduct"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:imeOptions="actionSearch"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- SwipeRefreshLayout wrapping 상품 리스트 RecyclerView -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="0dp"

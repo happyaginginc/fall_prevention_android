@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.winter.happyaging.data.product.model.ProductResponse
 import com.winter.happyaging.databinding.ItemProductBinding
+import java.text.NumberFormat
+import java.util.Locale
 
 class ProductAdapter(private var productList: List<ProductResponse>) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
@@ -14,10 +16,12 @@ class ProductAdapter(private var productList: List<ProductResponse>) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: ProductResponse) {
             binding.tvProductName.text = product.name
-            binding.tvProductPrice.text = "₩${product.price}"
+            
+            val formattedPrice = NumberFormat.getNumberInstance(Locale.KOREA).format(product.price)
+            binding.tvProductPrice.text = "${formattedPrice}원"
+
             binding.tvProductDescription.text = product.description
 
-            // Glide를 사용하여 이미지 로딩
             Glide.with(binding.ivProduct.context)
                 .load(product.imageUrl)
                 .into(binding.ivProduct)

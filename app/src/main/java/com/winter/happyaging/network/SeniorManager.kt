@@ -1,6 +1,5 @@
-package com.winter.happyaging.data.senior
+package com.winter.happyaging.network
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 
