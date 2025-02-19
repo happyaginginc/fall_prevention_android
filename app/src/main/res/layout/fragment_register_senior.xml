@@ -41,19 +41,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="이름 *"
+                    android:text="@string/label_name"
                     android:textStyle="bold"/>
                 <EditText
                     android:id="@+id/edtName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="이름을 입력해주세요"
+                    android:hint="@string/hint_name"
                     android:layout_marginBottom="4dp"/>
                 <TextView
                     android:id="@+id/tvNameError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="이름은 필수값입니다."
+                    android:text="@string/error_name_required"
                     android:textColor="@android:color/holo_red_dark"
                     android:textSize="12sp"
                     android:visibility="gone"
@@ -63,7 +63,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="성별 *"
+                    android:text="@string/label_gender"
                     android:textStyle="bold"/>
                 <Spinner
                     android:id="@+id/spinnerSex"
@@ -75,19 +75,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="거주지 *"
+                    android:text="@string/label_address"
                     android:textStyle="bold"/>
                 <EditText
                     android:id="@+id/edtAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="거주지를 입력하세요"
+                    android:hint="@string/hint_address"
                     android:layout_marginBottom="4dp"/>
                 <TextView
                     android:id="@+id/tvAddressError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="거주지를 입력해주세요."
+                    android:text="@string/error_address_required"
                     android:textColor="@android:color/holo_red_dark"
                     android:textSize="12sp"
                     android:visibility="gone"
@@ -97,19 +97,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="상세 주소 *"
+                    android:text="@string/label_address_detail"
                     android:textStyle="bold"/>
                 <EditText
                     android:id="@+id/edtAddressDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="상세 주소를 입력하세요"
+                    android:hint="@string/hint_address_detail"
                     android:layout_marginBottom="4dp"/>
                 <TextView
                     android:id="@+id/tvAddressDetailError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="상세 주소를 입력해주세요."
+                    android:text="@string/error_address_detail_required"
                     android:textColor="@android:color/holo_red_dark"
                     android:textSize="12sp"
                     android:visibility="gone"
@@ -119,20 +119,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="출생년도 *"
+                    android:text="@string/label_birth_year"
                     android:textStyle="bold"/>
                 <EditText
                     android:id="@+id/edtBirthYear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="출생년도를 입력하세요 (예: 1990)"
+                    android:hint="@string/hint_birth_year"
                     android:inputType="number"
                     android:layout_marginBottom="4dp"/>
                 <TextView
                     android:id="@+id/tvBirthYearError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="올바른 출생년도를 입력해주세요 (예: 2000)"
+                    android:text="@string/error_birth_year_invalid"
                     android:textColor="@android:color/holo_red_dark"
                     android:textSize="12sp"
                     android:visibility="gone"
@@ -142,20 +142,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="연락처 *"
+                    android:text="@string/label_phone"
                     android:textStyle="bold"/>
                 <EditText
                     android:id="@+id/edtPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="연락처를 입력하세요 (예: 010-1234-5678)"
+                    android:hint="@string/hint_phone"
                     android:inputType="phone"
                     android:layout_marginBottom="4dp"/>
                 <TextView
                     android:id="@+id/tvPhoneError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="휴대폰 번호 양식이 올바르지 않습니다. 예) 010-1234-5678"
+                    android:text="@string/error_phone_invalid"
                     android:textColor="@android:color/holo_red_dark"
                     android:textSize="12sp"
                     android:visibility="gone"
@@ -165,7 +165,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="관계 *"
+                    android:text="@string/label_relationship"
                     android:textStyle="bold"/>
                 <Spinner
                     android:id="@+id/spinnerRelationship"
@@ -177,13 +177,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="비고"
+                    android:text="@string/label_memo"
                     android:textStyle="bold"/>
                 <EditText
                     android:id="@+id/edtMemo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="메모를 입력해주세요"
+                    android:hint="@string/hint_memo"
                     android:layout_marginBottom="100dp"/>
             </LinearLayout>
         </ScrollView>
@@ -193,8 +193,8 @@
             android:id="@+id/fabRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="등록하기"
-            android:contentDescription="등록하기"
+            android:text="@string/btn_register"
+            android:contentDescription="@string/desc_register"
             android:layout_gravity="center|bottom"
             android:layout_margin="16dp"
             android:backgroundTint="@color/green"

@@ -17,8 +17,8 @@ import com.google.gson.Gson
 import com.winter.happyaging.R
 import com.winter.happyaging.data.aiAnalysis.model.AiAnalysisResponse
 import com.winter.happyaging.data.aiAnalysis.model.RoomAIPrompt
-import com.winter.happyaging.network.SeniorManager
 import com.winter.happyaging.databinding.FragmentAnalysisResultBinding
+import com.winter.happyaging.network.SeniorManager
 import com.winter.happyaging.ui.aiAnalysis.adapter.AnalysisAdapter
 import com.winter.happyaging.ui.home.senior.ManageSeniorActivity
 

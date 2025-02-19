@@ -1,53 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- 카메라 기능 사용 선언 -->
     <uses-feature android:name="android.hardware.camera.any" />
 
+    <!-- 필요한 권한들 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <!-- Android 13 이하에서는 READ_EXTERNAL_STORAGE를, 14 이상에서는 READ_MEDIA_IMAGES를 사용 -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <!-- 외부 앱(예: 카메라, 갤러리) 쿼리 선언 -->
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+            <data android:mimeType="image/*" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="낙상예방_new"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HappyAging"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        android:usesCleartextTraffic="true">
+
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false"
             android:label="Home" />
 
-        <activity android:name=".ui.home.senior.ManageSeniorActivity"
+        <activity
+            android:name=".ui.home.senior.ManageSeniorActivity"
             android:exported="false"/>
+
         <activity
             android:name=".ui.aiAnalysis.AIAnalysisActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"/>
 
-        <activity android:name="com.winter.happyaging.ui.aiAnalysis.AnalysisRecordListActivity" />
+        <activity
+            android:name="com.winter.happyaging.ui.aiAnalysis.AnalysisRecordListActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

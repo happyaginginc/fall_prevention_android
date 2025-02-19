@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.winter.happyaging.R
-
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -22,6 +22,7 @@ class RecordDateAdapter(
         return RecordDateViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RecordDateViewHolder, position: Int) {
         holder.bind(dateList[position])
     }
@@ -43,13 +44,15 @@ class RecordDateAdapter(
                 null
             }
 
-            val displayText = if (parsedDate != null) {
-                val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 H시 mm분의 분석 기록")
-                parsedDate.format(formatter)
+            if (parsedDate != null) {
+                val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 H시 mm분")
+                val dateTimeText = parsedDate.format(dateTimeFormatter)
+
+                val htmlText = "<font color='#1976D2'><b>$dateTimeText</b></font> 의 분석 기록"
+                tvRecordDate.text = HtmlCompat.fromHtml(htmlText, HtmlCompat.FROM_HTML_MODE_LEGACY)
             } else {
-                date
+                tvRecordDate.text = date
             }
-            tvRecordDate.text = displayText
 
             itemView.setOnClickListener {
                 onItemClick(date)

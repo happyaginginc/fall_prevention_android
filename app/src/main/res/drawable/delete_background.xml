@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <!-- 흰색 원형 배경 -->
+    <solid android:color="@android:color/white" />
+    <!-- 얇은 회색 테두리 -->
+    <stroke
+        android:width="1dp"
+        android:color="@android:color/darker_gray" />
+    <!-- 내부 여백 (아이콘과 배경 간의 간격) -->
+    <padding
+        android:left="4dp"
+        android:top="4dp"
+        android:right="4dp"
+        android:bottom="4dp" />
+</shape>

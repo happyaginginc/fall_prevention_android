@@ -37,11 +37,85 @@
     <string name="image_preview">업로드된 이미지 미리보기</string>
     <string name="base_image_url">https://api.happy-aging.co.kr/storage/images/</string>
 
-    <string name="required_note"><![CDATA[<font color="#FF0000">*</font>은 필수 문항입니다.]]></string>
-    <string name="name_label"><![CDATA[이름 <font color="#FF0000">*</font>]]></string>
-    <string name="phone_label"><![CDATA[전화번호 <font color="#FF0000">*</font>]]></string>
-    <string name="email_label"><![CDATA[이메일 <font color="#FF0000">*</font>]]></string>
-    <string name="password_label"><![CDATA[비밀번호 <font color="#FF0000">*</font>]]></string>
-    <string name="password_confirm_label"><![CDATA[비밀번호 확인 <font color="#FF0000">*</font>]]></string>
 
+    <!-- 회원 가입 -->
+    <!-- 공통 -->
+    <string name="required_note"><![CDATA[<font color="#FF0000">*</font>은 필수 문항입니다.]]></string>
+    <string name="sign_up_button">회원가입하기</string>
+    <string name="login_link">이미 회원이신가요? 로그인</string>
+
+    <!-- 환영 메시지 -->
+    <string name="welcome_message">환영합니다! 서비스 이용을 위해 회원가입을 해주세요</string>
+
+    <!-- 이름 -->
+    <string name="name_label"><![CDATA[이름 <font color="#FF0000">*</font>]]></string>
+    <string name="name_hint">이름을 입력해주세요</string>
+    <string name="name_error">이름은 필수값입니다.</string>
+
+    <!-- 전화번호 -->
+    <string name="phone_label"><![CDATA[전화번호 <font color="#FF0000">*</font>]]></string>
+    <string name="phone_hint">010-1234-5678</string>
+    <string name="phone_error">휴대폰 번호 양식이 올바르지 않습니다. 예) 010-1234-5678</string>
+
+    <!-- 이메일 -->
+    <string name="email_label"><![CDATA[이메일 <font color="#FF0000">*</font>]]></string>
+    <string name="email_hint">example@example.com</string>
+    <string name="email_error">올바른 이메일 형식이 아닙니다.</string>
+
+    <!-- 비밀번호 -->
+    <string name="password_label"><![CDATA[비밀번호 <font color="#FF0000">*</font>]]></string>
+    <string name="password_hint">비밀번호를 입력해주세요</string>
+    <string name="password_hint_details">영문 대소문자, 숫자, 특수문자 조합으로 8자리 이상 입력하세요.</string>
+    <string name="password_error">비밀번호는 최소 8자리이며, 대소문자, 숫자, 특수문자를 포함해야 합니다.</string>
+
+    <!-- 비밀번호 확인 -->
+    <string name="password_confirm_label"><![CDATA[비밀번호 확인 <font color="#FF0000">*</font>]]></string>
+    <string name="password_confirm_hint">비밀번호를 한번 더 입력해주세요</string>
+    <string name="password_confirm_error">비밀번호가 일치하지 않습니다.</string>
+
+    <!-- 개인정보 수집 -->
+    <string name="privacy_text">개인정보 수집 동의</string>
+    <string name="terms_detail">내용 보기</string>
+    <string name="privacy_error">개인정보 수집에 동의해 주세요.</string>
+
+
+    <!-- 시니어 추가 관련 -->
+    <!-- 이름 -->
+    <string name="label_name">이름 *</string>
+    <string name="hint_name">이름을 입력해주세요</string>
+    <string name="error_name_required">이름은 필수값입니다.</string>
+
+    <!-- 성별 -->
+    <string name="label_gender">성별 *</string>
+
+    <!-- 거주지 -->
+    <string name="label_address">거주지 *</string>
+    <string name="hint_address">거주지를 입력하세요</string>
+    <string name="error_address_required">거주지를 입력해주세요.</string>
+
+    <!-- 상세 주소 -->
+    <string name="label_address_detail">상세 주소 *</string>
+    <string name="hint_address_detail">상세 주소를 입력하세요</string>
+    <string name="error_address_detail_required">상세 주소를 입력해주세요.</string>
+
+    <!-- 출생년도 -->
+    <string name="label_birth_year">출생년도 *</string>
+    <string name="hint_birth_year">출생년도를 입력하세요 (예: 1990)</string>
+    <string name="error_birth_year_invalid">올바른 출생년도를 입력해주세요 (예: 1990)</string>
+
+    <!-- 연락처 -->
+    <string name="label_phone">연락처 *</string>
+    <string name="hint_phone">연락처를 입력하세요 (예: 010-1234-5678)</string>
+    <string name="error_phone_invalid">휴대폰 번호 양식이 올바르지 않습니다. (예: 010-1234-5678)</string>
+
+    <!-- 관계 -->
+    <string name="label_relationship">관계 *</string>
+
+    <!-- 비고 -->
+    <string name="label_memo">비고</string>
+    <string name="hint_memo">메모를 입력해주세요</string>
+
+    <!-- 등록 버튼 -->
+    <string name="btn_register">등록하기</string>
+    <string name="desc_register">등록하기</string>
 </resources>

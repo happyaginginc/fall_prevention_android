@@ -1,21 +1,21 @@
 package com.winter.happyaging.ui.aiAnalysis
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,23 +27,26 @@ import com.winter.happyaging.databinding.FragmentAiRoomBinding
 import com.winter.happyaging.network.ImageManager
 import com.winter.happyaging.network.RetrofitClient
 import com.winter.happyaging.ui.aiAnalysis.adapter.RoomAdapter
+import com.winter.happyaging.utils.ImagePickerManager
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 abstract class BaseRoomFragment(
     private val step: Int,
     private val roomType: String,
     private val nextAction: Int
-) : Fragment(R.layout.fragment_ai_room) {
+) : Fragment(R.layout.fragment_ai_room), ImagePickerManager.ImagePickerCallback {
 
     companion object {
         private const val TAG = "BaseRoomFragment"
-        private const val IMAGE_FILE_NAME = "uploaded_image.jpg"
         private const val GALLERY_IMAGE_FILE_NAME = "gallery_image.jpg"
     }
 
@@ -51,41 +54,42 @@ abstract class BaseRoomFragment(
     protected val binding get() = _binding!!
 
     protected lateinit var imageManager: ImageManager
-    // 방 데이터: 이제 각 방은 세 개의 가이드별 이미지 리스트를 가집니다.
     protected val roomList = mutableListOf(RoomData(name = "$roomType 1"))
 
-    /**
-     * 현재 선택된 방 인덱스와 선택된 가이드(1~3)
-     */
-    private var selectedRoomIndex: Int = 0
-    private var selectedGuideIndex: Int = 0
+    private var selectedRoomIndex = 0
+    private var selectedGuideIndex = 0
 
-    /**
-     * Room 리스트를 표시할 어댑터
-     */
     private lateinit var roomAdapter: RoomAdapter
+    private lateinit var imagePickerManager: ImagePickerManager
 
-    // 이미지 선택/업로드 관련 런처는 그대로 사용
-    private val galleryLauncher =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
-            if (uri != null) {
-                Log.d(TAG, "✅ 선택된 이미지 URI: $uri")
-                uploadGalleryImageToServer(uri)
+    private var cameraImageUri: Uri? = null
+
+    // 갤러리 권한 요청 및 결과 처리
+    private val permissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                imagePickerManager.openGallery()
             } else {
-                Log.e(TAG, "🚨 이미지가 선택되지 않았습니다.")
+                Log.e(TAG, "갤러리 접근 권한 거부됨")
             }
         }
 
-    private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) openGallery() else Log.e(TAG, "🚨 갤러리 접근 권한 거부됨")
-        }
-
+    // 카메라 촬영 결과 처리 (FileProvider로 저장된 이미지 사용)
     private val takePictureLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == android.app.Activity.RESULT_OK) {
-                val imageBitmap = result.data?.extras?.get("data") as? Bitmap
-                imageBitmap?.let { uploadCameraImageToServer(it) }
+                cameraImageUri?.let { uploadGalleryImageToServer(it) }
+            }
+        }
+
+    // 카메라 권한 요청
+    private val cameraPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openCamera()
+            } else {
+                Toast.makeText(requireContext(), "카메라 권한이 거부되었습니다.", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -93,14 +97,12 @@ abstract class BaseRoomFragment(
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAiRoomBinding.bind(view)
         imageManager = ImageManager(requireContext())
+        imagePickerManager = ImagePickerManager(this).apply { setCallback(this@BaseRoomFragment) }
 
-        val headerTitle: TextView = view.findViewById(R.id.tvHeader)
-        headerTitle.text = "낙상 위험 분석"
-
+        view.findViewById<TextView>(R.id.tvHeader).text = "낙상 위험 분석"
         setupUI()
         setupRecyclerView()
-        setupBackButton()
-        setupSystemBackPressedHandler()
+        setupBackNavigation()
     }
 
     override fun onDestroyView() {
@@ -108,15 +110,21 @@ abstract class BaseRoomFragment(
         _binding = null
     }
 
-    private fun setupUI() {
-        binding.tvStep.text = "$step / 6"
-        binding.tvTitle.text = roomType
-        binding.tvSubtitle.text = getSubtitleText(roomType)
-        binding.nextButton.setOnClickListener { onNextButtonClick() }
+    // ImagePickerManager 콜백
+    override fun onImagePicked(uri: Uri) {
+        Log.d(TAG, "선택된 이미지 URI: $uri")
+        uploadGalleryImageToServer(uri)
     }
 
-    private fun getSubtitleText(roomType: String): String {
-        return when (roomType) {
+    override fun onError(message: String) {
+        Log.e(TAG, message)
+    }
+
+    // UI 초기화
+    private fun setupUI() = with(binding) {
+        tvStep.text = "$step / 6"
+        tvTitle.text = roomType
+        tvSubtitle.text = when (roomType) {
             "거실" -> "다음 조건에 맞게 거실을 촬영해주세요."
             "주방" -> "다음 조건에 맞게 주방을 촬영해주세요."
             "욕실" -> "다음 조건에 맞게 욕실을 촬영해주세요."
@@ -125,8 +133,10 @@ abstract class BaseRoomFragment(
             "기타" -> "다음 조건에 맞게 촬영해주세요."
             else -> ""
         }
+        nextButton.setOnClickListener { onNextButtonClick() }
     }
 
+    // RecyclerView 및 Adapter 설정
     private fun setupRecyclerView() {
         binding.roomRecyclerView.layoutManager = LinearLayoutManager(context)
         roomAdapter = RoomAdapter(
@@ -137,21 +147,18 @@ abstract class BaseRoomFragment(
                 showImageSelectionDialog()
             },
             onDeleteImageClick = { roomPos, guideIndex, imagePos ->
-                // 삭제 시: 해당 방의 해당 가이드 리스트에서 imagePos 번째 이미지 제거 후 DataStore 업데이트
                 val room = roomList[roomPos]
                 when (guideIndex) {
                     1 -> room.guide1Images.removeAt(imagePos)
                     2 -> room.guide2Images.removeAt(imagePos)
                     3 -> room.guide3Images.removeAt(imagePos)
                 }
-                // DataStore에도 반영 (전체 데이터 재저장)
-                // 간단하게 해당 방 전체를 다시 저장합니다.
-                imageManager.saveImageData(room.name, guideIndex, "") // 빈 문자열은 무시하도록 처리 가능
+                imageManager.saveImageData(room.name, guideIndex, "")
                 roomAdapter.notifyItemChanged(roomPos)
             },
-            onAddRoomClick = { pos ->
+            onAddRoomClick = {
                 roomList.add(RoomData(name = "$roomType ${roomList.size + 1}"))
-                roomAdapter.notifyItemInserted(roomList.size - 1)
+                roomAdapter.notifyItemInserted(roomList.lastIndex)
             },
             onDeleteRoomClick = { pos ->
                 if (roomList.size > 1) {
@@ -163,11 +170,11 @@ abstract class BaseRoomFragment(
         binding.roomRecyclerView.adapter = roomAdapter
     }
 
-    private fun setupBackButton() {
-        binding.header.btnBack.setOnClickListener { requireActivity().supportFragmentManager.popBackStack() }
-    }
-
-    private fun setupSystemBackPressedHandler() {
+    // 뒤로가기 처리 (툴바 버튼 + 시스템 백버튼)
+    private fun setupBackNavigation() {
+        binding.header.btnBack.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -178,84 +185,104 @@ abstract class BaseRoomFragment(
         )
     }
 
+    // 이미지 선택 다이얼로그 표시
     private fun showImageSelectionDialog() {
         val options = arrayOf("카메라로 촬영", "갤러리에서 선택")
-        AlertDialog.Builder(requireContext())
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
             .setTitle("이미지 선택")
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> openCamera()
-                    1 -> checkGalleryPermission()
+                    1 -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            imagePickerManager.openGallery()
+                        } else {
+                            imagePickerManager.checkGalleryPermission(
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                permissionLauncher
+                            )
+                        }
+                    }
                 }
             }
             .show()
     }
 
+    // 카메라 앱 실행
     private fun openCamera() {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        takePictureLauncher.launch(cameraIntent)
-    }
-
-    private fun checkGalleryPermission() {
-        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            Manifest.permission.READ_MEDIA_IMAGES else Manifest.permission.READ_EXTERNAL_STORAGE
-        if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED)
-            openGallery() else permissionLauncher.launch(permission)
-    }
-
-    private fun openGallery() {
-        galleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    }
-
-    private fun uploadCameraImageToServer(bitmap: Bitmap) {
-        val byteArray = ByteArrayOutputStream().apply {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, this)
-        }.toByteArray()
-        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), byteArray)
-        val imagePart = MultipartBody.Part.createFormData("image", IMAGE_FILE_NAME, requestFile)
-        sendImageToServer(imagePart)
-    }
-
-    private fun uploadGalleryImageToServer(uri: Uri) {
-        val inputStream = requireContext().contentResolver.openInputStream(uri)
-        val byteArray = inputStream?.readBytes()
-        inputStream?.close()
-        if (byteArray == null) {
-            Log.e(TAG, "이미지 변환 실패")
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             return
         }
-        val mimeType = requireContext().contentResolver.getType(uri) ?: "image/jpeg"
-        val requestFile = RequestBody.create(mimeType.toMediaTypeOrNull(), byteArray)
-        val imagePart = MultipartBody.Part.createFormData("image", GALLERY_IMAGE_FILE_NAME, requestFile)
-        sendImageToServer(imagePart)
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (cameraIntent.resolveActivity(requireActivity().packageManager) != null) {
+            try {
+                createImageFile().also { file ->
+                    cameraImageUri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "com.winter.happyaging",
+                        file
+                    )
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+                    takePictureLauncher.launch(cameraIntent)
+                }
+            } catch (ex: IOException) {
+                Log.e(TAG, "이미지 파일 생성 실패", ex)
+            }
+        } else {
+            Toast.makeText(requireContext(), "사용 가능한 카메라 앱을 찾을 수 없습니다.", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
+    // 임시 이미지 파일 생성
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
+    }
+
+    // 갤러리 이미지 업로드 (Uri -> RequestBody)
+    private fun uploadGalleryImageToServer(uri: Uri) {
+        requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
+            val byteArray = inputStream.readBytes()
+            val mimeType = requireContext().contentResolver.getType(uri) ?: "image/jpeg"
+
+            val requestFile = byteArray.toRequestBody(mimeType.toMediaTypeOrNull())
+
+            val imagePart = MultipartBody.Part.createFormData("image", GALLERY_IMAGE_FILE_NAME, requestFile)
+            sendImageToServer(imagePart)
+        } ?: Log.e(TAG, "이미지 변환 실패")
+    }
+
+    // 서버로 이미지 전송
     private fun sendImageToServer(imagePart: MultipartBody.Part) {
-        val storageService = RetrofitClient.getInstance(requireContext()).create(ImageService::class.java)
-        storageService.uploadImages(imagePart).enqueue(object : Callback<ImageResponse> {
+        val imageService = RetrofitClient.getInstance(requireContext())
+            .create(ImageService::class.java)
+        imageService.uploadImages(imagePart).enqueue(object : Callback<ImageResponse> {
             override fun onResponse(call: Call<ImageResponse>, response: Response<ImageResponse>) {
                 if (response.isSuccessful) {
                     val imageUrl = response.body()?.data ?: ""
-                    Log.d(TAG, "✅ 업로드 성공! 서버에 저장된 URL (파일명): $imageUrl")
+                    Log.d(TAG, "업로드 성공! 서버 URL: $imageUrl")
                     saveImageToLocalDataStore(imageUrl)
                 } else {
-                    Log.e(TAG, "🚨 서버 응답 실패: ${response.code()}")
+                    Log.e(TAG, "서버 응답 실패: ${response.code()}")
                 }
             }
+
             override fun onFailure(call: Call<ImageResponse>, t: Throwable) {
-                Log.e(TAG, "🚨 네트워크 오류 발생: ${t.message}")
+                Log.e(TAG, "네트워크 오류: ${t.message}")
             }
         })
     }
 
+    // 로컬 데이터 저장 및 UI 갱신
     private fun saveImageToLocalDataStore(imageUrl: String) {
-
-        Log.d("Save Image Logggg", "$selectedRoomIndex")
         val roomName = roomList[selectedRoomIndex].name
-        Log.d("Save Image Logggg", roomName)
-        // 저장: 선택된 가이드(selectedGuideIndex)에 이미지 추가
         imageManager.saveImageData(roomName, selectedGuideIndex, imageUrl)
-        // 해당 방 데이터 업데이트
         when (selectedGuideIndex) {
             1 -> roomList[selectedRoomIndex].guide1Images.add(imageUrl)
             2 -> roomList[selectedRoomIndex].guide2Images.add(imageUrl)
@@ -264,10 +291,7 @@ abstract class BaseRoomFragment(
         roomAdapter.notifyItemChanged(selectedRoomIndex)
     }
 
-    // 분석 요청 시 각 방의 세 가이드 이미지들을 합쳐 전송합니다.
     protected open fun onNextButtonClick() {
-        // 예시: imageManager.getAllImageData()를 통해 각 방의 이미지 리스트를 가져와 RoomRequest 생성
-        // (RoomRequest의 roomImages는 세 가이드 이미지들을 합친 리스트로 설정)
         findNavController().navigate(nextAction)
     }
 }
