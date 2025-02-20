@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.aiAnalysis
+package com.winter.happyaging.ui.aiAnalysis.analysis
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,47 +1,61 @@
-<!-- SeniorAdapter 아이템 레이아웃 -->
-<LinearLayout
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:padding="16dp"
-    android:gravity="center_vertical">
+    android:background="@drawable/item_background">
 
-    <!-- 왼쪽 텍스트 정보 (이름, 주소, 나이) -->
-    <LinearLayout
+    <!-- 시니어 이름 -->
+    <TextView
+        android:id="@+id/tvSeniorName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:text="홍길동"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnManage"
+        app:layout_constraintHorizontal_bias="0"/>
 
-        <TextView
-            android:id="@+id/tvSeniorName2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="홍길동"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+    <!-- 시니어 주소 -->
+    <TextView
+        android:id="@+id/tvSeniorAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="대구 달성군 가창면"
+        android:textSize="14sp"
+        android:textColor="@color/secondary_text"
+        app:layout_constraintTop_toBottomOf="@id/tvSeniorName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnManage"
+        android:layout_marginTop="4dp"/>
 
-        <TextView
-            android:id="@+id/tvSeniorAddress2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="대구 달성군 가창면"
-            android:textSize="14sp"/>
+    <!-- 시니어 나이 -->
+    <TextView
+        android:id="@+id/tvSeniorAge"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="나이: 20세"
+        android:textSize="14sp"
+        android:textColor="@color/secondary_text"
+        app:layout_constraintTop_toBottomOf="@id/tvSeniorAddress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnManage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="4dp"/>
 
-        <TextView
-            android:id="@+id/tvSeniorAge2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="나이: 20세"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"/>
-    </LinearLayout>
-
-    <!-- 오른쪽 "관리하기" 버튼 -->
+    <!-- 관리하기 버튼 -->
     <Button
-        android:id="@+id/btnManage2"
+        android:id="@+id/btnManage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="관리하기"/>
-</LinearLayout>
+        android:text="관리하기"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

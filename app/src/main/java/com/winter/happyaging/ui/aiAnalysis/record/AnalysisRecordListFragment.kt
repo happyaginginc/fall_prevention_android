@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.aiAnalysis
+package com.winter.happyaging.ui.aiAnalysis.record
 
 import android.content.Context
 import android.os.Bundle
@@ -12,7 +12,8 @@ import com.winter.happyaging.R
 import com.winter.happyaging.data.aiAnalysis.model.AiAnalysisResponse
 import com.winter.happyaging.data.aiAnalysis.repository.AiAnalysisRepository
 import com.winter.happyaging.databinding.FragmentAnalysisRecordListBinding
-import com.winter.happyaging.ui.aiAnalysis.adapter.RecordDateAdapter
+import com.winter.happyaging.ui.aiAnalysis.record.adapter.RecordDateAdapter
+import com.winter.happyaging.ui.aiAnalysis.result.AnalysisResultFragment
 
 class AnalysisRecordListFragment : Fragment(R.layout.fragment_analysis_record_list) {
 

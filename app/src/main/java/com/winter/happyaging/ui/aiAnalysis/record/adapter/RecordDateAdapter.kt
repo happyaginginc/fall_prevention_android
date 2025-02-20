@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.aiAnalysis.adapter
+package com.winter.happyaging.ui.aiAnalysis.record.adapter
 
 import android.os.Build
 import android.view.LayoutInflater

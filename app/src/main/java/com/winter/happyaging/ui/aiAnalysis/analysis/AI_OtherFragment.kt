@@ -13,7 +13,6 @@ import com.winter.happyaging.data.aiAnalysis.model.AiAnalysisResponse
 import com.winter.happyaging.data.aiAnalysis.model.RoomRequest
 import com.winter.happyaging.data.aiAnalysis.repository.AiAnalysisRepository
 import com.winter.happyaging.network.TokenManager
-import com.winter.happyaging.ui.aiAnalysis.BaseRoomFragment
 import kotlinx.coroutines.launch
 
 class AI_OtherFragment : BaseRoomFragment(
@@ -47,7 +46,6 @@ class AI_OtherFragment : BaseRoomFragment(
     }
 
     private fun loadStoredImages() {
-        // 각 방에 대해 ImageManager에서 RoomImageInfo를 가져와 복원
         for (room in roomList) {
             val storedImages = imageManager.getImageData(room.name)
             storedImages?.let { info ->
@@ -139,7 +137,7 @@ class AI_OtherFragment : BaseRoomFragment(
             roomName.contains("화장실") -> "BATHROOM"
             roomName.contains("거실") -> "LIVING_ROOM"
             roomName.contains("주방") -> "KITCHEN"
-            roomName.contains("방") -> "GENERAL_ROOM"
+            roomName.contains("침실") -> "GENERAL_ROOM"
             roomName.contains("외부") -> "OUTDOOR"
             else -> "OTHER"
         }

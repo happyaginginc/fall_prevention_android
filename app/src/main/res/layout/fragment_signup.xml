@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/background_color">
 
     <!-- 공통 헤더 include -->
     <include
@@ -300,16 +300,6 @@
                         android:visibility="gone"
                         android:layout_marginBottom="4dp" />
                 </LinearLayout>
-
-                <!-- 로그인 링크 (가운데 정렬) -->
-                <TextView
-                    android:id="@+id/loginLink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/login_link"
-                    android:textColor="#000000"
-                    android:textSize="14sp"
-                    android:layout_gravity="center"/>
             </LinearLayout>
         </ScrollView>
 

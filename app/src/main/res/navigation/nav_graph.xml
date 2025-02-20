@@ -6,7 +6,7 @@
     <!-- AI Intro Fragment -->
     <fragment
         android:id="@+id/AIIntroFragment"
-        android:name="com.winter.happyaging.ui.aiAnalysis.AIIntroFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AIIntroFragment"
         android:label="AI Intro Fragment">
         <action
             android:id="@+id/action_AIIntroFragment_to_AILivingRoomFragment"
@@ -76,12 +76,12 @@
     <!-- 기타(기록 목록) Fragment -->
     <fragment
         android:id="@+id/AnalysisRecordListFragment"
-        android:name="com.winter.happyaging.ui.aiAnalysis.AnalysisRecordListFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.record.AnalysisRecordListFragment"
         android:label="분석 기록 목록" />
 
     <!-- Analysis Result Fragment (최종 결과 화면) -->
     <fragment
         android:id="@+id/AnalysisResultFragment"
-        android:name="com.winter.happyaging.ui.aiAnalysis.AnalysisResultFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.result.AnalysisResultFragment"
         android:label="Analysis Result Fragment" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.aiAnalysis.adapter
+package com.winter.happyaging.ui.aiAnalysis.analysis.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,19 +11,16 @@ import com.winter.happyaging.databinding.ItemRoomImageBinding
 class RoomImageAdapter(
     private val imageList: MutableList<String>,
     private val baseImageUrl: String,
-    // 콜백: 추가 버튼 클릭 시와 삭제 버튼 클릭 시
     private val onAddClick: () -> Unit,
     private val onDeleteClick: (position: Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    // 뷰타입 상수
     companion object {
         private const val VIEW_TYPE_IMAGE = 1
         private const val VIEW_TYPE_ADD = 2
     }
 
     override fun getItemViewType(position: Int): Int {
-        // 마지막 아이템은 항상 “추가하기” 버튼으로 표시
         return if (position == imageList.size) VIEW_TYPE_ADD else VIEW_TYPE_IMAGE
     }
 

@@ -1,6 +1,5 @@
 package com.winter.happyaging.ui.main
 
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,11 +12,12 @@ import com.winter.happyaging.ui.auth.login.LoginFragment
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = Color.parseColor("#B8660E")
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            showFragment(IntroFragment())
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, IntroFragment())
+                .commit()
         }
 
         val loginLink: TextView = findViewById(R.id.loginLink)

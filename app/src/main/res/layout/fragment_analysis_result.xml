@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:background="@android:color/white"
-    tools:context=".ui.aiAnalysis.AnalysisResultFragment">
+    tools:context=".ui.aiAnalysis.result.AnalysisResultFragment">
 
 
     <include
@@ -106,7 +106,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="확인"
-        android:contentDescription="확인 버튼"
         app:backgroundTint="?attr/colorPrimary"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"

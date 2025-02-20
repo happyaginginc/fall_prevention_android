@@ -1,13 +1,11 @@
-package com.winter.happyaging.ui.aiAnalysis.adapter
+package com.winter.happyaging.ui.aiAnalysis.result.adapter
 
-import android.os.Build
 import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.winter.happyaging.R
@@ -27,7 +25,6 @@ class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :
         return AnalysisViewHolder(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: AnalysisViewHolder, position: Int) {
         holder.bind(analysisList[position])
     }
@@ -45,7 +42,6 @@ class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :
         private val fallSummaryTextView: TextView = itemView.findViewById(R.id.fallSummaryTextView)
         private val fallRiskTextView: TextView = itemView.findViewById(R.id.fallRiskTextView)
 
-        @RequiresApi(Build.VERSION_CODES.N)
         fun bind(room: RoomAIPrompt) {
             roomNameTextView.text = room.roomName
 

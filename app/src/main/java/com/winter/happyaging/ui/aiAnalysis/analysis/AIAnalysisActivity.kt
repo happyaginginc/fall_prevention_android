@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.aiAnalysis
+package com.winter.happyaging.ui.aiAnalysis.analysis
 
 import android.graphics.Rect
 import android.os.Bundle

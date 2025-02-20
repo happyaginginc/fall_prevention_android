@@ -1,6 +1,5 @@
 package com.winter.happyaging.ui.auth.register
 
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
@@ -16,7 +15,6 @@ import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.winter.happyaging.R
@@ -24,7 +22,6 @@ import com.winter.happyaging.data.auth.model.request.RegisterRequest
 import com.winter.happyaging.data.auth.model.response.RegisterResponse
 import com.winter.happyaging.data.auth.service.AuthService
 import com.winter.happyaging.network.RetrofitClient
-import com.winter.happyaging.ui.auth.login.LoginFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -49,11 +46,9 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // fragment_signup.xml 레이아웃 사용
         return inflater.inflate(R.layout.fragment_signup, container, false)
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -74,7 +69,7 @@ class RegisterFragment : Fragment() {
         val tvPrivacyError: TextView = view.findViewById(R.id.tvPrivacyError)
         val btnSignUp: Button = view.findViewById(R.id.btnSignUp)
         val tvTermsDetail: TextView = view.findViewById(R.id.tvTermsDetail)
-        val loginLink: TextView = view.findViewById(R.id.loginLink)
+//        val loginLink: TextView = view.findViewById(R.id.loginLink)
 
         // HTML 텍스트가 포함된 문자열을 Html.fromHtml()로 적용
         val tvRequiredNote: TextView = view.findViewById(R.id.tvRequiredNote)
@@ -233,20 +228,10 @@ class RegisterFragment : Fragment() {
                     }
                 })
             } else {
-                // 유효성 미통과 시 해당 필드로 스크롤
                 scrollView.post {
-                    // 예시: 이름 입력 필드로 스크롤 (필요시 focusView 로직 추가)
                     scrollView.smoothScrollTo(0, etName.top)
                 }
                 Toast.makeText(requireContext(), R.string.fill_all_fields, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        // [3] 로그인 링크 클릭 시 로그인 화면으로 이동
-        loginLink.setOnClickListener {
-            parentFragmentManager.commit {
-                replace(R.id.fragmentContainer, LoginFragment())
-                addToBackStack(null)
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.aiAnalysis
+package com.winter.happyaging.ui.aiAnalysis.analysis
 
 import android.Manifest
 import android.app.Activity
@@ -25,7 +25,7 @@ import com.winter.happyaging.data.image.service.ImageService
 import com.winter.happyaging.databinding.FragmentAiRoomBinding
 import com.winter.happyaging.network.ImageManager
 import com.winter.happyaging.network.RetrofitClient
-import com.winter.happyaging.ui.aiAnalysis.adapter.RoomAdapter
+import com.winter.happyaging.ui.aiAnalysis.analysis.adapter.RoomAdapter
 import com.winter.happyaging.utils.ImagePickerManager
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -133,7 +133,7 @@ abstract class BaseRoomFragment(
             "거실" -> "세련되고 편안한 거실을 촬영해주세요."
             "주방" -> "깔끔하고 현대적인 주방을 촬영해주세요."
             "욕실" -> "안전하고 청결한 욕실을 촬영해주세요."
-            "일반 방" -> "편안한 일반 방을 촬영해주세요."
+            "침실" -> "편안한 일반 방을 촬영해주세요."
             "외부" -> "넓은 외부 환경을 촬영해주세요."
             "기타" -> "추가적인 공간을 촬영해주세요."
             else -> ""

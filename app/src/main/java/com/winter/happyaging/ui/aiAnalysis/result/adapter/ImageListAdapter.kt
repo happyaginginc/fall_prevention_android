@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.aiAnalysis.adapter
+package com.winter.happyaging.ui.aiAnalysis.result.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.winter.happyaging.R
+import com.winter.happyaging.ui.aiAnalysis.result.ImagePopupDialog
 
 class ImageListAdapter(private val imageUrls: List<String>) :
     RecyclerView.Adapter<ImageListAdapter.ImageViewHolder>() {
@@ -28,6 +29,10 @@ class ImageListAdapter(private val imageUrls: List<String>) :
             .placeholder(R.drawable.logo)
             .error(R.drawable.logo)
             .into(holder.imageView)
+
+        holder.imageView.setOnClickListener {
+            ImagePopupDialog(it.context, url).show()
+        }
     }
 
     override fun getItemCount(): Int = imageUrls.size

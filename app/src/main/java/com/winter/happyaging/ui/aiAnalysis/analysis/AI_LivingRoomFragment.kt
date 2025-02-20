@@ -1,7 +1,6 @@
 package com.winter.happyaging.ui.aiAnalysis.analysis
 
 import com.winter.happyaging.R
-import com.winter.happyaging.ui.aiAnalysis.BaseRoomFragment
 
 class AI_LivingRoomFragment : BaseRoomFragment(
     step = 1,

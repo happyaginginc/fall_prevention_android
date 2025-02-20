@@ -13,10 +13,10 @@ class SeniorAdapter(private var seniorList: List<SeniorReadResponse>) : Recycler
 
     inner class SeniorViewHolder(private val binding: ItemSeniorBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(senior: SeniorReadResponse) {
-            binding.tvSeniorName2.text = senior.name
-            binding.tvSeniorAddress2.text = senior.address
-            binding.tvSeniorAge2.text = "${calculateAge(senior.birthYear)}세"
-            binding.btnManage2.setOnClickListener {
+            binding.tvSeniorName.text = senior.name
+            binding.tvSeniorAddress.text = senior.address
+            binding.tvSeniorAge.text = "${calculateAge(senior.birthYear)}세"
+            binding.btnManage.setOnClickListener {
                 val context = binding.root.context
                 val intent = Intent(context, ManageSeniorActivity::class.java).apply {
                     putExtra("name", senior.name)

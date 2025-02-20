@@ -10,8 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.winter.happyaging.R
-import com.winter.happyaging.ui.aiAnalysis.AIAnalysisActivity
-import com.winter.happyaging.ui.aiAnalysis.AnalysisRecordListActivity
+import com.winter.happyaging.ui.aiAnalysis.analysis.AIAnalysisActivity
+import com.winter.happyaging.ui.aiAnalysis.record.AnalysisRecordListActivity
 
 class ManageSeniorActivity : AppCompatActivity() {
 

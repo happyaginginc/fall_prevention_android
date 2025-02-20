@@ -4,8 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:layout_marginBottom="12dp">  <!-- 아이템 간 간격 추가 -->
+    android:padding="16dp"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/item_background">
 
     <!-- 상품 이미지 -->
     <ImageView
@@ -22,9 +23,11 @@
         android:id="@+id/tvProductName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:text="상품 이름"
         android:textStyle="bold"
         android:textSize="16sp"
-        android:layout_marginStart="8dp"
+        android:textColor="@color/primary_text"
+        android:layout_marginStart="12dp"
         app:layout_constraintStart_toEndOf="@id/ivProduct"
         app:layout_constraintTop_toTopOf="@id/ivProduct"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -34,8 +37,10 @@
         android:id="@+id/tvProductPrice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:text="₩0"
         android:textColor="@android:color/holo_red_dark"
-        android:layout_marginStart="8dp"
+        android:textSize="14sp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@id/ivProduct"
         app:layout_constraintTop_toBottomOf="@id/tvProductName"
@@ -46,8 +51,10 @@
         android:id="@+id/tvProductDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:text="상품 설명 내용이 여기에 표시됩니다."
         android:textSize="12sp"
-        android:layout_marginStart="8dp"
+        android:textColor="@color/secondary_text"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@id/ivProduct"
         app:layout_constraintTop_toBottomOf="@id/tvProductPrice"

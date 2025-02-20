@@ -1,7 +1,11 @@
 package com.winter.happyaging.ui.home
 
+import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.winter.happyaging.R
 import com.winter.happyaging.databinding.ActivityHomeBinding
@@ -30,5 +34,19 @@ class HomeActivity : AppCompatActivity() {
             removeAllViews()
             addView(bottomNavView)
         }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        val view = currentFocus
+        if (view != null && ev.action == MotionEvent.ACTION_DOWN) {
+            val outRect = Rect()
+            view.getGlobalVisibleRect(outRect)
+            if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+                view.clearFocus()
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }

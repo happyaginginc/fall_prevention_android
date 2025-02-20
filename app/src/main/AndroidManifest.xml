@@ -57,11 +57,11 @@
             android:exported="false"/>
 
         <activity
-            android:name=".ui.aiAnalysis.AIAnalysisActivity"
+            android:name=".ui.aiAnalysis.analysis.AIAnalysisActivity"
             android:exported="false"/>
 
         <activity
-            android:name="com.winter.happyaging.ui.aiAnalysis.AnalysisRecordListActivity" />
+            android:name="com.winter.happyaging.ui.aiAnalysis.record.AnalysisRecordListActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

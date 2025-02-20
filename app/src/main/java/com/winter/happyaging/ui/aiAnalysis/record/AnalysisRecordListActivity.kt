@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.aiAnalysis
+package com.winter.happyaging.ui.aiAnalysis.record
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
