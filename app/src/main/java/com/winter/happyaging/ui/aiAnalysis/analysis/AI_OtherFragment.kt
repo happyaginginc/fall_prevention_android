@@ -21,6 +21,13 @@ class AI_OtherFragment : BaseRoomFragment(
     roomType = "기타",
     nextAction = R.id.action_AIOtherFragment_to_AnalysisResultFragment
 ) {
+    override val guideText1: String
+        get() = "해당 공간 전체를 촬영해주세요."
+    override val guideText2: String
+        get() = "특징적인 요소나 가구가 잘 보이도록 촬영해주세요."
+    override val guideText3: String
+        get() = "조명과 배경을 고려하여 촬영해주세요."
+
     companion object {
         private const val TAG = "AI_OtherFragment"
         private const val ANALYSIS_DATA_PREFS = "AnalysisData"

@@ -1,133 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_margin="8dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp"
+    app:strokeColor="@color/outlineColor"
+    app:strokeWidth="1dp"
+    android:backgroundTint="@color/white">
 
-    <!-- 상단: 방 번호와 방 이름 입력란 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- 방 번호 (예: 1) -->
+        <!-- 상단: 방 번호 및 이름 입력 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/roomNumberText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:layout_marginEnd="12dp"
+                android:text="1"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/buttonGreen" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/roomNameLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="ex) 안방 화장실"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxStrokeColor="@color/outlineColor">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/roomName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="56dp"
+                    android:textColor="@color/primaryText"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
         <TextView
-            android:id="@+id/roomNumber"
+            android:id="@+id/roomHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingVertical="8dp"
-            android:paddingHorizontal="12dp"
-            android:text="1"
-            android:textSize="16sp"
-            android:background="@drawable/rounded_background"
-            android:textColor="@color/white" />
+            android:text="미작성 시 '카테고리 + 숫자'로 표기됩니다."
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:layout_gravity="end"
+            android:textColor="@color/secondaryText" />
 
-        <!-- 방 이름 입력란 -->
-        <EditText
-            android:id="@+id/roomName"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:paddingHorizontal="20dp"
-            android:background="@drawable/rounded_background"
-            android:backgroundTint="#EEEEEE"
+        <!-- 가이드 텍스트 및 이미지 영역 -->
+        <TextView
+            android:id="@+id/tvGuide1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="가이드 텍스트 1"
             android:textSize="16sp"
-            android:hint="ex) 안방 화장실" />
+            android:layout_marginTop="16dp"
+            android:textColor="@color/primaryText" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvGuide1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal" />
+
+        <TextView
+            android:id="@+id/tvGuide2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="가이드 텍스트 2"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/primaryText" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvGuide2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal" />
+
+        <TextView
+            android:id="@+id/tvGuide3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="가이드 텍스트 3"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/primaryText" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvGuide3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal" />
+
+        <!-- 하단: 방 추가 및 삭제 버튼 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="end">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/AddRoomButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="추가하기"
+                android:textSize="16sp"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_plus"
+                app:iconPadding="8dp"
+                app:iconGravity="textStart" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/DeleteRoomButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:text="삭제하기"
+                android:textSize="16sp"
+                android:textColor="@color/secondaryText"
+                app:cornerRadius="16dp"
+                android:visibility="gone" />
+        </LinearLayout>
     </LinearLayout>
-
-    <!-- 하단 설명: 방 이름 미작성 시 기본값 안내 -->
-    <TextView
-        android:id="@+id/roomHint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="미작성 시 화장실1과 같이 표기됩니다."
-        android:textSize="12sp"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="end" />
-
-    <!-- 가이드 1: 방문이 있는 벽면에서 방 전체가 보이도록 -->
-    <TextView
-        android:id="@+id/tvGuide1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="방문이 있는 벽면에서 방 전체가 보이도록"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvGuide1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal" />
-
-    <!-- 가이드 2: 방문과 마주보는 벽면에서 방 전체가 보이도록 -->
-    <TextView
-        android:id="@+id/tvGuide2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="방문과 마주보는 벽면에서 방 전체가 보이도록"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvGuide2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal" />
-
-    <!-- 가이드 3: 방 밖에서 방문을 향해서 -->
-    <TextView
-        android:id="@+id/tvGuide3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="방 밖에서 방문을 향해서"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvGuide3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal" />
-
-    <!-- 하단: 방 추가 및 삭제 버튼 -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/AddRoomButton"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="16dp"
-        android:text="추가하기"
-        android:textSize="16sp"
-        android:textColor="#C1694F"
-        app:cornerRadius="16dp"
-        android:backgroundTint="#FADCB3"
-        app:icon="@drawable/ic_plus"
-        app:iconSize="20dp"
-        app:iconTint="#C1694F"
-        app:iconPadding="16dp"
-        app:iconGravity="textStart" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/DeleteRoomButton"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="16dp"
-        android:text="삭제하기"
-        android:textSize="16sp"
-        android:textColor="#747474"
-        app:cornerRadius="16dp"
-        android:backgroundTint="#D8D8D8"
-        app:icon="@drawable/ic_delete"
-        app:iconSize="20dp"
-        app:iconTint="#747474"
-        app:iconPadding="16dp"
-        app:iconGravity="textStart" />
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

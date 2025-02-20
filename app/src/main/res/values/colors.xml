@@ -8,4 +8,14 @@
     <color name="light_green">#CCDEA1</color>
     <color name="dark_green">#4A572D</color>
     <color name="colorAccent">#A9CF54</color>
+
+    <color name="chipGreen">#388E3C</color>
+    <color name="myPrimaryColor">#3F51B5</color>
+    <color name="mySecondaryText">#757575</color>
+
+    <color name="buttonGreen">#8BC455</color>
+    <color name="primaryText">#333333</color>
+    <color name="secondaryText">#808080</color>
+    <color name="grayBackground">#F5F5F5</color>
+    <color name="outlineColor">#DDDDDD</color>
 </resources>

@@ -1,8 +1,9 @@
 package com.winter.happyaging.ui.aiAnalysis.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.winter.happyaging.R
@@ -11,6 +12,9 @@ import com.winter.happyaging.databinding.ItemRoomBinding
 
 class RoomAdapter(
     private val roomList: MutableList<RoomData>,
+    private val guideText1: String,
+    private val guideText2: String,
+    private val guideText3: String,
     private val onAddImageClick: (roomPosition: Int, guideIndex: Int) -> Unit,
     private val onDeleteImageClick: (roomPosition: Int, guideIndex: Int, imagePosition: Int) -> Unit,
     private val onAddRoomClick: (position: Int) -> Unit,
@@ -23,54 +27,62 @@ class RoomAdapter(
     }
 
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
-        holder.bind(roomList[position])
+        holder.bind(roomList[position], position)
     }
 
     override fun getItemCount(): Int = roomList.size
 
     inner class RoomViewHolder(private val binding: ItemRoomBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(room: RoomData) {
-            val currentPosition = bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION } ?: return
+        fun bind(room: RoomData, position: Int) {
+            binding.apply {
+                roomNumberText.text = "${position + 1}"
+                roomHint.text = "미작성 시 '${room.name}'로 표기됩니다."
+                roomName.setText("")
+                roomNameLayout.hint = room.name
 
-            binding.roomName.setText(room.name)
+                // doAfterTextChanged를 이용해 중복 TextWatcher 등록을 방지
+                roomName.doAfterTextChanged { text ->
+                    val newName = text?.toString()?.trim()
+                    room.name = if (newName.isNullOrEmpty()) room.name else newName
+                }
 
-            binding.rvGuide1.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = RoomImageAdapter(
-                    imageList = room.guide1Images,
-                    baseImageUrl = context.getString(R.string.base_image_url),
-                    onAddClick = { onAddImageClick(currentPosition, 1) },
-                    onDeleteClick = { imagePos -> onDeleteImageClick(currentPosition, 1, imagePos) }
-                )
-            }
+                tvGuide1.text = guideText1
+                tvGuide2.text = guideText2
+                tvGuide3.text = guideText3
 
-            binding.rvGuide2.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = RoomImageAdapter(
-                    imageList = room.guide2Images,
-                    baseImageUrl = context.getString(R.string.base_image_url),
-                    onAddClick = { onAddImageClick(currentPosition, 2) },
-                    onDeleteClick = { imagePos -> onDeleteImageClick(currentPosition, 2, imagePos) }
-                )
-            }
+                // 각 가이드 이미지 RecyclerView 설정
+                rvGuide1.apply {
+                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    adapter = RoomImageAdapter(
+                        imageList = room.guide1Images,
+                        baseImageUrl = context.getString(R.string.base_image_url),
+                        onAddClick = { onAddImageClick(position, 1) },
+                        onDeleteClick = { imagePos -> onDeleteImageClick(position, 1, imagePos) }
+                    )
+                }
+                rvGuide2.apply {
+                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    adapter = RoomImageAdapter(
+                        imageList = room.guide2Images,
+                        baseImageUrl = context.getString(R.string.base_image_url),
+                        onAddClick = { onAddImageClick(position, 2) },
+                        onDeleteClick = { imagePos -> onDeleteImageClick(position, 2, imagePos) }
+                    )
+                }
+                rvGuide3.apply {
+                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    adapter = RoomImageAdapter(
+                        imageList = room.guide3Images,
+                        baseImageUrl = context.getString(R.string.base_image_url),
+                        onAddClick = { onAddImageClick(position, 3) },
+                        onDeleteClick = { imagePos -> onDeleteImageClick(position, 3, imagePos) }
+                    )
+                }
 
-            binding.rvGuide3.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = RoomImageAdapter(
-                    imageList = room.guide3Images,
-                    baseImageUrl = context.getString(R.string.base_image_url),
-                    onAddClick = { onAddImageClick(currentPosition, 3) },
-                    onDeleteClick = { imagePos -> onDeleteImageClick(currentPosition, 3, imagePos) }
-                )
-            }
-
-            binding.AddRoomButton.setOnClickListener {
-                Log.d("RoomAdapter", "방 추가 버튼 클릭됨 - 현재 방 개수: ${roomList.size}")
-                onAddRoomClick(currentPosition)
-            }
-            binding.DeleteRoomButton.setOnClickListener {
-                Log.d("RoomAdapter", "방 삭제 버튼 클릭됨 - 방 번호: ${currentPosition + 1}")
-                if (roomList.size > 1) onDeleteRoomClick(currentPosition)
+                // 방 추가 및 삭제 버튼
+                AddRoomButton.setOnClickListener { onAddRoomClick(position) }
+                DeleteRoomButton.visibility = if (roomList.size > 1) View.VISIBLE else View.GONE
+                DeleteRoomButton.setOnClickListener { onDeleteRoomClick(position) }
             }
         }
     }
