@@ -20,12 +20,10 @@ class AI_OtherFragment : BaseRoomFragment(
     roomType = "기타",
     nextAction = R.id.action_AIOtherFragment_to_AnalysisResultFragment
 ) {
-    override val guideText1: String
-        get() = "해당 공간 전체를 촬영해주세요."
-    override val guideText2: String
-        get() = "특징적인 요소나 가구가 잘 보이도록 촬영해주세요."
-    override val guideText3: String
-        get() = "조명과 배경을 고려하여 촬영해주세요."
+    override val guideTexts: List<String>
+        get() = listOf(
+            "기타 공간(베란다, 외부 계단 등) 전체가 보이도록 촬영해주세요."
+        )
 
     companion object {
         private const val TAG = "AI_OtherFragment"
@@ -45,18 +43,21 @@ class AI_OtherFragment : BaseRoomFragment(
         loadStoredImages()
     }
 
+
     private fun loadStoredImages() {
         for (room in roomList) {
-            val storedImages = imageManager.getImageData(room.name)
-            storedImages?.let { info ->
-                room.guide1Images.clear()
-                room.guide1Images.addAll(info.guide1.filter { it.isNotEmpty() })
-                room.guide2Images.clear()
-                room.guide2Images.addAll(info.guide2.filter { it.isNotEmpty() })
-                room.guide3Images.clear()
-                room.guide3Images.addAll(info.guide3.filter { it.isNotEmpty() })
+            val storedInfo = imageManager.getImageData(room.name)
+            if (storedInfo != null) {
+                val storedGuides = storedInfo.guides
+                val minCount = minOf(room.guides.size, storedGuides.size)
+
+                for (i in 0 until minCount) {
+                    room.guides[i].images.clear()
+                    room.guides[i].images.addAll(storedGuides[i])
+                }
             }
         }
+
         binding.roomRecyclerView.adapter?.notifyDataSetChanged()
     }
 
@@ -73,16 +74,11 @@ class AI_OtherFragment : BaseRoomFragment(
         val allRooms = imageManager.getAllImageData()
         Log.d("sendAnalysisRequest", "모든 방의 이미지 데이터: $allRooms")
 
-        val roomRequests: List<RoomRequest> = allRooms.values.map { info ->
-            val allImages = mutableListOf<String>()
-            allImages.addAll(info.guide1.filter { it.isNotEmpty() })
-            allImages.addAll(info.guide2.filter { it.isNotEmpty() })
-            allImages.addAll(info.guide3.filter { it.isNotEmpty() })
-            Log.d("sendAnalysisRequest", "방: ${info.roomName}, 합쳐진 이미지 리스트: $allImages")
-
+        val roomRequests: List<RoomRequest> = roomList.map { room ->
+            val allImages = room.guides.flatMap { it.images }
             RoomRequest(
-                roomName = info.roomName,
-                roomCategory = getRoomCategory(info.roomName),
+                roomName = room.name,
+                roomCategory = getRoomCategory(room.name),
                 roomImages = allImages
             )
         }

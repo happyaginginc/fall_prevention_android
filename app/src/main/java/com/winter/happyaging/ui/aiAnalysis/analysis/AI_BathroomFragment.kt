@@ -3,14 +3,15 @@ package com.winter.happyaging.ui.aiAnalysis.analysis
 import com.winter.happyaging.R
 
 class AI_BathroomFragment : BaseRoomFragment(
-    step = 3,
+    step = 1,
     roomType = "욕실/화장실",
-    nextAction = R.id.action_AIBathroomFragment_to_AIGeneralRoomFragment
+    nextAction = R.id.action_AIBathroomFragment_to_AILivingRoomFragment
 ) {
-    override val guideText1: String
-        get() = "욕실 내부 전체를 밝게 촬영해주세요."
-    override val guideText2: String
-        get() = "세면대와 거울이 보이도록 촬영해주세요."
-    override val guideText3: String
-        get() = "문을 열어 환기가 잘 되는 모습을 담아주세요."
+    override val guideTexts: List<String>
+        get() = listOf(
+            "욕실 내부 전체가 보이도록 촬영해주세요.",
+            "욕실 바닥재가 보이도록 촬영해주세요.",
+            "변기, 세면대가 보이도록 촬영해주세요.",
+            "욕실 문턱(단차)이 보이도록 촬영해주세요."
+        )
 }

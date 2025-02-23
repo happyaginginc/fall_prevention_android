@@ -33,10 +33,10 @@ class RoomImageAdapter(
         }
     }
 
-    override fun getItemCount(): Int = imageList.size + 1 // +1 for add button
+    override fun getItemCount(): Int = imageList.size + 1
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ImageViewHolder) {
+        if (holder is ImageViewHolder && position < imageList.size) {
             holder.bind(imageList[position])
         } else if (holder is AddViewHolder) {
             holder.bind()
@@ -45,7 +45,6 @@ class RoomImageAdapter(
 
     inner class ImageViewHolder(private val binding: ItemRoomImageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(imageName: String) {
-            // 전체 URL 생성 (이미지 파일명 앞에 BASE_IMAGE_URL 붙임)
             val fullUrl = "$baseImageUrl$imageName"
             Glide.with(binding.imageView.context)
                 .load(fullUrl)
@@ -53,7 +52,6 @@ class RoomImageAdapter(
                 .error(R.drawable.logo)
                 .into(binding.imageView)
 
-            // 삭제 버튼 클릭
             binding.btnDelete.setOnClickListener {
                 onDeleteClick(adapterPosition)
             }
@@ -62,7 +60,6 @@ class RoomImageAdapter(
 
     inner class AddViewHolder(private val binding: ItemRoomImageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind() {
-            // “추가” 아이콘 설정
             binding.imageView.setImageResource(R.drawable.ic_add_image)
             binding.btnDelete.visibility = View.GONE
             binding.root.setOnClickListener {

@@ -33,7 +33,7 @@ class AIIntroFragment : Fragment() {
         imageManager.clearLocalImageData()
 
         binding.btnStartAnalysis.setOnClickListener {
-            view.findNavController().navigate(R.id.action_AIIntroFragment_to_AILivingRoomFragment)
+            view.findNavController().navigate(R.id.action_AIIntroFragment_to_AIBathroomFragment)
         }
 
         val headerTitle: TextView = view.findViewById(R.id.tvHeader)

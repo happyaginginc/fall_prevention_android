@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_margin="8dp"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="6dp"
+    app:cardElevation="3dp"
     app:strokeColor="@color/outlineColor"
     app:strokeWidth="1dp"
     android:backgroundTint="@color/white">
@@ -17,7 +17,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- 상단: 방 번호 및 이름 입력 -->
+        <!-- 상단: 방 번호 및 이름 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,62 +68,21 @@
             android:layout_gravity="end"
             android:textColor="@color/secondaryText" />
 
-        <!-- 가이드 텍스트 및 이미지 영역 -->
-        <TextView
-            android:id="@+id/tvGuide1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="가이드 텍스트 1"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/primaryText" />
-
+        <!-- 가이드 목록을 세로로 표시할 RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvGuide1"
+            android:id="@+id/rvGuides"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal" />
+            android:layout_marginTop="12dp"
+            android:nestedScrollingEnabled="false" />
 
-        <TextView
-            android:id="@+id/tvGuide2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="가이드 텍스트 2"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/primaryText" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvGuide2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal" />
-
-        <TextView
-            android:id="@+id/tvGuide3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="가이드 텍스트 3"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/primaryText" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvGuide3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal" />
-
-        <!-- 하단: 방 추가 및 삭제 버튼 -->
+        <!-- 하단: 방 추가/삭제 버튼 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="16dp"
-            android:gravity="end">
+            android:gravity="end"
+            android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/AddRoomButton"

@@ -9,7 +9,17 @@
         android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AIIntroFragment"
         android:label="AI Intro Fragment">
         <action
-            android:id="@+id/action_AIIntroFragment_to_AILivingRoomFragment"
+            android:id="@+id/action_AIIntroFragment_to_AIBathroomFragment"
+            app:destination="@id/AIBathroomFragment" />
+    </fragment>
+
+    <!-- BATHROOM (욕실) Fragment -->
+    <fragment
+        android:id="@+id/AIBathroomFragment"
+        android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AI_BathroomFragment"
+        android:label="AI Bathroom Fragment">
+        <action
+            android:id="@+id/action_AIBathroomFragment_to_AILivingRoomFragment"
             app:destination="@id/AILivingRoomFragment" />
     </fragment>
 
@@ -29,17 +39,7 @@
         android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AI_KitchenFragment"
         android:label="AI Kitchen Fragment">
         <action
-            android:id="@+id/action_AIKitchenFragment_to_AIBathroomFragment"
-            app:destination="@id/AIBathroomFragment" />
-    </fragment>
-
-    <!-- BATHROOM (욕실) Fragment -->
-    <fragment
-        android:id="@+id/AIBathroomFragment"
-        android:name="com.winter.happyaging.ui.aiAnalysis.analysis.AI_BathroomFragment"
-        android:label="AI Bathroom Fragment">
-        <action
-            android:id="@+id/action_AIBathroomFragment_to_AIGeneralRoomFragment"
+            android:id="@+id/action_AIKitchenFragment_to_AIGeneralRoomFragment"
             app:destination="@id/AIGeneralRoomFragment" />
     </fragment>
 
