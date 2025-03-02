@@ -74,11 +74,11 @@ class AI_OtherFragment : BaseRoomFragment(
         val allRooms = imageManager.getAllImageData()
         Log.d("sendAnalysisRequest", "모든 방의 이미지 데이터: $allRooms")
 
-        val roomRequests: List<RoomRequest> = roomList.map { room ->
-            val allImages = room.guides.flatMap { it.images }
+        val roomRequests: List<RoomRequest> = allRooms.values.map { roomImageInfo ->
+            val allImages = roomImageInfo.guides.flatten()
             RoomRequest(
-                roomName = room.name,
-                roomCategory = getRoomCategory(room.name),
+                roomName = roomImageInfo.roomName,
+                roomCategory = getRoomCategory(roomImageInfo.roomName),
                 roomImages = allImages
             )
         }

@@ -1,7 +1,6 @@
 package com.winter.happyaging.ui.aiAnalysis.result.adapter
 
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :
     RecyclerView.Adapter<AnalysisAdapter.AnalysisViewHolder>() {
 
     companion object {
-        private const val TAG = "AnalysisAdapter"
         private const val BASE_IMAGE_URL = "https://api.happy-aging.co.kr/storage/images/"
     }
 
@@ -45,22 +43,20 @@ class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :
         fun bind(room: RoomAIPrompt) {
             roomNameTextView.text = room.roomName
 
-            fallSummaryTextView.text = room.responseDto.fallSummaryDescription
+            val response = room.responseDto
+            fallSummaryTextView.text = response.fallSummaryDescription
 
+            val fallAnalysis = response.fallAnalysis
             val riskDetails = """
-                <b>바닥 상태:</b> ${room.responseDto.fallAnalysis.floorCondition}<br><br>
-                <b>장애물:</b> ${room.responseDto.fallAnalysis.obstacles}<br><br>
-                <b>기타 요인:</b> ${room.responseDto.fallAnalysis.otherFactors}
-            """.trimIndent()
+            <b>바닥 상태:</b> ${fallAnalysis.floorCondition}<br><br>
+            <b>장애물:</b> ${fallAnalysis.obstacles}<br><br>
+            <b>기타 요인:</b> ${fallAnalysis.otherFactors}
+        """.trimIndent()
             fallRiskTextView.text = Html.fromHtml(riskDetails, Html.FROM_HTML_MODE_LEGACY)
 
-            Log.d(TAG, "🔍 받은 이미지 이름 리스트: ${room.images}")
-
             val fullUrls = room.images.map { imageName -> "$BASE_IMAGE_URL$imageName" }
-
             imagesRecyclerView.layoutManager =
                 LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-
             imagesRecyclerView.adapter = ImageListAdapter(fullUrls)
         }
     }

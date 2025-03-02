@@ -140,6 +140,7 @@ abstract class BaseRoomFragment(
 
     private fun setupRecyclerView() {
         binding.roomRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+
         roomAdapter = RoomAdapter(
             roomList = roomList,
             onAddImageClick = { roomPos, guidePos ->
@@ -148,11 +149,11 @@ abstract class BaseRoomFragment(
                 showImageSelectionDialog()
             },
             onDeleteImageClick = { roomPos, guidePos, imagePos ->
-                roomList[roomPos].guides[guidePos].images.removeAt(imagePos)
-                imageManager.saveImageData(roomList[roomPos].name, guidePos, "")
+                val removedImageUrl = roomList[roomPos].guides[guidePos].images.removeAt(imagePos)
+                imageManager.removeImageData(roomList[roomPos].name, guidePos, removedImageUrl)
                 roomAdapter.notifyItemChanged(roomPos)
             },
-            onAddRoomClick = {
+            onAddRoomClick = { pos ->
                 val newGuides = guideTexts.map { GuideData(it, mutableListOf()) }.toMutableList()
                 roomList.add(RoomData("$roomType ${roomList.size + 1}", newGuides))
                 roomAdapter.notifyItemInserted(roomList.lastIndex)
