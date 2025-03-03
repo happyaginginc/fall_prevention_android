@@ -32,9 +32,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/**
- * 로그인 화면
- */
 class LoginFragment : Fragment() {
 
     override fun onCreateView(
@@ -47,7 +44,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 뷰 초기화
         val scrollView: ScrollView = view.findViewById(R.id.scrollView)
         val tvFindEmailPassword: TextView = view.findViewById(R.id.tvFindEmailPassword)
         val tvSignUpLink: TextView = view.findViewById(R.id.signupLink)
@@ -57,10 +53,6 @@ class LoginFragment : Fragment() {
         val tvEmailError: TextView = view.findViewById(R.id.tvEmailError)
         val tvPasswordError: TextView = view.findViewById(R.id.tvPasswordError)
 
-        // HTML 태그 적용 (필요시, 예를 들어 라벨에 별표가 포함되어 있다면)
-        // 예: tvSignUpLink.text = Html.fromHtml(getString(R.string.signup_link), Html.FROM_HTML_MODE_LEGACY)
-
-        // 실시간 유효성 검사: 이메일
         etEmail.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 validateEmail(etEmail, tvEmailError)
@@ -91,7 +83,6 @@ class LoginFragment : Fragment() {
             // 에러가 있을 경우 API 호출 중단
             if (tvEmailError.visibility == View.VISIBLE || tvPasswordError.visibility == View.VISIBLE) {
                 Toast.makeText(requireContext(), R.string.login_fill_fields, Toast.LENGTH_SHORT).show()
-                // 에러가 있는 첫번째 필드로 스크롤 (선택사항)
                 scrollView.post {
                     scrollView.smoothScrollTo(0, etEmail.top)
                 }
@@ -118,7 +109,7 @@ class LoginFragment : Fragment() {
 
                                 // 2) 바로 getUserInfo() 호출해서 사용자 정보 가져오기
                                 val fullAccessToken = "Bearer $accessToken"
-                                authService.getUserInfo(fullAccessToken).enqueue(object : Callback<ApiResponse<UserInfoResponse>> {
+                                authService.getUserInfo().enqueue(object : Callback<ApiResponse<UserInfoResponse>> {
                                     override fun onResponse(
                                         call: Call<ApiResponse<UserInfoResponse>>,
                                         resp: Response<ApiResponse<UserInfoResponse>>
@@ -127,7 +118,6 @@ class LoginFragment : Fragment() {
                                             resp.body()?.let { userInfoResp ->
                                                 if (userInfoResp.status == 200) {
                                                     val userInfo = userInfoResp.data
-                                                    // 3) 사용자 정보 저장
                                                     UserProfileManager.saveUserInfo(
                                                         requireContext(),
                                                         userId = userInfo.id,
@@ -135,11 +125,9 @@ class LoginFragment : Fragment() {
                                                         name = userInfo.name,
                                                         phone = userInfo.phoneNumber
                                                     )
-                                                    // 4) 홈화면으로 이동
                                                     Toast.makeText(requireContext(), R.string.login_success, Toast.LENGTH_SHORT).show()
                                                     startActivity(Intent(requireContext(), HomeActivity::class.java))
                                                     requireActivity().finish()
-
                                                 } else {
                                                     Toast.makeText(requireContext(), "로그인 성공 but 사용자 정보 조회 실패", Toast.LENGTH_SHORT).show()
                                                 }
@@ -150,7 +138,6 @@ class LoginFragment : Fragment() {
                                             Toast.makeText(requireContext(), "사용자 정보 요청 오류: ${resp.code()}", Toast.LENGTH_SHORT).show()
                                         }
                                     }
-
                                     override fun onFailure(call: Call<ApiResponse<UserInfoResponse>>, t: Throwable) {
                                         Toast.makeText(requireContext(), "사용자 정보 요청 실패: ${t.message}", Toast.LENGTH_SHORT).show()
                                     }

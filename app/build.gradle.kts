@@ -67,7 +67,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.swiperefreshlayout)
-    implementation(libs.androidx.core.splashscreen)
+//    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.core.splashscreen.v100)
     annotationProcessor (libs.compiler)
 
     testImplementation(libs.junit)

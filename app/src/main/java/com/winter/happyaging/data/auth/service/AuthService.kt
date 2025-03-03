@@ -30,7 +30,5 @@ interface AuthService {
     ): Call<RefreshTokenResponse>
 
     @GET("/account/me")
-    fun getUserInfo(
-        @Header("Authorization") accessToken: String
-    ): Call<ApiResponse<UserInfoResponse>>
+    fun getUserInfo(): Call<ApiResponse<UserInfoResponse>>
 }

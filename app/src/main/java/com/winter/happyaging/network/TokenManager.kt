@@ -43,29 +43,30 @@ class TokenManager(private val context: Context) {
             onComplete(false)
             return
         }
-
         val authService = RetrofitClient.getInstance(context).create(AuthService::class.java)
-        authService.refreshAccessToken("Bearer $refreshToken").enqueue(object : Callback<RefreshTokenResponse> {
-            override fun onResponse(call: Call<RefreshTokenResponse>, response: Response<RefreshTokenResponse>) {
-                if (response.isSuccessful) {
-                    response.body()?.let { refreshResponse ->
-                        runBlocking {
-                            saveTokens(
-                                refreshResponse.data.accessToken.value,
-                                refreshResponse.data.refreshToken.value
-                            )
-                        }
-                        onComplete(true)
-                    } ?: onComplete(false)
-                } else {
+        authService.refreshAccessToken("Bearer $refreshToken")
+            .enqueue(object : Callback<RefreshTokenResponse> {
+                override fun onResponse(call: Call<RefreshTokenResponse>, response: Response<RefreshTokenResponse>) {
+                    if (response.isSuccessful) {
+                        response.body()?.let { refreshResponse ->
+                            // 새 토큰 저장
+                            runBlocking {
+                                saveTokens(
+                                    refreshResponse.data.accessToken.value,
+                                    refreshResponse.data.refreshToken.value
+                                )
+                            }
+                            onComplete(true)
+                        } ?: run { onComplete(false) }
+                    } else {
+                        onComplete(false)
+                    }
+                }
+
+                override fun onFailure(call: Call<RefreshTokenResponse>, t: Throwable) {
                     onComplete(false)
                 }
-            }
-
-            override fun onFailure(call: Call<RefreshTokenResponse>, t: Throwable) {
-                onComplete(false)
-            }
-        })
+            })
     }
 
     suspend fun clearTokens() {
