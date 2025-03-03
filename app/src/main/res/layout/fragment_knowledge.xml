@@ -7,9 +7,8 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:background="@color/background_color"
-    tools:context=".ui.home.product.PreventionGoodsFragment">
+    tools:context=".ui.home.knowledge.KnowledgeFragment">
 
-    <!-- 헤더 (공통 include 파일) -->
     <include
         android:id="@+id/header"
         layout="@layout/header"
@@ -17,13 +16,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- 검색바 -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/searchInputLayoutProduct"
+        android:id="@+id/searchInputLayoutVideo"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="상품명을 입력해주세요"
+        android:hint="영상 검색"
         app:boxBackgroundMode="outline"
         app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,42 +29,23 @@
         android:layout_marginTop="12dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtSearchProduct"
+            android:id="@+id/edtSearchVideo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionSearch"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- 정렬 옵션 Spinner (오른쪽 정렬) -->
-    <Spinner
-        android:id="@+id/spinnerSort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:minWidth="150dp"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchInputLayoutProduct" />
-
-    <!-- 목록을 감싸는 SwipeRefreshLayout -->
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerVideos"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/spinnerSort"
+        app:layout_constraintTop_toBottomOf="@id/searchInputLayoutVideo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerProduct"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            tools:listitem="@layout/item_product" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingTop="12dp"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_video" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
