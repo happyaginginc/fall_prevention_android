@@ -67,4 +67,11 @@ class TokenManager(private val context: Context) {
             }
         })
     }
+
+    suspend fun clearTokens() {
+        context.dataStore.edit { prefs ->
+            prefs.remove(ACCESS_TOKEN_KEY)
+            prefs.remove(REFRESH_TOKEN_KEY)
+        }
+    }
 }

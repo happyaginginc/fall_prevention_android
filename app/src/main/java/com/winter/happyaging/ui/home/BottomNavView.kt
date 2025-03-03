@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.winter.happyaging.R
+import com.winter.happyaging.ui.home.more.MoreFragment
 import com.winter.happyaging.ui.home.product.PreventionGoodsFragment
 import com.winter.happyaging.ui.home.senior.SeniorListFragment
 
@@ -28,7 +29,7 @@ class BottomNavView @JvmOverloads constructor(
         findViewById<LinearLayout>(R.id.nav_senior_list).isSelected = false
         findViewById<LinearLayout>(R.id.nav_knowledge).isSelected = false
         findViewById<LinearLayout>(R.id.nav_prevention_goods).isSelected = false
-        findViewById<LinearLayout>(R.id.nav_prevention_exercise).isSelected = false
+        findViewById<LinearLayout>(R.id.nav_more).isSelected = false
     }
 
     private fun setupClickListeners() {
@@ -59,11 +60,16 @@ class BottomNavView @JvmOverloads constructor(
                     .commit()
             }
         }
-        // 예방 운동
-        findViewById<LinearLayout>(R.id.nav_prevention_exercise).setOnClickListener { view ->
+        // 더보기
+        findViewById<LinearLayout>(R.id.nav_more).setOnClickListener { view ->
             resetSelection()
-//            view.isSelected = true
-            Toast.makeText(context, "개발 중입니다.", Toast.LENGTH_SHORT).show()
+            view.isSelected = true
+            if (context is AppCompatActivity) {
+                (context as AppCompatActivity).supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, MoreFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
     }
 }

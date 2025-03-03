@@ -39,6 +39,16 @@
         android:usesCleartextTraffic="true">
 
         <activity
+            android:name=".ui.splash.SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -62,6 +72,14 @@
 
         <activity
             android:name="com.winter.happyaging.ui.aiAnalysis.record.AnalysisRecordListActivity" />
+
+        <activity
+            android:name=".ui.survey.RiskAssessmentIntroActivity"
+            android:label="낙상 위험등급 측정"/>
+
+        <activity
+            android:name=".ui.survey.RiskAssessmentQuestionActivity"
+            android:label="낙상 위험 설문"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.winter.happyaging"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
 
         versionCode = 1
@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.androidx.core.splashscreen)
     annotationProcessor (libs.compiler)
 
     testImplementation(libs.junit)

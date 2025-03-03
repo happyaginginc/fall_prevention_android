@@ -18,9 +18,12 @@ import androidx.fragment.app.commit
 import com.winter.happyaging.R
 import com.winter.happyaging.data.auth.model.request.LoginRequest
 import com.winter.happyaging.data.auth.model.response.LoginResponse
+import com.winter.happyaging.data.auth.model.response.UserInfoResponse
 import com.winter.happyaging.data.auth.service.AuthService
 import com.winter.happyaging.network.RetrofitClient
 import com.winter.happyaging.network.TokenManager
+import com.winter.happyaging.network.UserProfileManager
+import com.winter.happyaging.network.model.ApiResponse
 import com.winter.happyaging.ui.auth.findAccount.FindAccountFragment
 import com.winter.happyaging.ui.auth.register.RegisterFragment
 import com.winter.happyaging.ui.home.HomeActivity
@@ -106,53 +109,70 @@ class LoginFragment : Fragment() {
                     if (response.isSuccessful) {
                         response.body()?.let { loginResponse ->
                             if (loginResponse.status == 200) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    R.string.login_success,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
+                                // 1) 토큰 저장
                                 val accessToken = loginResponse.data.accessToken.value
                                 val refreshToken = loginResponse.data.refreshToken.value
-
-                                // TokenManager를 통해 토큰 저장
                                 runBlocking {
                                     TokenManager(requireContext()).saveTokens(accessToken, refreshToken)
                                 }
 
-                                // 홈 화면으로 이동
-                                startActivity(Intent(requireContext(), HomeActivity::class.java))
-                                requireActivity().finish()
+                                // 2) 바로 getUserInfo() 호출해서 사용자 정보 가져오기
+                                val fullAccessToken = "Bearer $accessToken"
+                                authService.getUserInfo(fullAccessToken).enqueue(object : Callback<ApiResponse<UserInfoResponse>> {
+                                    override fun onResponse(
+                                        call: Call<ApiResponse<UserInfoResponse>>,
+                                        resp: Response<ApiResponse<UserInfoResponse>>
+                                    ) {
+                                        if (resp.isSuccessful) {
+                                            resp.body()?.let { userInfoResp ->
+                                                if (userInfoResp.status == 200) {
+                                                    val userInfo = userInfoResp.data
+                                                    // 3) 사용자 정보 저장
+                                                    UserProfileManager.saveUserInfo(
+                                                        requireContext(),
+                                                        userId = userInfo.id,
+                                                        email = userInfo.email,
+                                                        name = userInfo.name,
+                                                        phone = userInfo.phoneNumber
+                                                    )
+                                                    // 4) 홈화면으로 이동
+                                                    Toast.makeText(requireContext(), R.string.login_success, Toast.LENGTH_SHORT).show()
+                                                    startActivity(Intent(requireContext(), HomeActivity::class.java))
+                                                    requireActivity().finish()
+
+                                                } else {
+                                                    Toast.makeText(requireContext(), "로그인 성공 but 사용자 정보 조회 실패", Toast.LENGTH_SHORT).show()
+                                                }
+                                            } ?: run {
+                                                Toast.makeText(requireContext(), "사용자 정보가 비어있습니다.", Toast.LENGTH_SHORT).show()
+                                            }
+                                        } else {
+                                            Toast.makeText(requireContext(), "사용자 정보 요청 오류: ${resp.code()}", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+
+                                    override fun onFailure(call: Call<ApiResponse<UserInfoResponse>>, t: Throwable) {
+                                        Toast.makeText(requireContext(), "사용자 정보 요청 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+                                    }
+                                })
+
                             } else {
-                                Toast.makeText(
-                                    requireContext(),
+                                Toast.makeText(requireContext(),
                                     getString(R.string.login_fail_status, loginResponse.status),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
                         } ?: run {
-                            Toast.makeText(
-                                requireContext(),
-                                R.string.login_fail_empty_body,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(requireContext(), R.string.login_fail_empty_body, Toast.LENGTH_SHORT).show()
                         }
                     } else {
                         val errorBody = response.errorBody()?.string() ?: getString(R.string.unknown_error)
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.login_fail_server, errorBody),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(requireContext(), getString(R.string.login_fail_server, errorBody), Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                    Toast.makeText(
-                        requireContext(),
-                        R.string.network_error,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show()
                 }
             })
         }

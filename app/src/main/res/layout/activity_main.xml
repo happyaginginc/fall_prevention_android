@@ -1,43 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragmentContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="로고 이미지"
-        android:src="@drawable/logo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp" />
+    <!-- 로딩 표시용 ProgressBar -->
+    <ProgressBar
+        android:id="@+id/progressBarMain"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
-
-    <!-- 하단 버튼 -->
-    <Button
-        android:id="@+id/signupButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="25dp"
-        android:backgroundTint="#A9CF54"
-        android:text="회원가입하기"
-        android:textColor="@android:color/white" />
-
-    <!-- 하단 링크 -->
-    <TextView
-        android:id="@+id/loginLink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="이미 계정이 있으신가요? 로그인"
-        android:layout_above="@id/signupButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:textColor="#000000" />
-
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</RelativeLayout>
+</FrameLayout>

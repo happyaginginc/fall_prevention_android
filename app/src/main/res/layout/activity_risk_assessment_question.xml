@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
+
+    <!-- 공통 헤더 -->
+    <include
+        android:id="@+id/header"
+        layout="@layout/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="?android:listDivider"
+        android:dividerHeight="8dp"
+        />
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="제출"
+        android:layout_margin="16dp"
+        android:backgroundTint="#8BC34A"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"/>
+</LinearLayout>

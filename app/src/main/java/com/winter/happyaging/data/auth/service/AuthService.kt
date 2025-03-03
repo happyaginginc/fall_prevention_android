@@ -5,6 +5,7 @@ import com.winter.happyaging.data.auth.model.request.RegisterRequest
 import com.winter.happyaging.data.auth.model.response.LoginResponse
 import com.winter.happyaging.data.auth.model.response.RegisterResponse
 import com.winter.happyaging.data.auth.model.response.UserInfoResponse
+import com.winter.happyaging.network.model.ApiResponse
 import com.winter.happyaging.network.security.model.RefreshTokenResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -31,5 +32,5 @@ interface AuthService {
     @GET("/account/me")
     fun getUserInfo(
         @Header("Authorization") accessToken: String
-    ): Call<UserInfoResponse>
+    ): Call<ApiResponse<UserInfoResponse>>
 }

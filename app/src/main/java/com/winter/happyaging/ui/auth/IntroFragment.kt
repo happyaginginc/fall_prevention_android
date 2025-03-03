@@ -19,7 +19,6 @@ class IntroFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_first, container, false)
-        // 혹은 fragment_intro.xml 등을 사용해도 무방
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

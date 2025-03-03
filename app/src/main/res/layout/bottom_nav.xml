@@ -85,27 +85,27 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <!-- 예방 운동 -->
     <LinearLayout
-        android:id="@+id/nav_prevention_exercise"
+        android:id="@+id/nav_more"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_prevention_exercise"
+        <!-- ic_more 라는 아이콘(직접 추가해주세요) -->
+        <ImageView
+            android:id="@+id/iv_more"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:srcCompat="@drawable/ic_prevention_exercise"
-            app:tint="@color/bottom_nav_color" />
+            android:src="@drawable/ic_more"
+            android:tint="@color/bottom_nav_color" />
 
         <TextView
-            android:id="@+id/tv_prevention_exercise"
+            android:id="@+id/tv_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="예방 운동"
+            android:text="더보기"
             android:textColor="@color/bottom_nav_color"
             android:textSize="12sp" />
     </LinearLayout>

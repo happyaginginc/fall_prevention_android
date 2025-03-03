@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.winter.happyaging.R
 import com.winter.happyaging.ui.aiAnalysis.analysis.AIAnalysisActivity
 import com.winter.happyaging.ui.aiAnalysis.record.AnalysisRecordListActivity
+import com.winter.happyaging.ui.survey.RiskAssessmentIntroActivity
 
 class ManageSeniorActivity : AppCompatActivity() {
 
@@ -26,7 +27,7 @@ class ManageSeniorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_manage_senior)  // XML 파일 로드
+        setContentView(R.layout.activity_manage_senior)
 
         tvName = findViewById(R.id.tvSeniorName2)
         tvAddress = findViewById(R.id.tvSeniorAddress2)
@@ -42,6 +43,7 @@ class ManageSeniorActivity : AppCompatActivity() {
         var address = intent.getStringExtra("address") ?: "주소 없음"
         var birthYear = intent.getIntExtra("birthYear", -1)
 
+        // 이미 SharedPreferences 에 저장되어 있을 수 있으므로 확인
         if (seniorId == -1L) {
             val sharedPrefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
             seniorId = sharedPrefs.getLong("seniorId", -1L)
@@ -50,10 +52,12 @@ class ManageSeniorActivity : AppCompatActivity() {
             birthYear = sharedPrefs.getInt("seniorBirthYear", -1)
         }
 
+        // 화면에 표시
         tvName.text = name
         tvAddress.text = address
         tvAge.text = if (birthYear > 1900) "나이: ${calculateAge(birthYear)}세" else "나이 정보 없음"
 
+        // 현재 Senior 정보 SP 에 저장
         getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).edit().apply {
             putLong("seniorId", seniorId)
             putString("seniorName", name)
@@ -64,29 +68,30 @@ class ManageSeniorActivity : AppCompatActivity() {
 
         Log.d("ManageSeniorActivity", "불러온 Senior 정보 - ID: $seniorId, 이름: $name, 주소: $address, 출생년도: $birthYear")
 
-        // 낙상 위험등급 측정 버튼 (준비 중)
+        // [1] 낙상 위험등급 측정 버튼
         balanceBtn.setOnClickListener {
-            Toast.makeText(this, "준비 중입니다", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, RiskAssessmentIntroActivity::class.java)
+            startActivity(intent)
         }
 
-        // 낙상 위험등급 결과 확인 버튼 (준비 중)
+        // [2] 낙상 위험등급 결과 확인 버튼
         fallResultBtn.setOnClickListener {
             Toast.makeText(this, "준비 중입니다", Toast.LENGTH_SHORT).show()
         }
 
-        // 집 사진 AI 분석 버튼: AIAnalysisActivity 실행
+        // 집 사진 AI 분석 버튼: 기존 로직
         cameraBtn.setOnClickListener {
             val intent = Intent(this, AIAnalysisActivity::class.java)
             startActivity(intent)
         }
 
-        // 집 사진 AI 분석 결과 확인 버튼: 새로운 액티비티 실행하여 AnalysisRecordListFragment 표시
+        // 집 사진 AI 분석 결과 확인 버튼
         resultBtn.setOnClickListener {
-            val intent = Intent(this, AnalysisRecordListActivity::class.java);
+            val intent = Intent(this, AnalysisRecordListActivity::class.java)
             startActivity(intent)
         }
 
-        // 뒤로가기 버튼: 액티비티 종료
+        // 뒤로가기
         backBtn.setOnClickListener {
             finish()
         }
