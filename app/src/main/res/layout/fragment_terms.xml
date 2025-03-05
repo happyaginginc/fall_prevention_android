@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- 뒤로가기 버튼 -->
         <ImageView
             android:id="@+id/btnBack"
             android:layout_width="24dp"
@@ -25,17 +26,17 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="개인정보 이용 약관"
+            android:text="개인정보처리방침"
             android:textStyle="bold"
             android:textSize="24sp"
             android:layout_marginBottom="8dp"/>
 
-        <!-- 소제목 또는 부가 설명 -->
+        <!-- 소제목 -->
         <TextView
             android:id="@+id/tvSubTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="개인정보의 수집 · 이용에 관한 사항"
+            android:text="본 서비스의 개인정보 수집·이용 및 관리 안내"
             android:textSize="14sp"
             android:layout_marginBottom="16dp"/>
 
@@ -44,7 +45,7 @@
             android:id="@+id/tvDescribe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="&lt;낙상예방9988&gt; 참여 신청 및 지원과 관련하여\n다음과 같이 귀하의 개인정보를 수집∙이용하기 위하여\n&lt;개인정보 보호법&gt; 제 15조에 따라 관련 사항을 알려 드리오니\n동의하여 주시기 바랍니다."
+            android:text="본 개인정보처리방침은 &amp;lt;낙상 예방 9988 : 우리 함께 낙상 예방&amp;gt;의 개인정보 수집, 이용, 보관 및 파기 정책을 상세히 안내합니다. 아래 내용을 주의 깊게 읽어주시기 바랍니다."
             android:textSize="14sp"
             android:layout_marginBottom="16dp"/>
 
@@ -53,16 +54,8 @@
             android:id="@+id/tvContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1) 개인정보의 수집·이용 목적\n&lt;낙상예방9988&gt; 참여안내 및 위험측정 결과안내\n\n2) 수집·이용할 개인정보 항목\n성별, 성명, 주소, 출생년도, 휴대전화번호\n\n3) 개인정보의 보유·이용기간\n&lt;낙상예방9988&gt; 참여종료 후 5년간\n\n"
-            android:layout_marginBottom="24dp"/>
-
-<!--        위험문-->
-        <TextView
-            android:id="@+id/tvDanger"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="※ 수집된 정보는 어르신 개인의 낙상예방에 필요한 위험도 산출\n및 예방에 필요한 제언 등의 정보 생성을 위해 활용됩니다.\n 이외 회사의 영리 및 제3자 제공 등 다른 목적으로는\n활용되지 않습니다.
-            \n\n※ 위의 개인정보 수집∙이용에 대한 동의를 거부할 권리가\n있습니다. 그러나, 동의를 거부할 경우 &lt;낙상예방9988&gt;\n신청이 불가합니다."
+            android:text="1. 총칙\n\n“낙상 예방 9988 : 우리 함께 낙상 예방”(이하 “본 서비스”)은 이용자의 개인정보 보호를 중요시하며, 개인정보 보호법 및 관련 법령을 준수합니다. 본 방침은 본 서비스 이용 시 처리되는 개인정보 항목, 이용 목적, 보유 기간, 안전 조치, 이용자의 권리 등에 대해 안내합니다.\n\n2. 수집하는 개인정보의 항목\n\n필수 수집 항목:\n• 성명\n• 출생년도\n• 성별\n• 주소\n• 휴대전화번호\n\n선택 수집 항목:\n• 이메일 주소\n• 사용자 ID\n• 피트니스 정보 (활동 데이터, 운동 기록 등)\n• 건강 정보 (낙상 이력, 건강 상태 등)\n• 사진\n\n3. 개인정보의 수집 및 이용 목적\n\n- 서비스 제공 및 운영\n- 낙상 위험도 산출 및 평가 결과 안내\n- 사용자 맞춤형 낙상 예방 가이드라인 제공\n- 고객지원 및 문의 대응\n- 불만 처리 및 분쟁 조정 기록 보관\n- 법령 또는 내부 정책에 따른 보관\n- 이용자의 권리 행사 지원\n\n4. 개인정보의 보유 및 이용 기간\n\n원칙적으로, 이용 목적 달성 또는 동의 철회 시 지체 없이 파기합니다. 단, 서비스 참여 종료 후 3년간 보관하며, 법령에 따른 추가 보관이 요구될 경우 해당 기간 동안 보관할 수 있습니다.\n\n5. 개인정보의 제3자 제공 및 위탁\n\n원칙적으로 외부 제공하지 않으나, 법령에 따라 동의 없이 제공될 수 있습니다.\n\n6. 개인정보의 파기 절차 및 방법\n\n- 파기 절차: 이용 목적 달성 후 지체 없이 안전하게 파기\n- 파기 방법: 전자적 파일은 복구 불가능한 방법으로 영구 삭제, 문서형 정보는 분쇄 또는 소각\n\n7. 보안 조치\n\n관리적 조치(직원 교육 및 내부관리계획), 기술적 조치(암호화, 접근 통제, AI 기반 이상 탐지) 및 물리적 조치를 통해 개인정보를 안전하게 보호합니다.\n\n8. 이용자의 권리 및 행사 방법\n\n이용자는 개인정보 열람, 정정, 삭제, 동의 철회 및 처리 정지 요구가 가능하며, 관련 요청은 개인정보 보호책임자 또는 고객센터로 문의할 수 있습니다.\n\n9. 정책 및 서비스 문의처\n\n전화: 010-4563-1030\n연락처: 02-6736-5678\n이메일: happyaging525@gmail.com\n주소: 서울 양천구 신정로 267 (신정동, 양천벤처타운) 703호\n\n10. 개인정보 처리방침의 변경 및 공지 의무\n\n본 방침은 법령, 내부 정책 또는 서비스 변경에 따라 수정될 수 있으며, 변경 시 앱 내 공지나 웹사이트를 통해 안내됩니다.\n\n11. 부칙\n\n본 방침은 게시된 날로부터 시행되며, 서비스 특성에 따라 추가 조항이 있을 수 있습니다."
+            android:textSize="14sp"
             android:layout_marginBottom="24dp"/>
 
         <!-- 확인 버튼 -->
@@ -75,6 +68,5 @@
             android:textColor="@android:color/white"
             android:layout_marginTop="16dp"
             android:layout_gravity="center"/>
-
     </LinearLayout>
 </ScrollView>

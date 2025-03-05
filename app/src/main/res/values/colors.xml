@@ -24,4 +24,8 @@
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="accent_color">#3F51B5</color>
+
+    <color name="risk_level_low">#66BB6A</color>
+    <color name="risk_level_medium">#FFA726</color>
+    <color name="risk_level_high">#EF5350</color>
 </resources>

@@ -15,5 +15,6 @@ data class SurveyQuestionResponse(
 
 data class SurveyOption(
     @SerializedName("optionNumber") val optionNumber: Int,
-    @SerializedName("content") val content: String
+    @SerializedName("content") val content: String,
+    @SerializedName("nextQuestionNumber") val nextQuestionNumber: Int? = null
 )

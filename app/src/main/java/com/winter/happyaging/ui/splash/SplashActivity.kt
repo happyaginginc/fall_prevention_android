@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.winter.happyaging.data.auth.model.response.UserInfoResponse
@@ -40,9 +41,12 @@ class SplashActivity : AppCompatActivity() {
         val refreshToken = tokenManager.getRefreshToken()
 
         if (accessToken.isNullOrEmpty() || refreshToken.isNullOrEmpty()) {
+            Log.d("checkAutoLogin", "토큰이 존재하지 않음. 로그인 화면으로 이동.")
             navigateToIntro()
             return
         }
+
+        Log.d("checkAutoLogin", "토큰 확인 완료. 유저 정보 요청 시작.")
 
         val authService = RetrofitClient.getInstance(this).create(AuthService::class.java)
         authService.getUserInfo().enqueue(object : Callback<ApiResponse<UserInfoResponse>> {
@@ -53,6 +57,7 @@ class SplashActivity : AppCompatActivity() {
                 if (response.isSuccessful && response.body()?.status == 200) {
                     val userInfo = response.body()?.data
                     if (userInfo != null) {
+                        Log.d("checkAutoLogin", "유저 정보 로드 성공: ${userInfo.email}")
                         UserProfileManager.saveUserInfo(
                             this@SplashActivity,
                             userInfo.id,
@@ -62,14 +67,17 @@ class SplashActivity : AppCompatActivity() {
                         )
                         navigateToHome()
                     } else {
+                        Log.d("checkAutoLogin", "유저 정보가 없음. 로그인 화면으로 이동.")
                         navigateToIntro()
                     }
                 } else {
+                    Log.d("checkAutoLogin", "응답 실패 또는 상태 코드 오류: ${response.code()}")
                     navigateToIntro()
                 }
             }
 
             override fun onFailure(call: Call<ApiResponse<UserInfoResponse>>, t: Throwable) {
+                Log.e("checkAutoLogin", "네트워크 요청 실패: ${t.localizedMessage}")
                 showNetworkFailDialog()
             }
         })

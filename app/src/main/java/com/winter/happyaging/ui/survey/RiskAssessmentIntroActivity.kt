@@ -18,27 +18,16 @@ class RiskAssessmentIntroActivity : AppCompatActivity() {
         binding = ActivityRiskAssessmentIntroBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 헤더 타이틀 설정
         binding.header.tvHeader.text = "낙상 위험등급 측정"
-        // 뒤로가기 버튼 동작
-        binding.header.btnBack.setOnClickListener {
-            finish()
-        }
+        binding.header.btnBack.setOnClickListener { finish() }
 
         tokenManager = TokenManager(this)
-        val seniorId = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).getLong("seniorId", -1L)
+        getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            .getLong("seniorId", -1L) // seniorId 사용 여부에 따라 추가 처리 가능
 
-        // TODO: 만약 토큰이 필요하면 토큰 검사. 없으면 로그인 유도 등
-        // val accessToken = tokenManager.getAccessToken()
-
-        // "위험등급 측정 시작하기" 버튼
         binding.btnStartSurvey.setOnClickListener {
-            // QuestionRepository 에서 질문 목록을 캐싱하도록 먼저 호출한 뒤
-            // 실제 설문 화면으로 이동
             QuestionRepository.getQuestionListOnce(this) {
-                // 캐싱 완료 후 설문 화면 진입
-                val intent = Intent(this, RiskAssessmentQuestionActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this, RiskAssessmentQuestionActivity::class.java))
             }
         }
     }

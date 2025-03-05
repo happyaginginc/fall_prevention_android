@@ -13,6 +13,7 @@ import com.winter.happyaging.R
 import com.winter.happyaging.ui.aiAnalysis.analysis.AIAnalysisActivity
 import com.winter.happyaging.ui.aiAnalysis.record.AnalysisRecordListActivity
 import com.winter.happyaging.ui.survey.RiskAssessmentIntroActivity
+import com.winter.happyaging.ui.survey.fallResult.FallSurveyRecordListActivity
 
 class ManageSeniorActivity : AppCompatActivity() {
 
@@ -74,10 +75,21 @@ class ManageSeniorActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // [2] 낙상 위험등급 결과 확인 버튼
         fallResultBtn.setOnClickListener {
-            Toast.makeText(this, "준비 중입니다", Toast.LENGTH_SHORT).show()
+            val sharedPrefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            val seniorId = sharedPrefs.getLong("seniorId", -1L)
+            if (seniorId == -1L) {
+                Toast.makeText(this, "시니어 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // 낙상 위험등급 결과 목록 화면으로 이동
+            val intent = Intent(this, FallSurveyRecordListActivity::class.java).apply {
+                putExtra("seniorId", seniorId)
+            }
+            startActivity(intent)
         }
+
 
         // 집 사진 AI 분석 버튼: 기존 로직
         cameraBtn.setOnClickListener {

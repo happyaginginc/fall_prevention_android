@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.winter.happyaging"
-        minSdk = 26
+        minSdk = 21
         targetSdk = 35
 
         versionCode = 1
@@ -29,9 +29,11 @@ android {
             )
         }
     }
-    
+
+    // dataBinding 및 viewBinding을 buildFeatures 블록에서 함께 설정
     buildFeatures {
         dataBinding = true
+        viewBinding = true
     }
 
     compileOptions {
@@ -41,37 +43,40 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    viewBinding.isEnabled=true
 }
 
+
 dependencies {
+    // ================ AndroidX 및 구글 라이브러리 ================
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat.v161)
-    implementation(libs.material.v190)
-    implementation(libs.androidx.activity.ktx)
-    implementation(libs.androidx.constraintlayout.v214)
-    implementation(libs.androidx.navigation.fragment.ktx.v273)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.coordinatorlayout)
     implementation(libs.androidx.cardview)
-    implementation (libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.preferences)
 
-    implementation (libs.okhttp)
-    implementation (libs.logging.interceptor)
-
+    // ================ 네트워킹/이미지 라이브러리 ================
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.cronet.embedded)
 
-    implementation (libs.glide )
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+    // 만약 Kotlin KAPT 사용 중이면: kapt(libs.compiler)
+
+    // ================ 기타 AndroidX 라이브러리 ================
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.swiperefreshlayout)
-//    implementation(libs.androidx.core.splashscreen)
-    implementation(libs.androidx.core.splashscreen.v100)
-    annotationProcessor (libs.compiler)
+    implementation(libs.androidx.core.splashscreen)
 
+    // ================ 테스트 라이브러리 ================
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit.v115)
-    androidTestImplementation(libs.androidx.espresso.core.v351)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }

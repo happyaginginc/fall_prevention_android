@@ -1,7 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/background_color">
 
     <!-- 공통 헤더 -->
@@ -11,22 +14,130 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <!-- 스크롤 영역 -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:divider="?android:listDivider"
-        android:dividerHeight="8dp"
-        />
+        android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnSubmit"
+        <LinearLayout
+            android:id="@+id/layoutQuestionContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 카테고리 표시 -->
+            <TextView
+                android:id="@+id/tvCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="카테고리"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- 질문 번호 -->
+            <TextView
+                android:id="@+id/tvQuestionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Q1"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginBottom="4dp" />
+
+            <!-- 질문 내용 -->
+            <TextView
+                android:id="@+id/tvQuestionContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="질문 내용"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- 질문 이미지 (있으면 표시) -->
+            <ImageView
+                android:id="@+id/ivQuestionImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="8dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:visibility="gone" />
+
+            <!-- 답변 입력/선택 컨테이너(동적 뷰 추가) -->
+            <LinearLayout
+                android:id="@+id/layoutAnswerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 하단 버튼 영역 (이전, 다음/제출) -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="제출"
-        android:layout_margin="16dp"
-        android:backgroundTint="#8BC34A"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"/>
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp">
+
+        <!-- 이전 버튼 -->
+        <Button
+            android:id="@+id/btnPrev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이전"
+            android:layout_marginEnd="8dp"
+            android:visibility="invisible"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#757575"/>
+
+        <!-- 다음/제출 버튼 -->
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="다음"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#8BC34A"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- 로딩 오버레이 (Result에서 쓰던 상세한 로딩으로 교체) -->
+    <LinearLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="#88000000">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="분석 결과지 생성 중"
+            android:textSize="20sp"
+            android:textColor="@color/primaryText"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI가 설문조사를 분석하고 있어요!"
+            android:textSize="14sp"
+            android:textColor="@color/secondaryText"
+            android:layout_marginTop="8dp" />
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            style="@android:style/Widget.ProgressBar.Large" />
+    </LinearLayout>
+
 </LinearLayout>

@@ -108,7 +108,6 @@ class LoginFragment : Fragment() {
                                 }
 
                                 // 2) 바로 getUserInfo() 호출해서 사용자 정보 가져오기
-                                val fullAccessToken = "Bearer $accessToken"
                                 authService.getUserInfo().enqueue(object : Callback<ApiResponse<UserInfoResponse>> {
                                     override fun onResponse(
                                         call: Call<ApiResponse<UserInfoResponse>>,
