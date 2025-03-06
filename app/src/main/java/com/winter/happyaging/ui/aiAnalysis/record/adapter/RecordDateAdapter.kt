@@ -38,25 +38,15 @@ class RecordDateAdapter(
         private val tvRecordDate: TextView = itemView.findViewById(R.id.tvRecordDate)
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(date: String) {
-            val parsedDate = try {
-                LocalDateTime.parse(date)
-            } catch (e: Exception) {
-                null
-            }
-
-            if (parsedDate != null) {
-                val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 H시 mm분")
-                val dateTimeText = parsedDate.format(dateTimeFormatter)
-
-                val htmlText = "<font color='#1976D2'><b>$dateTimeText</b></font> 의 분석 기록"
-                tvRecordDate.text = HtmlCompat.fromHtml(htmlText, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            val parsedDate = runCatching { LocalDateTime.parse(date) }.getOrNull()
+            tvRecordDate.text = if (parsedDate != null) {
+                val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 H시 mm분")
+                val dateTimeText = parsedDate.format(formatter)
+                HtmlCompat.fromHtml("<font color='#1976D2'><b>$dateTimeText</b></font> 의 분석 기록", HtmlCompat.FROM_HTML_MODE_LEGACY)
             } else {
-                tvRecordDate.text = date
+                date
             }
-
-            itemView.setOnClickListener {
-                onItemClick(date)
-            }
+            itemView.setOnClickListener { onItemClick(date) }
         }
     }
 }

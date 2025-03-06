@@ -27,17 +27,12 @@ class AnalysisRecordListFragment : Fragment(R.layout.fragment_analysis_record_li
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAnalysisRecordListBinding.bind(view)
 
-        val headerTitle: TextView = view.findViewById(R.id.tvHeader)
-        headerTitle.text = "낙상 위험 분석 기록"
-
-        binding.header.btnBack.setOnClickListener {
-            requireActivity().finish()
-        }
+        view.findViewById<TextView>(R.id.tvHeader)?.text = "낙상 위험 분석 기록"
+        binding.header.btnBack.setOnClickListener { requireActivity().finish() }
 
         setupRecyclerView()
         fetchRecordDates()
     }
-
 
     private fun setupRecyclerView() {
         recordDateAdapter = RecordDateAdapter(dateList) { selectedDate ->
@@ -71,7 +66,7 @@ class AnalysisRecordListFragment : Fragment(R.layout.fragment_analysis_record_li
         }
         binding.progressBar.visibility = View.VISIBLE
         AiAnalysisRepository.getAnalysisByDate(requireContext(), seniorId, date,
-            onSuccess = { response: AiAnalysisResponse ->
+            onSuccess = { response ->
                 val json = Gson().toJson(response)
                 val bundle = Bundle().apply { putString("analysisResultJson", json) }
                 binding.progressBar.visibility = View.GONE
@@ -87,8 +82,8 @@ class AnalysisRecordListFragment : Fragment(R.layout.fragment_analysis_record_li
     }
 
     private fun getStoredSeniorId(): Long {
-        val sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getLong("seniorId", -1L)
+        val prefs = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        return prefs.getLong("seniorId", -1L)
     }
 
     override fun onDestroyView() {

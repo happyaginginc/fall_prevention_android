@@ -42,19 +42,18 @@ class AnalysisAdapter(private var analysisList: List<RoomAIPrompt>) :
 
         fun bind(room: RoomAIPrompt) {
             roomNameTextView.text = room.roomName
-
             val response = room.responseDto
             fallSummaryTextView.text = response.fallSummaryDescription
 
             val fallAnalysis = response.fallAnalysis
             val riskDetails = """
-            <b>바닥 상태:</b> ${fallAnalysis.floorCondition}<br><br>
-            <b>장애물:</b> ${fallAnalysis.obstacles}<br><br>
-            <b>기타 요인:</b> ${fallAnalysis.otherFactors}
-        """.trimIndent()
+                <b>바닥 상태:</b> ${fallAnalysis.floorCondition}<br><br>
+                <b>장애물:</b> ${fallAnalysis.obstacles}<br><br>
+                <b>기타 요인:</b> ${fallAnalysis.otherFactors}
+            """.trimIndent()
             fallRiskTextView.text = Html.fromHtml(riskDetails, Html.FROM_HTML_MODE_LEGACY)
 
-            val fullUrls = room.images.map { imageName -> "$BASE_IMAGE_URL$imageName" }
+            val fullUrls = room.images.map { "$BASE_IMAGE_URL$it" }
             imagesRecyclerView.layoutManager =
                 LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
             imagesRecyclerView.adapter = ImageListAdapter(fullUrls)

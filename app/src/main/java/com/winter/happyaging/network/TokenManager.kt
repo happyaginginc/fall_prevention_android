@@ -49,7 +49,6 @@ class TokenManager(private val context: Context) {
                 override fun onResponse(call: Call<RefreshTokenResponse>, response: Response<RefreshTokenResponse>) {
                     if (response.isSuccessful) {
                         response.body()?.let { refreshResponse ->
-                            // 새 토큰 저장
                             runBlocking {
                                 saveTokens(
                                     refreshResponse.data.accessToken.value,
@@ -57,7 +56,7 @@ class TokenManager(private val context: Context) {
                                 )
                             }
                             onComplete(true)
-                        } ?: run { onComplete(false) }
+                        } ?: onComplete(false)
                     } else {
                         onComplete(false)
                     }

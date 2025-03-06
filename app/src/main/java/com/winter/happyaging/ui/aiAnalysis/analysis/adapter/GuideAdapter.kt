@@ -29,20 +29,14 @@ class GuideAdapter(
     inner class GuideViewHolder(private val binding: ItemGuideBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(guideData: GuideData, guideIndex: Int) {
             binding.tvGuide.text = guideData.guideText
-
             binding.rvGuideImages.layoutManager =
                 LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
-            val adapter = RoomImageAdapter(
+            binding.rvGuideImages.adapter = RoomImageAdapter(
                 imageList = guideData.images,
                 baseImageUrl = binding.root.context.getString(R.string.base_image_url),
-                onAddClick = {
-                    onAddImageClick(roomIndex, guideIndex)
-                },
-                onDeleteClick = { imagePos ->
-                    onDeleteImageClick(roomIndex, guideIndex, imagePos)
-                }
+                onAddClick = { onAddImageClick(roomIndex, guideIndex) },
+                onDeleteClick = { imagePos -> onDeleteImageClick(roomIndex, guideIndex, imagePos) }
             )
-            binding.rvGuideImages.adapter = adapter
         }
     }
 }

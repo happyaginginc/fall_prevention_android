@@ -29,10 +29,7 @@ class ImageListAdapter(private val imageUrls: List<String>) :
             .placeholder(R.drawable.logo)
             .error(R.drawable.logo)
             .into(holder.imageView)
-
-        holder.imageView.setOnClickListener {
-            ImagePopupDialog(it.context, url).show()
-        }
+        holder.imageView.setOnClickListener { ImagePopupDialog(it.context, url).show() }
     }
 
     override fun getItemCount(): Int = imageUrls.size

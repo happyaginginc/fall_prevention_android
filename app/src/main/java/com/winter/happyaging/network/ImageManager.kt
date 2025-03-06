@@ -30,16 +30,11 @@ class ImageManager(private val context: Context) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    /**
-     * 이미지 저장
-     * guideIndex에 해당하는 이미지 목록에 새로운 imageUrl을 추가로 넣어준다.
-     */
     fun saveImageData(roomName: String, guideIndex: Int, imageUrl: String) {
         scope.launch {
             val existingData = getAllImageData().toMutableMap()
             val roomData = existingData[roomName] ?: RoomImageInfo(roomName, mutableListOf())
 
-            // guideIndex 범위 맞춰서 guides 확장
             ensureGuideSize(roomData.guides, guideIndex)
             roomData.guides[guideIndex].add(imageUrl)
 
@@ -78,9 +73,6 @@ class ImageManager(private val context: Context) {
         }.first()
     }
 
-    /**
-     * 로컬 DataStore 초기화 (모든 저장 이미지 삭제)
-     */
     fun clearLocalImageData() {
         scope.launch {
             context.dataStore.edit { preferences ->

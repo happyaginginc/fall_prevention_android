@@ -19,10 +19,7 @@ class AIIntroFragment : Fragment() {
 
     private lateinit var imageManager: ImageManager
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAiIntroBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -35,26 +32,17 @@ class AIIntroFragment : Fragment() {
         binding.btnStartAnalysis.setOnClickListener {
             view.findNavController().navigate(R.id.action_AIIntroFragment_to_AIBathroomFragment)
         }
-
-        val headerTitle: TextView = view.findViewById(R.id.tvHeader)
-        headerTitle.text = "낙상 위험 분석 시작하기"
-
-        binding.header.btnBack.setOnClickListener {
-            requireActivity().finish()
-        }
-
+        view.findViewById<TextView>(R.id.tvHeader)?.text = "낙상 위험 분석 시작하기"
+        binding.header.btnBack.setOnClickListener { requireActivity().finish() }
         setupSystemBackPressedHandler()
     }
 
     private fun setupSystemBackPressedHandler() {
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    requireActivity().finish()
-                }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
             }
-        )
+        })
     }
 
     override fun onDestroyView() {

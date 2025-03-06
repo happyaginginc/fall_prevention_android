@@ -20,17 +20,12 @@ class RoomImageAdapter(
         private const val VIEW_TYPE_ADD = 2
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position == imageList.size) VIEW_TYPE_ADD else VIEW_TYPE_IMAGE
-    }
+    override fun getItemViewType(position: Int): Int =
+        if (position == imageList.size) VIEW_TYPE_ADD else VIEW_TYPE_IMAGE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding = ItemRoomImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return if (viewType == VIEW_TYPE_IMAGE) {
-            ImageViewHolder(binding)
-        } else {
-            AddViewHolder(binding)
-        }
+        return if (viewType == VIEW_TYPE_IMAGE) ImageViewHolder(binding) else AddViewHolder(binding)
     }
 
     override fun getItemCount(): Int = imageList.size + 1
@@ -45,16 +40,12 @@ class RoomImageAdapter(
 
     inner class ImageViewHolder(private val binding: ItemRoomImageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(imageName: String) {
-            val fullUrl = "$baseImageUrl$imageName"
             Glide.with(binding.imageView.context)
-                .load(fullUrl)
+                .load("$baseImageUrl$imageName")
                 .placeholder(R.drawable.logo)
                 .error(R.drawable.logo)
                 .into(binding.imageView)
-
-            binding.btnDelete.setOnClickListener {
-                onDeleteClick(adapterPosition)
-            }
+            binding.btnDelete.setOnClickListener { onDeleteClick(adapterPosition) }
         }
     }
 
@@ -62,9 +53,7 @@ class RoomImageAdapter(
         fun bind() {
             binding.imageView.setImageResource(R.drawable.ic_add_image)
             binding.btnDelete.visibility = View.GONE
-            binding.root.setOnClickListener {
-                onAddClick()
-            }
+            binding.root.setOnClickListener { onAddClick() }
         }
     }
 }

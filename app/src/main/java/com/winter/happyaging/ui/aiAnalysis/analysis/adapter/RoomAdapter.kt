@@ -30,32 +30,26 @@ class RoomAdapter(
 
     inner class RoomViewHolder(private val binding: ItemRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(room: RoomData, position: Int) {
-            binding.apply {
-                roomNumberText.text = "${position + 1}"
-                roomHint.text = "미작성 시 '${room.name}'로 표기됩니다."
-                roomName.setText("")
-                roomNameLayout.hint = room.name
+            binding.roomNumberText.text = "${position + 1}"
+            binding.roomHint.text = "미작성 시 '${room.name}'로 표기됩니다."
+            binding.roomName.setText("")
+            binding.roomNameLayout.hint = room.name
 
-                roomName.doAfterTextChanged { text ->
-                    val newName = text?.toString()?.trim()
-                    if (!newName.isNullOrEmpty()) {
-                        room.name = newName
-                    }
-                }
-
-                rvGuides.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
-                val guideAdapter = GuideAdapter(
-                    roomIndex = position,
-                    guides = room.guides,
-                    onAddImageClick = onAddImageClick,
-                    onDeleteImageClick = onDeleteImageClick
-                )
-                rvGuides.adapter = guideAdapter
-
-                AddRoomButton.setOnClickListener { onAddRoomClick(position) }
-                DeleteRoomButton.visibility = if (roomList.size > 1) View.VISIBLE else View.GONE
-                DeleteRoomButton.setOnClickListener { onDeleteRoomClick(position) }
+            binding.roomName.doAfterTextChanged { text ->
+                text?.toString()?.trim()?.takeIf { it.isNotEmpty() }?.let { room.name = it }
             }
+
+            binding.rvGuides.layoutManager =
+                LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
+            binding.rvGuides.adapter = GuideAdapter(
+                roomIndex = position,
+                guides = room.guides,
+                onAddImageClick = onAddImageClick,
+                onDeleteImageClick = onDeleteImageClick
+            )
+            binding.AddRoomButton.setOnClickListener { onAddRoomClick(position) }
+            binding.DeleteRoomButton.visibility = if (roomList.size > 1) View.VISIBLE else View.GONE
+            binding.DeleteRoomButton.setOnClickListener { onDeleteRoomClick(position) }
         }
     }
 }
