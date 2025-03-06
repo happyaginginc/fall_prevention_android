@@ -98,7 +98,7 @@
         <!-- FileProvider: 한 번만 등록 -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
+            android:authorities="com.winter.happyaging"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

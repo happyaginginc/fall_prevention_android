@@ -146,7 +146,7 @@ abstract class BaseRoomFragment(
                 imageManager.removeImageData(roomList[roomPos].name, guidePos, "")
                 roomAdapter.notifyItemChanged(roomPos)
             },
-            onAddRoomClick = { pos ->
+            onAddRoomClick = {
                 val newGuides = guideTexts.map { GuideData(it, mutableListOf()) }.toMutableList()
                 roomList.add(RoomData("$roomType ${roomList.size + 1}", newGuides))
                 roomAdapter.notifyItemInserted(roomList.lastIndex)
