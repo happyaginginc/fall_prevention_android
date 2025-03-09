@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -35,10 +37,12 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.max
 
 abstract class BaseRoomFragment(
     private val step: Int,
@@ -66,6 +70,7 @@ abstract class BaseRoomFragment(
     private var selectedRoomIndex = 0
     private var selectedGuideIndex = 0
 
+    // 권한 요청(갤러리)
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -75,6 +80,7 @@ abstract class BaseRoomFragment(
             }
         }
 
+    // 권한 요청(카메라)
     private val cameraPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -84,6 +90,7 @@ abstract class BaseRoomFragment(
             }
         }
 
+    // 사진 촬영 결과
     private val takePictureLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -99,10 +106,12 @@ abstract class BaseRoomFragment(
         imageManager = ImageManager(requireContext())
         imagePickerManager = ImagePickerManager(this).apply { setCallback(this@BaseRoomFragment) }
 
+        // 기존에 저장돼 있던 방 데이터(글로벌)
         val existingRooms = globalRoomData[roomType]
         if (!existingRooms.isNullOrEmpty()) {
             roomList.clear()
             roomList.addAll(existingRooms)
+            // 새로운 guideTexts가 들어왔을 수 있으므로, 기존 room에도 맞춰서 merge
             for (room in roomList) {
                 if (room.guides.size != guideTexts.size) {
                     val newGuides = guideTexts.map { GuideData(it, mutableListOf()) }.toMutableList()
@@ -114,11 +123,14 @@ abstract class BaseRoomFragment(
                 }
             }
         } else {
+            // 새로운 방 리스트 초기화
             val guides = guideTexts.map { GuideData(it, mutableListOf()) }.toMutableList()
             roomList.add(RoomData(name = "$roomType 1", guides = guides))
         }
 
+        // 로컬(ImageManager)에 저장된 정보와 머지
         mergeWithLocalImageData()
+
         setupUI()
         setupRecyclerView()
         setupBackNavigation()
@@ -126,10 +138,12 @@ abstract class BaseRoomFragment(
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // fragment가 사라질 때 roomList를 globalRoomData에 저장
         globalRoomData[roomType] = roomList.toMutableList()
         _binding = null
     }
 
+    // 로컬 datastore와 UI 데이터를 머지
     private fun mergeWithLocalImageData() {
         try {
             val allRooms = imageManager.getAllImageData()
@@ -158,12 +172,16 @@ abstract class BaseRoomFragment(
             "기타" -> "추가적인 공간을 촬영해주세요."
             else -> ""
         }
+
+        // 버튼 설정
         btnPrev.visibility = if (step == 1) View.INVISIBLE else View.VISIBLE
         btnNext.text = if (step == 6) "분석 시작" else "다음"
+
         btnPrev.setOnClickListener {
             scrollContainer.smoothScrollTo(0, 0)
             findNavController().popBackStack()
         }
+
         btnNext.setOnClickListener { onNextButtonClick() }
     }
 
@@ -333,14 +351,20 @@ abstract class BaseRoomFragment(
 
     private fun uploadGalleryImageToServer(uri: Uri) {
         try {
-            requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
-                val byteArray = inputStream.readBytes()
-                val mimeType = requireContext().contentResolver.getType(uri) ?: "image/jpeg"
-                val requestFile = byteArray.toRequestBody(mimeType.toMediaTypeOrNull())
-                val imagePart = MultipartBody.Part.createFormData("image", GALLERY_IMAGE_FILE_NAME, requestFile)
-                sendImageToServer(imagePart)
-            } ?: Toast.makeText(requireContext(), "이미지 파일을 읽을 수 없습니다.", Toast.LENGTH_SHORT).show()
+            // 1) 이미지 리사이징/압축
+            val processedImageData = processImage(uri)
+                ?: run {
+                    Toast.makeText(requireContext(), "이미지 처리 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+            // 2) 멀티파트 전송
+            val requestFile = processedImageData.toRequestBody("image/jpeg".toMediaTypeOrNull())
+            val imagePart = MultipartBody.Part.createFormData("image", GALLERY_IMAGE_FILE_NAME, requestFile)
+            sendImageToServer(imagePart)
+
         } catch (e: Exception) {
+            e.printStackTrace()
             Toast.makeText(requireContext(), "이미지 파일 처리 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
         }
     }
@@ -362,6 +386,7 @@ abstract class BaseRoomFragment(
                         Toast.makeText(requireContext(), "이미지 업로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
                     }
                 }
+
                 override fun onFailure(call: Call<ImageResponse>, t: Throwable) {
                     Toast.makeText(requireContext(), "이미지 업로드 중 오류가 발생했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
                 }
@@ -378,6 +403,73 @@ abstract class BaseRoomFragment(
         val currentScrollY = binding.scrollContainer.scrollY
         roomAdapter.notifyItemChanged(selectedRoomIndex)
         binding.scrollContainer.post { binding.scrollContainer.scrollTo(0, currentScrollY) }
+    }
+
+
+    private fun processImage(uri: Uri): ByteArray? {
+        // 1) inJustDecodeBounds로 원본 크기만 파악 후, inSampleSize 계산
+        val originalBitmap = decodeSampledBitmap(uri, 4096) // 4K 이상 넘는 사이즈를 한번에 decode하지 않도록 샘플링
+            ?: return null
+
+        // 2) 최대 해상도 1920으로 스케일링
+        val scaledBitmap = scaleBitmap(originalBitmap, 1920)
+
+        // 3) JPEG 압축률 100%에서 시작해서 5MB(5*1024*1024) 이하가 될 때까지 줄이는 로직
+        return compressBitmapIteratively(scaledBitmap, 5 * 1024 * 1024)
+    }
+
+    private fun decodeSampledBitmap(uri: Uri, maxDim: Int): Bitmap? {
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        requireContext().contentResolver.openInputStream(uri)?.use { stream ->
+            BitmapFactory.decodeStream(stream, null, options)
+        }
+        val (width, height) = options.outWidth to options.outHeight
+
+        var inSampleSize = 1
+        while ((width / inSampleSize) > maxDim || (height / inSampleSize) > maxDim) {
+            inSampleSize *= 2
+        }
+
+        // 실제 디코딩
+        val decodeOptions = BitmapFactory.Options().apply {
+            inSampleSize = inSampleSize
+        }
+        return requireContext().contentResolver.openInputStream(uri)?.use { stream ->
+            BitmapFactory.decodeStream(stream, null, decodeOptions)
+        }
+    }
+
+    private fun scaleBitmap(bitmap: Bitmap, maxDim: Int): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        val maxSide = max(width, height)
+
+        if (maxSide <= maxDim) {
+            // 이미 충분히 작으면 원본 그대로 리턴
+            return bitmap
+        }
+
+        val scale = maxDim.toFloat() / maxSide.toFloat()
+        val newWidth = (width * scale).toInt()
+        val newHeight = (height * scale).toInt()
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+    }
+
+    private fun compressBitmapIteratively(bitmap: Bitmap, maxBytes: Int): ByteArray {
+        var quality = 100
+        val bos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bos)
+
+        // 파일 크기가 maxBytes(5MB) 이하가 될 때까지, 또는 quality가 너무 낮아질 때까지 품질을 줄임
+        while (bos.size() > maxBytes && quality > 10) {
+            bos.reset()
+            quality -= 5
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bos)
+        }
+
+        return bos.toByteArray()
     }
 
     protected open fun onNextButtonClick() {

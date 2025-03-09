@@ -30,6 +30,9 @@ class ImageManager(private val context: Context) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
+    /**
+     * 이미지 URL을 roomName/guideIndex별로 저장
+     */
     fun saveImageData(roomName: String, guideIndex: Int, imageUrl: String) {
         scope.launch {
             val existingData = getAllImageData().toMutableMap()
@@ -47,6 +50,9 @@ class ImageManager(private val context: Context) {
         }
     }
 
+    /**
+     * 해당 roomName, guideIndex에 저장된 이미지 중 imageUrl 제거
+     */
     fun removeImageData(roomName: String, guideIndex: Int, imageUrl: String) {
         scope.launch {
             val existingData = getAllImageData().toMutableMap()
@@ -73,6 +79,9 @@ class ImageManager(private val context: Context) {
         }.first()
     }
 
+    /**
+     * 로컬(DataStore)에 있는 모든 이미지 데이터 초기화
+     */
     fun clearLocalImageData() {
         scope.launch {
             context.dataStore.edit { preferences ->
@@ -82,6 +91,9 @@ class ImageManager(private val context: Context) {
         }
     }
 
+    /**
+     * 맵 -> JSON 직렬화
+     */
     private fun serializeImageData(data: Map<String, RoomImageInfo>): String {
         val jsonObj = JSONObject()
         data.forEach { (roomName, roomInfo) ->
@@ -97,6 +109,9 @@ class ImageManager(private val context: Context) {
         return jsonObj.toString()
     }
 
+    /**
+     * JSON -> 맵 역직렬화
+     */
     private fun deserializeImageData(serializedData: String): Map<String, RoomImageInfo> {
         if (serializedData.isBlank()) return emptyMap()
 
@@ -121,6 +136,9 @@ class ImageManager(private val context: Context) {
         return result
     }
 
+    /**
+     * guideIndex까지 guides가 존재하지 않을 경우 확장
+     */
     private fun ensureGuideSize(guides: MutableList<MutableList<String>>, guideIndex: Int) {
         while (guides.size <= guideIndex) {
             guides.add(mutableListOf())

@@ -2,7 +2,6 @@ package com.winter.happyaging.ui.survey.fallResult
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
