@@ -64,7 +64,7 @@
                         android:text="사용자 이름"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/tvUserEmail"
@@ -72,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:text="user@email.com"
                         android:textSize="14sp"
-                        android:textColor="@android:color/darker_gray" />
+                        android:textColor="@color/dark_gray" />
 
                     <TextView
                         android:id="@+id/tvUserPhone"
@@ -80,7 +80,7 @@
                         android:layout_height="wrap_content"
                         android:text="010-1234-5678"
                         android:textSize="14sp"
-                        android:textColor="@android:color/darker_gray" />
+                        android:textColor="@color/dark_gray" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -113,7 +113,7 @@
                     android:text="공지사항"
                     android:textSize="16sp"
                     android:layout_marginStart="8dp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <!-- 문의하기 -->
@@ -138,7 +138,7 @@
                     android:text="문의하기"
                     android:textSize="16sp"
                     android:layout_marginStart="8dp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <!-- Q&A -->
@@ -163,7 +163,7 @@
                     android:text="Q&amp;A"
                     android:textSize="16sp"
                     android:layout_marginStart="8dp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <!-- 이용방침 -->
@@ -188,7 +188,7 @@
                     android:text="이용방침"
                     android:textSize="16sp"
                     android:layout_marginStart="8dp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <View
@@ -221,7 +221,7 @@
                     android:text="로그아웃"
                     android:textSize="16sp"
                     android:layout_marginStart="8dp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@color/black"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@android:color/white"
+    android:background="@color/background_color"
     tools:context=".ui.aiAnalysis.result.AnalysisResultFragment">
 
 
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="집 안 위험 요소는?"
-                    android:textColor="@android:color/holo_red_dark"
+                    android:textColor="@color/holoRedDark"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="집 안 낙상 위험 요소를 분석해보았어요!"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/dark_gray"
                     android:textSize="14sp" />
 
                 <TextView
@@ -88,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="아래 결과지를 읽고 추천 용품도 살펴보세요!"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/dark_gray"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -107,7 +107,7 @@
         android:layout_height="wrap_content"
         android:text="확인"
         app:backgroundTint="?attr/colorPrimary"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"

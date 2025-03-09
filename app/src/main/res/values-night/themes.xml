@@ -8,7 +8,7 @@
     <style name="Theme.HappyAging.Splash" parent="Theme.SplashScreen">
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="windowSplashScreenBackground">@color/black</item>
+        <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
     </style>
 </resources>

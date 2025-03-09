@@ -91,7 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/name_error"
-                        android:textColor="@android:color/holo_red_dark"
+                        android:textColor="@color/holoRedDark"
                         android:textSize="12sp"
                         android:visibility="gone"
                         android:layout_marginBottom="4dp" />
@@ -127,7 +127,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/phone_error"
-                        android:textColor="@android:color/holo_red_dark"
+                        android:textColor="@color/holoRedDark"
                         android:textSize="12sp"
                         android:visibility="gone"
                         android:layout_marginBottom="4dp" />
@@ -164,7 +164,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/email_error"
-                        android:textColor="@android:color/holo_red_dark"
+                        android:textColor="@color/holoRedDark"
                         android:textSize="12sp"
                         android:visibility="gone"
                         android:layout_marginBottom="4dp" />
@@ -210,7 +210,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/password_error"
-                        android:textColor="@android:color/holo_red_dark"
+                        android:textColor="@color/holoRedDark"
                         android:textSize="12sp"
                         android:visibility="gone"
                         android:layout_marginBottom="4dp" />
@@ -247,7 +247,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/password_confirm_error"
-                        android:textColor="@android:color/holo_red_dark"
+                        android:textColor="@color/holoRedDark"
                         android:textSize="12sp"
                         android:visibility="gone"
                         android:layout_marginBottom="4dp" />
@@ -295,7 +295,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/privacy_error"
-                        android:textColor="@android:color/holo_red_dark"
+                        android:textColor="@color/holoRedDark"
                         android:textSize="12sp"
                         android:visibility="gone"
                         android:layout_marginBottom="4dp" />
@@ -309,7 +309,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sign_up_button"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:backgroundTint="#A9CF54"
             android:padding="12dp"
             android:layout_margin="16dp"

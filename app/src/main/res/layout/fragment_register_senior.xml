@@ -47,14 +47,16 @@
                     android:id="@+id/edtName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints=""
                     android:hint="@string/hint_name"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="4dp"
+                    android:inputType="" />
                 <TextView
                     android:id="@+id/tvNameError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/error_name_required"
-                    android:textColor="@android:color/holo_red_dark"
+                    android:textColor="@color/holoRedDark"
                     android:textSize="12sp"
                     android:visibility="gone"
                     android:layout_marginBottom="12dp"/>
@@ -77,18 +79,22 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_address"
                     android:textStyle="bold"/>
+
                 <EditText
                     android:id="@+id/edtAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints=""
                     android:hint="@string/hint_address"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="4dp"
+                    android:inputType="" />
+
                 <TextView
                     android:id="@+id/tvAddressError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/error_address_required"
-                    android:textColor="@android:color/holo_red_dark"
+                    android:textColor="@color/holoRedDark"
                     android:textSize="12sp"
                     android:visibility="gone"
                     android:layout_marginBottom="12dp"/>
@@ -103,14 +109,16 @@
                     android:id="@+id/edtAddressDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints=""
                     android:hint="@string/hint_address_detail"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="4dp"
+                    android:inputType="" />
                 <TextView
                     android:id="@+id/tvAddressDetailError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/error_address_detail_required"
-                    android:textColor="@android:color/holo_red_dark"
+                    android:textColor="@color/holoRedDark"
                     android:textSize="12sp"
                     android:visibility="gone"
                     android:layout_marginBottom="12dp"/>
@@ -125,15 +133,17 @@
                     android:id="@+id/edtBirthYear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints=""
                     android:hint="@string/hint_birth_year"
                     android:inputType="number"
                     android:layout_marginBottom="4dp"/>
+
                 <TextView
                     android:id="@+id/tvBirthYearError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/error_birth_year_invalid"
-                    android:textColor="@android:color/holo_red_dark"
+                    android:textColor="@color/holoRedDark"
                     android:textSize="12sp"
                     android:visibility="gone"
                     android:layout_marginBottom="12dp"/>
@@ -148,15 +158,17 @@
                     android:id="@+id/edtPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints=""
                     android:hint="@string/hint_phone"
                     android:inputType="phone"
                     android:layout_marginBottom="4dp"/>
+
                 <TextView
                     android:id="@+id/tvPhoneError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/error_phone_invalid"
-                    android:textColor="@android:color/holo_red_dark"
+                    android:textColor="@color/holoRedDark"
                     android:textSize="12sp"
                     android:visibility="gone"
                     android:layout_marginBottom="12dp"/>
@@ -179,12 +191,15 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_memo"
                     android:textStyle="bold"/>
+
                 <EditText
                     android:id="@+id/edtMemo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints=""
                     android:hint="@string/hint_memo"
-                    android:layout_marginBottom="100dp"/>
+                    android:layout_marginBottom="100dp"
+                    android:inputType="" />
             </LinearLayout>
         </ScrollView>
 
@@ -198,7 +213,7 @@
             android:layout_gravity="center|bottom"
             android:layout_margin="16dp"
             android:backgroundTint="@color/green"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/white"/>
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/background_color"
     android:padding="16dp">
 
     <RelativeLayout
@@ -66,7 +66,7 @@
                 android:backgroundTint="#8BC34A"
                 android:text="위험등급 측정 시작하기"
                 android:layout_marginTop="180dp"
-                android:textColor="@android:color/white"
+                android:textColor="@color/white"
                 android:textStyle="bold" />
         </LinearLayout>
     </RelativeLayout>

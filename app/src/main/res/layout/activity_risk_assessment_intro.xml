@@ -85,7 +85,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="#8BC34A"
                     android:text="위험등급 측정 시작하기"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
             </LinearLayout>

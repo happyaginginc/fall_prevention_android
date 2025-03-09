@@ -5,9 +5,12 @@
     <color name="green">#A9CF54</color>
     <color name="orange">#FF9800</color>
     <color name="gray">#474545</color>
+    <color name="dark_gray">#AAAAAA</color>
     <color name="light_green">#CCDEA1</color>
     <color name="dark_green">#4A572D</color>
     <color name="colorAccent">#A9CF54</color>
+
+    <color name="holoRedDark">#CC0000</color>
 
     <color name="chipGreen">#388E3C</color>
     <color name="myPrimaryColor">#3F51B5</color>
