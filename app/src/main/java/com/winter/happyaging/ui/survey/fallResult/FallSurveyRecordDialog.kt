@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,9 +88,9 @@ class FallSurveyRecordDialog : DialogFragment() {
             downloadManager.enqueue(request)
             Toast.makeText(requireContext(), "다운로드가 시작되었습니다.", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
+            Log.e("FallSurveyRecordDialog", "Download error: ${e.message}", e)
             e.printStackTrace()
             Toast.makeText(requireContext(), "다운로드 시작 중 오류 발생", Toast.LENGTH_SHORT).show()
         }
     }
-
 }

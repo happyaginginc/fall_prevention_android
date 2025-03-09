@@ -21,10 +21,13 @@ class KnowledgeViewModel(application: Application): AndroidViewModel(application
 
     fun fetchVideos(isRefresh: Boolean = false) {
         if (!isRefresh && hasFetchedData) return
-
-        repository.fetchVideos { videos ->
-            _videoList.postValue(videos)
-            hasFetchedData = true
+        try {
+            repository.fetchVideos { videos ->
+                _videoList.postValue(videos)
+                hasFetchedData = true
+            }
+        } catch (e: Exception) {
+            _videoList.postValue(emptyList())
         }
     }
 }

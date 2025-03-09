@@ -1,135 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/background_color">
 
-    <!-- 헤더 포함 -->
+    <!-- 공통 헤더(기존 header.xml 포함) -->
     <include
         android:id="@+id/header"
         layout="@layout/header"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    <!-- 메인 콘텐츠 컨테이너 -->
-    <FrameLayout
-        android:id="@+id/content_container"
-        android:layout_width="0dp"
+    <!-- 스크롤 가능한 영역 -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollContainer"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:padding="24dp">
 
-        <!-- 스크롤 가능한 메인 콘텐츠를 NestedScrollView로 변경 -->
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/mainContent"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <!-- 단계 표시 -->
+            <TextView
+                android:id="@+id/tvStep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="12dp"
+                android:text="0/6"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/bg_step" />
+
+            <!-- 화면 제목 (예: 욕실/화장실) -->
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="화면 제목"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/primaryText" />
+
+            <!-- 부제목 (간단 설명) -->
+            <TextView
+                android:id="@+id/tvSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="설명 텍스트"
+                android:textSize="14sp"
+                android:textColor="@color/secondaryText" />
+
+            <!-- 방/가이드 목록 표시용 RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/roomRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp">
-
-                <!-- 상단 UI 요소들 (예: tvStep, tvTitle, tvSubtitle) -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="24dp">
-
-                    <TextView
-                        android:id="@+id/tvStep"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingVertical="8dp"
-                        android:paddingHorizontal="12dp"
-                        android:text="0/0"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/bg_step"
-                        android:layout_marginEnd="8dp" />
-
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="화면 제목"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="16dp"
-                        android:textColor="@color/primaryText" />
-
-                    <TextView
-                        android:id="@+id/tvSubtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="설명 텍스트"
-                        android:textSize="14sp"
-                        android:layout_marginTop="8dp"
-                        android:textColor="@color/secondaryText" />
-                </LinearLayout>
-
-                <!-- RecyclerView: 중첩 스크롤 방지를 위해 nestedScrollingEnabled="false" 추가 -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/roomRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never"
-                    android:nestedScrollingEnabled="false" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/nextButton"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginBottom="16dp"
-                    android:layout_gravity="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="56dp"
-                    app:cornerRadius="16dp"
-                    android:backgroundTint="@color/buttonGreen"
-                    android:text="다음"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/white"/>
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-        <!-- 로딩 화면 -->
-        <LinearLayout
-            android:id="@+id/loadingLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:background="#88000000">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="분석 결과지 생성 중"
-                android:textSize="20sp"
-                android:textColor="@color/primaryText"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="AI가 집 안의 낙상 위험 요소를 분석하고 있어요!"
-                android:textSize="14sp"
-                android:textColor="@color/secondaryText"
-                android:layout_marginTop="8dp"/>
-
-            <ProgressBar
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                style="@android:style/Widget.ProgressBar.Large"/>
+                android:layout_marginTop="24dp"
+                android:nestedScrollingEnabled="false" />
         </LinearLayout>
-    </FrameLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- 하단 버튼 영역: 이전 / 다음(또는 분석 시작) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp">
+
+        <!-- 이전 버튼 (step=1일 때는 INVISIBLE 처리) -->
+        <Button
+            android:id="@+id/btnPrev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이전"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#757575"
+            android:visibility="invisible" />
+
+        <!-- 다음 / 분석 시작 버튼 -->
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="다음"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/buttonGreen"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- 로딩 오버레이(기존 loadingLayout -> loadingOverlay 로 명칭 변경) -->
+    <LinearLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="#88000000">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="분석 결과지 생성 중"
+            android:textSize="20sp"
+            android:textColor="@color/primaryText"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI가 집 안의 낙상 위험 요소를 분석하고 있어요!"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/secondaryText"/>
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            style="@android:style/Widget.ProgressBar.Large" />
+    </LinearLayout>
+
+</LinearLayout>

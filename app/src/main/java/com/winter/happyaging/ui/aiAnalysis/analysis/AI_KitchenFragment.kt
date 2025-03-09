@@ -3,7 +3,7 @@ package com.winter.happyaging.ui.aiAnalysis.analysis
 import com.winter.happyaging.R
 
 class AI_KitchenFragment : BaseRoomFragment(
-    step = 2,
+    step = 3,
     roomType = "주방",
     nextAction = R.id.action_AIKitchenFragment_to_AIGeneralRoomFragment
 ) {

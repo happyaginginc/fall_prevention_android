@@ -75,9 +75,13 @@ class AnalysisResultFragment : Fragment() {
         requireContext().getSharedPreferences(ANALYSIS_DATA_PREFS, Context.MODE_PRIVATE)
             .getString(ANALYSIS_RESULT_KEY, null)
         if (json != null) {
-            val response = Gson().fromJson(json, AiAnalysisResponse::class.java)
-            analysisList = response.data.roomAIPrompts
-            analysisAdapter.updateData(analysisList)
+            try {
+                val response = Gson().fromJson(json, AiAnalysisResponse::class.java)
+                analysisList = response.data.roomAIPrompts
+                analysisAdapter.updateData(analysisList)
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "분석 결과를 불러오는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+            }
         } else {
             Toast.makeText(requireContext(), "저장된 분석 결과가 없습니다.", Toast.LENGTH_SHORT).show()
         }

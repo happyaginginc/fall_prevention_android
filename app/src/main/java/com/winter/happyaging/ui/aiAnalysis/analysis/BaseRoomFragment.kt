@@ -17,6 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.winter.happyaging.BuildConfig
 import com.winter.happyaging.R
 import com.winter.happyaging.data.aiAnalysis.model.GuideData
 import com.winter.happyaging.data.aiAnalysis.model.RoomData
@@ -47,27 +49,29 @@ abstract class BaseRoomFragment(
     protected open val guideTexts: List<String> = emptyList()
 
     companion object {
-        private const val TAG = "BaseRoomFragment"
         private const val GALLERY_IMAGE_FILE_NAME = "gallery_image.jpg"
+        private val globalRoomData = mutableMapOf<String, MutableList<RoomData>>()
     }
 
     private var _binding: FragmentAiRoomBinding? = null
     protected val binding get() = _binding!!
 
-    protected lateinit var imageManager: ImageManager
-    protected val roomList = mutableListOf<RoomData>()
+    private val roomList = mutableListOf<RoomData>()
 
-    private var selectedRoomIndex = 0
-    private var selectedGuideIndex = 0
-
+    lateinit var imageManager: ImageManager
     private lateinit var roomAdapter: RoomAdapter
     private lateinit var imagePickerManager: ImagePickerManager
+
     private var cameraImageUri: Uri? = null
+    private var selectedRoomIndex = 0
+    private var selectedGuideIndex = 0
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 imagePickerManager.openGallery()
+            } else {
+                Toast.makeText(requireContext(), "갤러리 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -84,6 +88,8 @@ abstract class BaseRoomFragment(
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 cameraImageUri?.let { uploadGalleryImageToServer(it) }
+            } else {
+                Toast.makeText(requireContext(), "사진 촬영이 취소되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -93,27 +99,51 @@ abstract class BaseRoomFragment(
         imageManager = ImageManager(requireContext())
         imagePickerManager = ImagePickerManager(this).apply { setCallback(this@BaseRoomFragment) }
 
-        val guides = guideTexts.map { GuideData(it, mutableListOf()) }.toMutableList()
-        roomList.add(RoomData(name = "$roomType 1", guides = guides))
+        val existingRooms = globalRoomData[roomType]
+        if (!existingRooms.isNullOrEmpty()) {
+            roomList.clear()
+            roomList.addAll(existingRooms)
+            for (room in roomList) {
+                if (room.guides.size != guideTexts.size) {
+                    val newGuides = guideTexts.map { GuideData(it, mutableListOf()) }.toMutableList()
+                    val minSize = minOf(room.guides.size, newGuides.size)
+                    for (i in 0 until minSize) {
+                        newGuides[i].images.addAll(room.guides[i].images)
+                    }
+                    room.guides = newGuides
+                }
+            }
+        } else {
+            val guides = guideTexts.map { GuideData(it, mutableListOf()) }.toMutableList()
+            roomList.add(RoomData(name = "$roomType 1", guides = guides))
+        }
 
-        binding.header.tvHeader.text = "낙상 위험 분석"
+        mergeWithLocalImageData()
         setupUI()
         setupRecyclerView()
         setupBackNavigation()
-        binding.roomRecyclerView.isNestedScrollingEnabled = false
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        globalRoomData[roomType] = roomList.toMutableList()
         _binding = null
     }
 
-    override fun onImagePicked(uri: Uri) {
-        uploadGalleryImageToServer(uri)
-    }
-
-    override fun onError(message: String) {
-        // 에러 메시지 처리(필요시 사용자에게 노출)
+    private fun mergeWithLocalImageData() {
+        try {
+            val allRooms = imageManager.getAllImageData()
+            roomList.forEach { room ->
+                val storedInfo = allRooms[room.name] ?: return@forEach
+                val minSize = minOf(room.guides.size, storedInfo.guides.size)
+                for (i in 0 until minSize) {
+                    room.guides[i].images.clear()
+                    room.guides[i].images.addAll(storedInfo.guides[i])
+                }
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "로컬 이미지 데이터를 불러오는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupUI() = with(binding) {
@@ -128,34 +158,49 @@ abstract class BaseRoomFragment(
             "기타" -> "추가적인 공간을 촬영해주세요."
             else -> ""
         }
-        nextButton.setOnClickListener { onNextButtonClick() }
+        btnPrev.visibility = if (step == 1) View.INVISIBLE else View.VISIBLE
+        btnNext.text = if (step == 6) "분석 시작" else "다음"
+        btnPrev.setOnClickListener {
+            scrollContainer.smoothScrollTo(0, 0)
+            findNavController().popBackStack()
+        }
+        btnNext.setOnClickListener { onNextButtonClick() }
     }
 
     private fun setupRecyclerView() {
-        binding.roomRecyclerView.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(context)
+        binding.roomRecyclerView.layoutManager = LinearLayoutManager(context)
         roomAdapter = RoomAdapter(
             roomList = roomList,
+            roomType = roomType,
             onAddImageClick = { roomPos, guidePos ->
                 selectedRoomIndex = roomPos
                 selectedGuideIndex = guidePos
                 showImageSelectionDialog()
             },
             onDeleteImageClick = { roomPos, guidePos, imagePos ->
+                val removedUrl = roomList[roomPos].guides[guidePos].images[imagePos]
                 roomList[roomPos].guides[guidePos].images.removeAt(imagePos)
-                imageManager.removeImageData(roomList[roomPos].name, guidePos, "")
+                imageManager.removeImageData(roomList[roomPos].name, guidePos, removedUrl)
                 roomAdapter.notifyItemChanged(roomPos)
             },
             onAddRoomClick = {
-                val newGuides = guideTexts.map { GuideData(it, mutableListOf()) }.toMutableList()
-                roomList.add(RoomData("$roomType ${roomList.size + 1}", newGuides))
-                roomAdapter.notifyItemInserted(roomList.lastIndex)
-                binding.roomRecyclerView.smoothScrollToPosition(roomList.lastIndex)
+                val guides = guideTexts.map { GuideData(it, mutableListOf()) }.toMutableList()
+                roomList.add(RoomData("$roomType ${roomList.size + 1}", guides))
+                val newPos = roomList.lastIndex
+                roomAdapter.notifyItemInserted(newPos)
+                binding.roomRecyclerView.post {
+                    val vh = binding.roomRecyclerView.findViewHolderForAdapterPosition(newPos)
+                    vh?.itemView?.let { itemView ->
+                        binding.scrollContainer.smoothScrollTo(0, itemView.top)
+                    }
+                }
             },
             onDeleteRoomClick = { pos ->
                 if (roomList.size > 1) {
                     roomList.removeAt(pos)
                     roomAdapter.notifyItemRemoved(pos)
+                } else {
+                    Toast.makeText(requireContext(), "최소 한 개의 방은 필요합니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         )
@@ -163,15 +208,62 @@ abstract class BaseRoomFragment(
     }
 
     private fun setupBackNavigation() {
-        binding.header.btnBack.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
-        }
+        binding.header.btnBack.setOnClickListener { handleBackPress() }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    requireActivity().supportFragmentManager.popBackStack()
+                    handleBackPress()
                 }
-            })
+            }
+        )
+    }
+
+    private fun handleBackPress() {
+        if (!hasImagesToDelete()) {
+            imageManager.clearLocalImageData()
+            globalRoomData.clear()
+            roomList.clear()
+            binding.scrollContainer.smoothScrollTo(0, 0)
+            findNavController().popBackStack(R.id.AIIntroFragment, false)
+        } else {
+            showDeleteAlertDialog()
+        }
+    }
+
+    private fun hasImagesToDelete(): Boolean {
+        val localData = imageManager.getAllImageData()
+        if (localData.isNotEmpty()) {
+            for (roomImageInfo in localData.values) {
+                roomImageInfo.guides.forEach { imageList ->
+                    if (imageList.isNotEmpty()) return true
+                }
+            }
+        }
+        if (globalRoomData.isNotEmpty()) {
+            globalRoomData.values.forEach { roomDataList ->
+                roomDataList.forEach { roomData ->
+                    roomData.guides.forEach { guide ->
+                        if (guide.images.isNotEmpty()) return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    private fun showDeleteAlertDialog() {
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("뒤로가기")
+            .setMessage("지금 뒤로가시면 촬영하신 데이터가 모두 사라집니다.\n정말 뒤로 가시겠습니까?")
+            .setPositiveButton("예") { _, _ ->
+                imageManager.clearLocalImageData()
+                globalRoomData.clear()
+                roomList.clear()
+                binding.scrollContainer.smoothScrollTo(0, 0)
+                findNavController().popBackStack(R.id.AIIntroFragment, false)
+            }
+            .setNegativeButton("아니오", null)
+            .show()
     }
 
     private fun showImageSelectionDialog() {
@@ -203,19 +295,24 @@ abstract class BaseRoomFragment(
             cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             return
         }
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { intent ->
-            if (intent.resolveActivity(requireActivity().packageManager) != null) {
-                try {
-                    val file = createImageFile()
-                    cameraImageUri = FileProvider.getUriForFile(requireContext(), "com.winter.happyaging", file)
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
-                    takePictureLauncher.launch(intent)
-                } catch (ex: IOException) {
-                    // 파일 생성 실패 시 처리
-                }
-            } else {
-                Toast.makeText(requireContext(), "사용 가능한 카메라 앱을 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            try {
+                val file = createImageFile()
+                cameraImageUri = FileProvider.getUriForFile(
+                    requireContext(),
+                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                    file
+                )
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                takePictureLauncher.launch(intent)
+            } catch (ex: IOException) {
+                Toast.makeText(requireContext(), "사진 파일 생성 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
             }
+        } else {
+            Toast.makeText(requireContext(), "사용 가능한 카메라 앱을 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -226,13 +323,25 @@ abstract class BaseRoomFragment(
         return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
     }
 
+    override fun onImagePicked(uri: Uri) {
+        uploadGalleryImageToServer(uri)
+    }
+
+    override fun onError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
     private fun uploadGalleryImageToServer(uri: Uri) {
-        requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
-            val byteArray = inputStream.readBytes()
-            val mimeType = requireContext().contentResolver.getType(uri) ?: "image/jpeg"
-            val requestFile = byteArray.toRequestBody(mimeType.toMediaTypeOrNull())
-            val imagePart = MultipartBody.Part.createFormData("image", GALLERY_IMAGE_FILE_NAME, requestFile)
-            sendImageToServer(imagePart)
+        try {
+            requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
+                val byteArray = inputStream.readBytes()
+                val mimeType = requireContext().contentResolver.getType(uri) ?: "image/jpeg"
+                val requestFile = byteArray.toRequestBody(mimeType.toMediaTypeOrNull())
+                val imagePart = MultipartBody.Part.createFormData("image", GALLERY_IMAGE_FILE_NAME, requestFile)
+                sendImageToServer(imagePart)
+            } ?: Toast.makeText(requireContext(), "이미지 파일을 읽을 수 없습니다.", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "이미지 파일 처리 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -244,21 +353,31 @@ abstract class BaseRoomFragment(
                 override fun onResponse(call: Call<ImageResponse>, response: Response<ImageResponse>) {
                     if (response.isSuccessful) {
                         val imageUrl = response.body()?.data.orEmpty()
-                        saveImageToLocalDataStore(imageUrl)
+                        if (imageUrl.isNotEmpty()) {
+                            saveImageToLocalDataStore(imageUrl)
+                        } else {
+                            Toast.makeText(requireContext(), "이미지 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "이미지 업로드 실패: ${response.message()}", Toast.LENGTH_SHORT).show()
                     }
                 }
                 override fun onFailure(call: Call<ImageResponse>, t: Throwable) {
-                    // 실패 처리 (필요시 사용자에게 알림)
+                    Toast.makeText(requireContext(), "이미지 업로드 중 오류가 발생했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
                 }
             })
     }
 
     private fun saveImageToLocalDataStore(imageUrl: String) {
         roomList[selectedRoomIndex].guides[selectedGuideIndex].images.add(imageUrl)
-        imageManager.saveImageData(roomList[selectedRoomIndex].name, selectedGuideIndex, imageUrl)
-        val currentScrollY = binding.mainContent.scrollY
+        imageManager.saveImageData(
+            roomList[selectedRoomIndex].name,
+            selectedGuideIndex,
+            imageUrl
+        )
+        val currentScrollY = binding.scrollContainer.scrollY
         roomAdapter.notifyItemChanged(selectedRoomIndex)
-        binding.mainContent.post { binding.mainContent.scrollTo(0, currentScrollY) }
+        binding.scrollContainer.post { binding.scrollContainer.scrollTo(0, currentScrollY) }
     }
 
     protected open fun onNextButtonClick() {

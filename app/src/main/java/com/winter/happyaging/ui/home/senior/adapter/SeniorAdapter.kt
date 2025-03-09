@@ -46,11 +46,11 @@ class SeniorAdapter(private var seniorList: List<SeniorReadResponse>) : Recycler
 
     private fun calculateAge(birthYear: Int): Int {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        return currentYear - birthYear
+        return if (birthYear in 1901..currentYear) currentYear - birthYear else 0
     }
 
     fun updateData(newList: List<SeniorReadResponse>) {
         seniorList = newList
-        notifyDataSetChanged() // 데이터 변경 후 UI 갱신
+        notifyDataSetChanged()
     }
 }

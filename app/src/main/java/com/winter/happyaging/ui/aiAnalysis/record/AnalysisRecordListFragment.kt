@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.winter.happyaging.R
-import com.winter.happyaging.data.aiAnalysis.model.AiAnalysisResponse
 import com.winter.happyaging.data.aiAnalysis.repository.AiAnalysisRepository
 import com.winter.happyaging.databinding.FragmentAnalysisRecordListBinding
 import com.winter.happyaging.ui.aiAnalysis.record.adapter.RecordDateAdapter
@@ -43,42 +42,51 @@ class AnalysisRecordListFragment : Fragment(R.layout.fragment_analysis_record_li
     }
 
     private fun fetchRecordDates() {
-        val seniorId = getStoredSeniorId()
-        if (seniorId == -1L) {
-            Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-            return
+        try {
+            val seniorId = getStoredSeniorId()
+            if (seniorId == -1L) {
+                Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+                return
+            }
+            AiAnalysisRepository.getRecordDates(requireContext(), seniorId,
+                onSuccess = { dates ->
+                    dateList = dates
+                    recordDateAdapter.updateData(dateList)
+                },
+                onFailure = { error ->
+                    Toast.makeText(requireContext(), "기록 목록 로드 실패: $error", Toast.LENGTH_SHORT).show()
+                })
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "기록 목록을 불러오는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
         }
-        AiAnalysisRepository.getRecordDates(requireContext(), seniorId,
-            onSuccess = { dates ->
-                dateList = dates
-                recordDateAdapter.updateData(dateList)
-            },
-            onFailure = { error ->
-                Toast.makeText(requireContext(), "기록 목록 로드 실패: $error", Toast.LENGTH_SHORT).show()
-            })
     }
 
     private fun fetchAnalysisByDate(date: String) {
-        val seniorId = getStoredSeniorId()
-        if (seniorId == -1L) {
-            Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
-            return
+        try {
+            val seniorId = getStoredSeniorId()
+            if (seniorId == -1L) {
+                Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+                return
+            }
+            binding.progressBar.visibility = View.VISIBLE
+            AiAnalysisRepository.getAnalysisByDate(requireContext(), seniorId, date,
+                onSuccess = { response ->
+                    val json = Gson().toJson(response)
+                    val bundle = Bundle().apply { putString("analysisResultJson", json) }
+                    binding.progressBar.visibility = View.GONE
+                    requireActivity().supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, AnalysisResultFragment::class.java, bundle)
+                        .addToBackStack(null)
+                        .commit()
+                },
+                onFailure = { error ->
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "분석 결과 로드 실패: $error", Toast.LENGTH_SHORT).show()
+                })
+        } catch (e: Exception) {
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(requireContext(), "분석 결과를 불러오는 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
         }
-        binding.progressBar.visibility = View.VISIBLE
-        AiAnalysisRepository.getAnalysisByDate(requireContext(), seniorId, date,
-            onSuccess = { response ->
-                val json = Gson().toJson(response)
-                val bundle = Bundle().apply { putString("analysisResultJson", json) }
-                binding.progressBar.visibility = View.GONE
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, AnalysisResultFragment::class.java, bundle)
-                    .addToBackStack(null)
-                    .commit()
-            },
-            onFailure = { error ->
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(), "분석 결과 로드 실패: $error", Toast.LENGTH_SHORT).show()
-            })
     }
 
     private fun getStoredSeniorId(): Long {

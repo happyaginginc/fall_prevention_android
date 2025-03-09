@@ -7,12 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.winter.happyaging.R
 import com.winter.happyaging.network.TokenManager
 import com.winter.happyaging.network.UserProfileManager
 import com.winter.happyaging.ui.main.MainActivity
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MoreFragment : Fragment() {
 
@@ -29,12 +33,10 @@ class MoreFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // 헤더 타이틀 변경
         val headerTitle: TextView = view.findViewById(R.id.tvHeader)
         headerTitle.text = "더보기"
 
-        // 뒤로가기 버튼 필요 시, setOnClickListener 처리
-        view.findViewById<View>(R.id.btnBack)?.visibility = View.GONE // 더보기라면 굳이 뒤로가기 없애도 OK
+        view.findViewById<View>(R.id.btnBack)?.visibility = View.GONE
 
         tvUserName = view.findViewById(R.id.tvUserName)
         tvUserEmail = view.findViewById(R.id.tvUserEmail)
@@ -49,34 +51,23 @@ class MoreFragment : Fragment() {
         tvUserEmail.text = email
         tvUserPhone.text = phone
 
-        // 각 메뉴 항목(공지사항, 문의하기, Q&A, 이용방침 등)은 뷰 find 후 setOnClickListener
-        view.findViewById<LinearLayout>(R.id.menuNotice).setOnClickListener {
-            // TODO: 공지사항 화면으로 이동 or Toast
-        }
-        view.findViewById<LinearLayout>(R.id.menuContact).setOnClickListener {
-            // TODO: 문의하기 화면
-        }
-        view.findViewById<LinearLayout>(R.id.menuQna).setOnClickListener {
-            // TODO: Q&A 화면
-        }
-        view.findViewById<LinearLayout>(R.id.menuPolicy).setOnClickListener {
-            // TODO: 이용방침 화면
-        }
-
-        // 로그아웃
         logoutLayout = view.findViewById(R.id.menuLogout)
         logoutLayout.setOnClickListener {
-            // 로그아웃 로직
-            runBlocking {
-                TokenManager(requireContext()).clearTokens() // 토큰 삭제
-            }
-            UserProfileManager.clearUserInfo(requireContext()) // 사용자 정보 삭제
+            lifecycleScope.launch {
+                try {
+                    withContext(Dispatchers.IO) {
+                        TokenManager(requireContext()).clearTokens()  // 토큰 삭제
+                    }
+                    UserProfileManager.clearUserInfo(requireContext())  // 사용자 정보 삭제
 
-            // MainActivity 다시 시작하면 MainActivity에서 토큰 없다고 판단 → IntroFragment 표출
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-            requireActivity().finish()
+                    val intent = Intent(requireContext(), MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    requireActivity().finish()
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "로그아웃 중 오류 발생: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 }

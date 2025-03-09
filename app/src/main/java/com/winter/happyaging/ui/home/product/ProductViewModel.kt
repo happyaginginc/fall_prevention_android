@@ -13,14 +13,22 @@ class ProductViewModel(application: Application) : AndroidViewModel(application)
     val productList: LiveData<List<ProductResponse>> get() = _productList
 
     fun fetchProductList() {
-        repository.getProductList { products ->
-            _productList.postValue(products)
+        try {
+            repository.getProductList { products ->
+                _productList.postValue(products)
+            }
+        } catch (e: Exception) {
+            _productList.postValue(emptyList())
         }
     }
 
     fun refreshProductList() {
-        repository.refreshProductList { products ->
-            _productList.postValue(products)
+        try {
+            repository.refreshProductList { products ->
+                _productList.postValue(products)
+            }
+        } catch (e: Exception) {
+            _productList.postValue(emptyList())
         }
     }
 }

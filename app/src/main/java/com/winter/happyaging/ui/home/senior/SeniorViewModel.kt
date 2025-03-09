@@ -12,17 +12,27 @@ class SeniorViewModel(application: Application) : AndroidViewModel(application) 
     private val _seniorList = MutableLiveData<List<SeniorReadResponse>>()
     val seniorList: LiveData<List<SeniorReadResponse>> get() = _seniorList
 
-    // 앱 실행 시 혹은 처음 화면에 진입할 때 호출
     fun fetchSeniorList() {
-        repository.getSeniorList { seniors ->
-            _seniorList.postValue(seniors)
+        try {
+            repository.getSeniorList { seniors ->
+                _seniorList.postValue(seniors)
+            }
+        } catch (e: Exception) {
+            _seniorList.postValue(emptyList())
         }
     }
 
-    // 스와이프 새로고침이나 Senior 추가 후 강제 새로고침
     fun refreshSeniorList() {
-        repository.refreshSeniorList { seniors ->
-            _seniorList.postValue(seniors)
+        try {
+            repository.refreshSeniorList { seniors ->
+                if (seniors == null) {
+                    _seniorList.postValue(emptyList())
+                } else {
+                    _seniorList.postValue(seniors)
+                }
+            }
+        } catch (e: Exception) {
+            _seniorList.postValue(emptyList())
         }
     }
 }

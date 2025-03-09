@@ -11,6 +11,8 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.winter.happyaging.data.survey.model.SurveyAnswerRequest
@@ -39,7 +41,7 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.header.tvHeader.text = "낙상 위험등급 설문"
-        binding.header.btnBack.setOnClickListener { finish() }
+        binding.header.btnBack.setOnClickListener { handleBackPress() }
 
         questionList = QuestionRepository.getCachedQuestionList()
         if (questionList.isEmpty()) {
@@ -61,7 +63,6 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
 
         binding.btnNext.setOnClickListener {
             if (!validateAndSaveUserAnswer(currentIndex)) return@setOnClickListener
-
             if (isLastQuestion(currentIndex)) {
                 submitSurveyAnswers()
             } else {
@@ -74,6 +75,34 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
                 }
             }
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                handleBackPress()
+            }
+        })
+    }
+
+    private fun handleBackPress() {
+        if (!hasUnsavedData()) {
+            finish()
+        } else {
+            showDiscardDialog()
+        }
+    }
+
+    private fun hasUnsavedData(): Boolean = userAnswers.isNotEmpty()
+
+    private fun showDiscardDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("뒤로가기")
+            .setMessage("현재까지 작성하신 설문 답변이 사라집니다. 정말 뒤로 가시겠습니까?")
+            .setPositiveButton("예") { _, _ ->
+                userAnswers.clear()
+                finish()
+            }
+            .setNegativeButton("아니오", null)
+            .show()
     }
 
     private fun showQuestion(questionIndex: Int) {
@@ -84,7 +113,10 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
 
         if (!question.imageUrl.isNullOrEmpty()) {
             binding.ivQuestionImage.visibility = View.VISIBLE
-            Glide.with(this).load(question.imageUrl).into(binding.ivQuestionImage)
+            Glide.with(this)
+                .load(question.imageUrl)
+                .error(android.R.drawable.stat_notify_error)
+                .into(binding.ivQuestionImage)
         } else {
             binding.ivQuestionImage.visibility = View.GONE
         }
@@ -107,9 +139,7 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
     private fun validateAndSaveUserAnswer(questionIndex: Int): Boolean {
         val question = questionList[questionIndex]
         val answer = collectUserAnswer(question, binding.layoutAnswerContainer) ?: UserAnswer()
-
         if (!isAnswerValid(question, answer)) return false
-
         userAnswers[question.questionNumber] = answer
         return true
     }
@@ -148,10 +178,7 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
         }
     }
 
-    private fun collectUserAnswer(
-        question: SurveyQuestionResponse,
-        container: ViewGroup
-    ): UserAnswer? {
+    private fun collectUserAnswer(question: SurveyQuestionResponse, container: ViewGroup): UserAnswer? {
         return when (question.type) {
             "SHORT_ANSWER" -> {
                 val editText = container.getChildAt(0) as? EditText ?: return null
@@ -198,7 +225,6 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
                     Toast.makeText(this, "답변을 입력해주세요.", Toast.LENGTH_SHORT).show()
                     return false
                 }
-
                 when (question.questionNumber) {
                     3 -> {
                         val height = inputText.toIntOrNull()
@@ -241,8 +267,6 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
     private fun findNextQuestionIndex(currentIndex: Int): Int {
         val currentQuestion = questionList[currentIndex]
         val userAnswer = userAnswers[currentQuestion.questionNumber] ?: return -1
-
-        // nextQuestionNumber 지정이 있다면 그 번호로 바로 점프
         userAnswer.optionNumbers.forEach { optNumber ->
             val targetOption = currentQuestion.options.firstOrNull { it.optionNumber == optNumber }
             targetOption?.nextQuestionNumber?.let { jumpQNum ->
@@ -250,19 +274,14 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
                 if (jumpIndex != -1) return jumpIndex
             }
         }
-        // 그 외에는 단순 다음 순서로
         val nextIndex = currentIndex + 1
         return if (nextIndex < questionList.size) nextIndex else -1
     }
 
-    private fun isLastQuestion(index: Int): Boolean {
-        return index == questionList.size - 1
-    }
+    private fun isLastQuestion(index: Int): Boolean = index == questionList.size - 1
 
     private fun submitSurveyAnswers() {
         binding.loadingOverlay.visibility = View.VISIBLE
-
-        // 로딩 동안 버튼 숨기기
         binding.btnPrev.visibility = View.GONE
         binding.btnNext.visibility = View.GONE
 
@@ -270,7 +289,6 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
         val seniorId = sharedPrefs.getLong("seniorId", -1L)
         if (seniorId == -1L) {
             Toast.makeText(this, "시니어 정보가 없습니다.", Toast.LENGTH_SHORT).show()
-            // 로딩 해제 + 버튼 복원
             binding.loadingOverlay.visibility = View.GONE
             binding.btnPrev.visibility = if (currentIndex > 0) View.VISIBLE else View.INVISIBLE
             binding.btnNext.visibility = View.VISIBLE
@@ -287,19 +305,9 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
 
         val requestBody = SurveyCreateRequest(responses = responses)
         val service = RetrofitClient.getInstance(this).create(SurveyService::class.java)
-
         service.submitSurvey(seniorId, requestBody).enqueue(object : Callback<SurveyCreateResponse> {
-            override fun onResponse(
-                call: Call<SurveyCreateResponse>,
-                response: Response<SurveyCreateResponse>
-            ) {
-                // 응답 후 로딩 오버레이 해제
+            override fun onResponse(call: Call<SurveyCreateResponse>, response: Response<SurveyCreateResponse>) {
                 binding.loadingOverlay.visibility = View.GONE
-
-                // 여기서는 보통 설문 완료 후 결과 액티비티로 넘어가므로,
-                // 버튼을 다시 보여줄 일이 사실상 없을 수 있음.
-                // 하지만 로직상 서버 실패면 다시 보여줘야 하므로 다음과 같이 처리:
-
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body?.status == 201) {
@@ -309,7 +317,6 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
                             "설문 제출이 완료되었습니다.\n(Survey ID: $newSurveyId)",
                             Toast.LENGTH_LONG
                         ).show()
-
                         val intent = Intent(
                             this@RiskAssessmentQuestionActivity,
                             RiskAssessmentResultActivity::class.java
@@ -318,47 +325,40 @@ class RiskAssessmentQuestionActivity : AppCompatActivity() {
                         intent.putExtra("surveyId", newSurveyId)
                         startActivity(intent)
                         finish()
-
                     } else {
-                        // 서버가 201이 아니면 실패 처리
-                        Toast.makeText(
-                            this@RiskAssessmentQuestionActivity,
-                            "제출 실패: ${body?.status}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        // 버튼 복원(다시 시도할 수 있게)
+                        showRetryDialog("제출 실패: ${body?.status}. 다시 시도하시겠습니까?") { submitSurveyAnswers() }
                         binding.btnPrev.visibility = if (currentIndex > 0) View.VISIBLE else View.INVISIBLE
                         binding.btnNext.visibility = View.VISIBLE
                     }
                 } else {
-                    Toast.makeText(
-                        this@RiskAssessmentQuestionActivity,
-                        "서버 에러: ${response.code()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    // 버튼 복원
+                    showRetryDialog("서버 에러: ${response.code()}. 다시 시도하시겠습니까?") { submitSurveyAnswers() }
                     binding.btnPrev.visibility = if (currentIndex > 0) View.VISIBLE else View.INVISIBLE
                     binding.btnNext.visibility = View.VISIBLE
                 }
             }
 
             override fun onFailure(call: Call<SurveyCreateResponse>, t: Throwable) {
-                // 네트워크 에러 시 로딩 오버레이 해제 + 버튼 복원
                 binding.loadingOverlay.visibility = View.GONE
-                Toast.makeText(
-                    this@RiskAssessmentQuestionActivity,
-                    "네트워크 오류가 발생했습니다.",
-                    Toast.LENGTH_SHORT
-                ).show()
-
+                showRetryDialog("네트워크 오류가 발생했습니다. 다시 시도하시겠습니까?") { submitSurveyAnswers() }
                 binding.btnPrev.visibility = if (currentIndex > 0) View.VISIBLE else View.INVISIBLE
                 binding.btnNext.visibility = View.VISIBLE
             }
         })
     }
 
+    private fun showRetryDialog(message: String, retryAction: () -> Unit) {
+        AlertDialog.Builder(this)
+            .setTitle("오류")
+            .setMessage(message)
+            .setPositiveButton("재시도") { dialog, _ ->
+                retryAction()
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
 
     private fun getCategoryKorean(category: String): String {
         return when (category) {

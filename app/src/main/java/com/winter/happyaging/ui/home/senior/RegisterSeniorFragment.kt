@@ -1,3 +1,4 @@
+// app/src/main/java/com/winter/happyaging/ui/home/senior/RegisterSeniorFragment.kt
 package com.winter.happyaging.ui.home.senior
 
 import android.os.Bundle
@@ -25,7 +26,6 @@ class RegisterSeniorFragment : Fragment() {
     private var _binding: FragmentRegisterSeniorBinding? = null
     private val binding get() = _binding!!
 
-    // 정규식 (예시: 010-1234-5678)
     private val phoneRegex = Regex("^010-\\d{4}-\\d{4}\$")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -36,21 +36,21 @@ class RegisterSeniorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 스피너 초기화
-        val sexOptions = listOf("MALE", "FEMALE")
-        val relationshipOptions = listOf("SELF", "FAMILY", "ETC")
+        val sexOptions = listOf("남자", "여자")
+        val relationshipOptions = listOf("본인", "가족", "기타 (친구, 지인 등)")
         binding.spinnerSex.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, sexOptions)
         binding.spinnerRelationship.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, relationshipOptions)
+
+        val sexMapping = mapOf("남자" to "MALE", "여자" to "FEMALE")
+        val relationshipMapping = mapOf("본인" to "SELF", "가족" to "FAMILY", "기타 (친구, 지인 등)" to "ETC")
 
         val headerTitle: TextView = view.findViewById(R.id.tvHeader)
         headerTitle.text = "시니어 관리"
 
         binding.header.btnBack.setOnClickListener {
-//            requireActivity().finish()
             requireActivity().supportFragmentManager.popBackStack()
         }
 
-        // 실시간 입력 검증 TextWatcher 등록
         binding.edtName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) { validateName() }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -82,7 +82,6 @@ class RegisterSeniorFragment : Fragment() {
         })
 
         binding.fabRegister.setOnClickListener {
-            // 모든 필드 검증 실행
             val isNameValid = validateName()
             val isAddressValid = validateAddress()
             val isAddressDetailValid = validateAddressDetail()
@@ -91,31 +90,36 @@ class RegisterSeniorFragment : Fragment() {
 
             if (!isNameValid || !isAddressValid || !isAddressDetailValid || !isBirthYearValid || !isPhoneValid) {
                 Toast.makeText(requireContext(), "모든 필수 정보를 올바르게 입력해주세요.", Toast.LENGTH_SHORT).show()
-                // 첫번째 에러 항목으로 스크롤
                 binding.scrollViewRegister.post { binding.scrollViewRegister.smoothScrollTo(0, binding.edtName.top) }
                 return@setOnClickListener
             }
 
-            // 모든 검증 통과 시 데이터 추출
             val name = binding.edtName.text.toString().trim()
             val address = binding.edtAddress.text.toString().trim()
             val addressDetail = binding.edtAddressDetail.text.toString().trim()
-            val birthYear = binding.edtBirthYear.text.toString().trim().toInt()
+            val birthYear = try {
+                binding.edtBirthYear.text.toString().trim().toInt()
+            } catch (e: NumberFormatException) {
+                Toast.makeText(requireContext(), "출생년도 입력이 올바르지 않습니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val phoneNumberInput = binding.edtPhone.text.toString().trim()
             val memo = binding.edtMemo.text.toString().trim()
-            val sex = binding.spinnerSex.selectedItem.toString().trim()
-            val relationship = binding.spinnerRelationship.selectedItem.toString().trim()
 
-            // 전화번호 포맷 (필요시 이미 올바른 형식이 입력된 것으로 가정)
+            val selectedSex = binding.spinnerSex.selectedItem.toString().trim()
+            val selectedRelationship = binding.spinnerRelationship.selectedItem.toString().trim()
+            val internalSex = sexMapping[selectedSex] ?: selectedSex
+            val internalRelationship = relationshipMapping[selectedRelationship] ?: selectedRelationship
+
             val formattedPhoneNumber = formatPhoneNumber(phoneNumberInput)
 
             val requestData = SeniorCreateRequest(
                 name = name,
                 address = "$address $addressDetail",
                 birthYear = birthYear,
-                sex = sex,
+                sex = internalSex,
                 phoneNumber = formattedPhoneNumber,
-                relationship = relationship,
+                relationship = internalRelationship,
                 memo = memo
             )
 
@@ -185,7 +189,6 @@ class RegisterSeniorFragment : Fragment() {
     }
 
     private fun formatPhoneNumber(input: String): String {
-        // 이미 "010-1234-5678" 형식이면 그대로 리턴
         val cleaned = input.replace(Regex("[^0-9]"), "")
         return when (cleaned.length) {
             10 -> cleaned.replace(Regex("(\\d{3})(\\d{3})(\\d{4})"), "$1-$2-$3")
@@ -203,11 +206,11 @@ class RegisterSeniorFragment : Fragment() {
                     parentFragmentManager.setFragmentResult("refreshSeniorList", Bundle())
                     parentFragmentManager.popBackStack()
                 } else {
-                    Toast.makeText(requireContext(), "등록 실패: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "등록 실패: 서버 오류 ${response.code()}. 다시 시도해주세요.", Toast.LENGTH_LONG).show()
                 }
             }
             override fun onFailure(call: Call<SeniorCreateResponse>, t: Throwable) {
-                Toast.makeText(requireContext(), "네트워크 오류 발생", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "네트워크 오류 발생: ${t.localizedMessage}. 인터넷 연결을 확인하고 다시 시도해주세요.", Toast.LENGTH_LONG).show()
             }
         })
     }

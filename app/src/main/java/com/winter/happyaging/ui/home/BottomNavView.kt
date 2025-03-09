@@ -37,44 +37,30 @@ class BottomNavView @JvmOverloads constructor(
         findViewById<LinearLayout>(R.id.nav_senior_list).setOnClickListener { view ->
             resetSelection()
             view.isSelected = true
-            if (context is AppCompatActivity) {
-                (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, SeniorListFragment())
-                    .commit()
-            }
+            (context as? AppCompatActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragmentContainer, SeniorListFragment())?.commit()
         }
         // 관련 지식
         findViewById<LinearLayout>(R.id.nav_knowledge).setOnClickListener { view ->
             resetSelection()
             view.isSelected = true
-            if (context is AppCompatActivity) {
-                (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, KnowledgeFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
+            (context as? AppCompatActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragmentContainer, KnowledgeFragment())?.addToBackStack(null)?.commit()
         }
         // 예방 물품
         findViewById<LinearLayout>(R.id.nav_prevention_goods).setOnClickListener { view ->
             resetSelection()
             view.isSelected = true
-            if (context is AppCompatActivity) {
-                (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, PreventionGoodsFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
+            (context as? AppCompatActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragmentContainer, PreventionGoodsFragment())?.addToBackStack(null)
+                ?.commit()
         }
         // 더보기
         findViewById<LinearLayout>(R.id.nav_more).setOnClickListener { view ->
             resetSelection()
             view.isSelected = true
-            if (context is AppCompatActivity) {
-                (context as AppCompatActivity).supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, MoreFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
+            (context as? AppCompatActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragmentContainer, MoreFragment())?.addToBackStack(null)?.commit()
         }
     }
 }

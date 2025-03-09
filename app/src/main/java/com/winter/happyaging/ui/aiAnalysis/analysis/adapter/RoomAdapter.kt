@@ -1,5 +1,6 @@
 package com.winter.happyaging.ui.aiAnalysis.analysis.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.winter.happyaging.databinding.ItemRoomBinding
 
 class RoomAdapter(
     private val roomList: MutableList<RoomData>,
+    private val roomType: String,
     private val onAddImageClick: (roomPosition: Int, guidePosition: Int) -> Unit,
     private val onDeleteImageClick: (roomPosition: Int, guidePosition: Int, imagePosition: Int) -> Unit,
     private val onAddRoomClick: (position: Int) -> Unit,
@@ -30,26 +32,40 @@ class RoomAdapter(
 
     inner class RoomViewHolder(private val binding: ItemRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(room: RoomData, position: Int) {
-            binding.roomNumberText.text = "${position + 1}"
-            binding.roomHint.text = "미작성 시 '${room.name}'로 표기됩니다."
-            binding.roomName.setText("")
-            binding.roomNameLayout.hint = room.name
+            try {
+                binding.roomNumberText.text = "${position + 1}"
 
-            binding.roomName.doAfterTextChanged { text ->
-                text?.toString()?.trim()?.takeIf { it.isNotEmpty() }?.let { room.name = it }
+                val defaultName = "$roomType ${position + 1}"
+
+                binding.roomHint.text = "미작성 시 '$defaultName'로 표기됩니다."
+                binding.roomNameLayout.hint = defaultName
+
+                if (room.name == defaultName) {
+                    binding.roomName.setText("")
+                } else {
+                    binding.roomName.setText(room.name)
+                }
+
+                binding.roomName.doAfterTextChanged { text ->
+                    val input = text?.toString()?.trim()
+                    room.name = if (input.isNullOrEmpty()) defaultName else input
+                }
+
+                binding.rvGuides.layoutManager =
+                    LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
+                binding.rvGuides.adapter = GuideAdapter(
+                    roomIndex = position,
+                    guides = room.guides,
+                    onAddImageClick = onAddImageClick,
+                    onDeleteImageClick = onDeleteImageClick
+                )
+
+                binding.AddRoomButton.setOnClickListener { onAddRoomClick(position) }
+                binding.DeleteRoomButton.visibility = if (roomList.size > 1) View.VISIBLE else View.GONE
+                binding.DeleteRoomButton.setOnClickListener { onDeleteRoomClick(position) }
+            } catch (e: Exception) {
+                Log.e("RoomAdapter", "Error binding room at position $position", e)
             }
-
-            binding.rvGuides.layoutManager =
-                LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
-            binding.rvGuides.adapter = GuideAdapter(
-                roomIndex = position,
-                guides = room.guides,
-                onAddImageClick = onAddImageClick,
-                onDeleteImageClick = onDeleteImageClick
-            )
-            binding.AddRoomButton.setOnClickListener { onAddRoomClick(position) }
-            binding.DeleteRoomButton.visibility = if (roomList.size > 1) View.VISIBLE else View.GONE
-            binding.DeleteRoomButton.setOnClickListener { onDeleteRoomClick(position) }
         }
     }
 }

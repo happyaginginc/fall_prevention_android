@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.winter.happyaging.R
 import com.winter.happyaging.data.product.model.ProductResponse
 import com.winter.happyaging.databinding.FragmentPreventionGoodsBinding
-import com.winter.happyaging.ui.home.adapter.ProductAdapter
+import com.winter.happyaging.ui.home.product.adapter.ProductAdapter
 
 class PreventionGoodsFragment : Fragment() {
 

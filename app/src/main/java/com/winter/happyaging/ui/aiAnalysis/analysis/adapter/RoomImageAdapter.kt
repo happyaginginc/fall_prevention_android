@@ -40,11 +40,15 @@ class RoomImageAdapter(
 
     inner class ImageViewHolder(private val binding: ItemRoomImageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(imageName: String) {
-            Glide.with(binding.imageView.context)
-                .load("$baseImageUrl$imageName")
-                .placeholder(R.drawable.logo)
-                .error(R.drawable.logo)
-                .into(binding.imageView)
+            try {
+                Glide.with(binding.imageView.context)
+                    .load("$baseImageUrl$imageName")
+                    .placeholder(R.drawable.logo)
+                    .error(R.drawable.logo)
+                    .into(binding.imageView)
+            } catch (e: Exception) {
+                binding.imageView.setImageResource(R.drawable.logo)
+            }
             binding.btnDelete.setOnClickListener { onDeleteClick(adapterPosition) }
         }
     }

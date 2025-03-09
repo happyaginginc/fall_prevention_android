@@ -11,9 +11,6 @@ import androidx.fragment.app.commit
 import com.winter.happyaging.R
 import com.winter.happyaging.ui.auth.login.LoginFragment
 
-/**
- * 회원가입 완료 화면
- */
 class RegisterCompleteFragment : Fragment() {
 
     companion object {

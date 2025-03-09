@@ -8,6 +8,7 @@ import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.winter.happyaging.data.survey.model.SurveyResultData
 import com.winter.happyaging.data.survey.service.SurveyService
@@ -56,7 +57,6 @@ class RiskAssessmentResultActivity : AppCompatActivity() {
     }
 
     private fun fetchSurveyResult(seniorId: Long, surveyId: Int) {
-        // 간단 로딩 표시
         binding.loadingLayout.visibility = View.VISIBLE
 
         val service = RetrofitClient.getInstance(this).create(SurveyService::class.java)
@@ -65,7 +65,6 @@ class RiskAssessmentResultActivity : AppCompatActivity() {
                 call: Call<ApiResponse<SurveyResultData>>,
                 response: Response<ApiResponse<SurveyResultData>>
             ) {
-                // 응답 후 로딩 숨김
                 binding.loadingLayout.visibility = View.GONE
 
                 if (response.isSuccessful) {
@@ -76,28 +75,28 @@ class RiskAssessmentResultActivity : AppCompatActivity() {
                         riskLevel = data.riskLevel
                         summary = data.summary
 
-                        // 화면에 결과 반영
                         binding.tvRiskLevel.text = "위험등급: $riskLevel"
                         binding.tvSummary.text = summary
                     } else {
-                        Toast.makeText(this@RiskAssessmentResultActivity, "결과 조회 실패", Toast.LENGTH_SHORT).show()
+                        Log.e("RiskAssessmentResult", "Fetch failed: status ${body?.status}")
+                        showRetryDialog("결과 조회 실패. 다시 시도하시겠습니까?") { fetchSurveyResult(seniorId, surveyId) }
                     }
                 } else {
-                    Toast.makeText(this@RiskAssessmentResultActivity, "서버 에러: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    Log.e("RiskAssessmentResult", "Server error: ${response.code()}")
+                    showRetryDialog("서버 에러: ${response.code()}. 다시 시도하시겠습니까?") { fetchSurveyResult(seniorId, surveyId) }
                 }
             }
 
             override fun onFailure(call: Call<ApiResponse<SurveyResultData>>, t: Throwable) {
                 binding.loadingLayout.visibility = View.GONE
-                Toast.makeText(this@RiskAssessmentResultActivity, "네트워크 오류 발생", Toast.LENGTH_SHORT).show()
-                Log.e("RiskAssessmentResult", "Error: ${t.message}")
+                Log.e("RiskAssessmentResult", "Network error: ${t.message}")
+                showRetryDialog("네트워크 오류 발생. 다시 시도하시겠습니까?") { fetchSurveyResult(seniorId, surveyId) }
             }
         })
     }
 
     private fun downloadPdfUsingDownloadManager(pdfUrl: String, fileName: String) {
         try {
-            // 예시: https://api.happy-aging.co.kr/downloadPDF?filename=
             val completeUrl = "https://api.happy-aging.co.kr/downloadPDF?filename=$pdfUrl"
             val uri = Uri.parse(completeUrl)
             val request = DownloadManager.Request(uri)
@@ -112,8 +111,23 @@ class RiskAssessmentResultActivity : AppCompatActivity() {
             downloadManager.enqueue(request)
             Toast.makeText(this, "다운로드가 시작되었습니다.", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
+            Log.e("RiskAssessmentResult", "Download error: ${e.message}", e)
             e.printStackTrace()
             Toast.makeText(this, "다운로드 시작 중 오류 발생", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showRetryDialog(message: String, retryAction: () -> Unit) {
+        AlertDialog.Builder(this)
+            .setTitle("오류")
+            .setMessage(message)
+            .setPositiveButton("재시도") { dialog, _ ->
+                retryAction()
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

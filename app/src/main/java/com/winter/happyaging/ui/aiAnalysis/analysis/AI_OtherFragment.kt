@@ -37,28 +37,10 @@ class AI_OtherFragment : BaseRoomFragment(
         super.onViewCreated(view, savedInstanceState)
         tokenManager = TokenManager(requireContext())
 
-        binding.nextButton.text = "분석 시작"
-        binding.nextButton.setOnClickListener { sendAnalysisRequest() }
-
-        loadStoredImages()
-    }
-
-
-    private fun loadStoredImages() {
-        for (room in roomList) {
-            val storedInfo = imageManager.getImageData(room.name)
-            if (storedInfo != null) {
-                val storedGuides = storedInfo.guides
-                val minCount = minOf(room.guides.size, storedGuides.size)
-
-                for (i in 0 until minCount) {
-                    room.guides[i].images.clear()
-                    room.guides[i].images.addAll(storedGuides[i])
-                }
-            }
+        binding.btnNext.text = "분석 시작"
+        binding.btnNext.setOnClickListener {
+            sendAnalysisRequest()
         }
-
-        binding.roomRecyclerView.adapter?.notifyDataSetChanged()
     }
 
     private fun sendAnalysisRequest() {
@@ -70,51 +52,71 @@ class AI_OtherFragment : BaseRoomFragment(
             return
         }
 
-        // 각 방의 모든 가이드 이미지들을 합쳐서 RoomRequest 생성
-        val allRooms = imageManager.getAllImageData()
-        Log.d("sendAnalysisRequest", "모든 방의 이미지 데이터: $allRooms")
+        try {
+            val allRooms = imageManager.getAllImageData()
+            Log.d(TAG, "모든 방의 이미지 데이터: $allRooms")
 
-        val roomRequests: List<RoomRequest> = allRooms.values.map { roomImageInfo ->
-            val allImages = roomImageInfo.guides.flatten()
-            RoomRequest(
-                roomName = roomImageInfo.roomName,
-                roomCategory = getRoomCategory(roomImageInfo.roomName),
-                roomImages = allImages
-            )
-        }
-
-        Log.d("sendAnalysisRequest", "생성된 RoomRequest 리스트: $roomRequests")
-
-        binding.loadingLayout.visibility = View.VISIBLE
-        binding.mainContent.visibility = View.GONE
-
-        AiAnalysisRepository.uploadRoomImages(
-            context = requireContext(),
-            binding = binding.loadingLayout,
-            seniorId = seniorId,
-            roomRequests = roomRequests,
-            onSuccess = { response ->
-                saveAnalysisResponse(response)
-                handleAnalysisSuccess()
-            },
-            onFailure = { error ->
-                Toast.makeText(requireContext(), "분석 실패: $error", Toast.LENGTH_SHORT).show()
-            },
-            onComplete = {
-                binding.loadingLayout.visibility = View.GONE
-                binding.mainContent.visibility = View.VISIBLE
+            val roomRequests: List<RoomRequest> = allRooms.values.mapNotNull { roomImageInfo ->
+                val allImages = roomImageInfo.guides.flatten()
+                if (allImages.isNotEmpty()) {
+                    RoomRequest(
+                        roomName = roomImageInfo.roomName,
+                        roomCategory = getRoomCategory(roomImageInfo.roomName),
+                        roomImages = allImages
+                    )
+                } else {
+                    null
+                }
             }
-        )
+
+            if (roomRequests.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "업로드한 이미지가 없습니다.\n최소 1장 이상 등록해주세요.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
+
+            binding.btnPrev.visibility = View.GONE
+            binding.btnNext.visibility = View.GONE
+            binding.loadingOverlay.visibility = View.VISIBLE
+            binding.scrollContainer.visibility = View.GONE
+
+            AiAnalysisRepository.uploadRoomImages(
+                context = requireContext(),
+                binding = binding.loadingOverlay,
+                seniorId = seniorId,
+                roomRequests = roomRequests,
+                onSuccess = { response ->
+                    saveAnalysisResponse(response)
+                    handleAnalysisSuccess()
+                },
+                onFailure = { error ->
+                    Toast.makeText(requireContext(), "분석 실패: $error", Toast.LENGTH_SHORT).show()
+                },
+                onComplete = {
+                    binding.loadingOverlay.visibility = View.GONE
+                }
+            )
+        } catch (e: Exception) {
+            binding.loadingOverlay.visibility = View.GONE
+            Toast.makeText(requireContext(), "분석 요청 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun saveAnalysisResponse(response: AiAnalysisResponse) {
         lifecycleScope.launch {
-            val sharedPreferences = requireContext().getSharedPreferences(ANALYSIS_DATA_PREFS, Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            val json = Gson().toJson(response)
-            editor.putString(ANALYSIS_RESULT_KEY, json)
-            editor.apply()
-            Log.d(TAG, "분석 결과 저장 완료")
+            try {
+                val sharedPreferences = requireContext().getSharedPreferences(ANALYSIS_DATA_PREFS, Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                val json = Gson().toJson(response)
+                editor.putString(ANALYSIS_RESULT_KEY, json)
+                editor.apply()
+                Log.d(TAG, "분석 결과 저장 완료")
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "분석 결과 저장 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -137,9 +139,5 @@ class AI_OtherFragment : BaseRoomFragment(
             roomName.contains("외부") -> "OUTDOOR"
             else -> "OTHER"
         }
-    }
-
-    override fun onNextButtonClick() {
-        sendAnalysisRequest()
     }
 }

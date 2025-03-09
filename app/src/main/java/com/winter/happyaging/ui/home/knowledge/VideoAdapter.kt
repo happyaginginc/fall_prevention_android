@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.winter.happyaging.data.youtube.model.YoutubeVideo
@@ -12,8 +13,6 @@ import com.winter.happyaging.databinding.ItemVideoBinding
 
 class VideoAdapter(private var videoList: List<YoutubeVideo>) :
     RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
-
-    val currentList: List<YoutubeVideo> get() = videoList
 
     inner class VideoViewHolder(private val binding: ItemVideoBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -23,17 +22,21 @@ class VideoAdapter(private var videoList: List<YoutubeVideo>) :
                 .load(video.thumbnailUrl)
                 .into(binding.ivThumbnail)
             binding.root.setOnClickListener {
-                val context = binding.root.context
-                val videoId = video.videoId
-                if (videoId.isNotEmpty()) {
-                    val youtubeIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:$videoId"))
-                    val packageManager: PackageManager = context.packageManager
-                    if (youtubeIntent.resolveActivity(packageManager) != null) {
-                        context.startActivity(youtubeIntent)
-                        return@setOnClickListener
+                try {
+                    val context = binding.root.context
+                    val videoId = video.videoId
+                    if (videoId.isNotEmpty()) {
+                        val youtubeIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:$videoId"))
+                        val packageManager: PackageManager = context.packageManager
+                        if (youtubeIntent.resolveActivity(packageManager) != null) {
+                            context.startActivity(youtubeIntent)
+                            return@setOnClickListener
+                        }
                     }
+                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$videoId")))
+                } catch (e: Exception) {
+                    Toast.makeText(binding.root.context, "영상 재생 중 오류 발생", Toast.LENGTH_SHORT).show()
                 }
-                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$videoId")))
             }
         }
     }

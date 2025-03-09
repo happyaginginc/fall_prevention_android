@@ -1,5 +1,6 @@
 package com.winter.happyaging.ui.auth.register
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
@@ -15,6 +16,7 @@ import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.winter.happyaging.R
@@ -26,9 +28,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/**
- * 회원가입 화면
- */
 class RegisterFragment : Fragment() {
 
     private lateinit var etName: EditText
@@ -49,6 +48,7 @@ class RegisterFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_signup, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -69,7 +69,6 @@ class RegisterFragment : Fragment() {
         val tvPrivacyError: TextView = view.findViewById(R.id.tvPrivacyError)
         val btnSignUp: Button = view.findViewById(R.id.btnSignUp)
         val tvTermsDetail: TextView = view.findViewById(R.id.tvTermsDetail)
-//        val loginLink: TextView = view.findViewById(R.id.loginLink)
 
         // HTML 텍스트가 포함된 문자열을 Html.fromHtml()로 적용
         val tvRequiredNote: TextView = view.findViewById(R.id.tvRequiredNote)
@@ -180,6 +179,9 @@ class RegisterFragment : Fragment() {
                 tvPasswordConfirmError.visibility == View.GONE &&
                 tvPrivacyError.visibility == View.GONE) {
 
+                // 회원가입 버튼 비활성화하여 중복 클릭 방지
+                btnSignUp.isEnabled = false
+
                 val name = etName.text.toString().trim()
                 val phoneNumber = etPhoneNumber.text.toString().trim()
                 val email = etEmail.text.toString().trim()
@@ -197,6 +199,8 @@ class RegisterFragment : Fragment() {
 
                 authService.register(registerRequest).enqueue(object : Callback<RegisterResponse> {
                     override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
+                        // 회원가입 버튼 재활성화
+                        btnSignUp.isEnabled = true
                         if (response.isSuccessful) {
                             response.body()?.let { authResponse ->
                                 if (authResponse.status == 201) {
@@ -214,16 +218,21 @@ class RegisterFragment : Fragment() {
                                 }
                             }
                         } else {
-                            val errorBody = response.errorBody()?.string() ?: getString(R.string.unknown_error)
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.register_fail, errorBody),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            try {
+                                val errorBody = response.errorBody()?.string() ?: getString(R.string.unknown_error)
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.register_fail, errorBody),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } catch (e: Exception) {
+                                Toast.makeText(requireContext(), getString(R.string.register_fail, getString(R.string.unknown_error)), Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
 
                     override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+                        btnSignUp.isEnabled = true
                         Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show()
                     }
                 })

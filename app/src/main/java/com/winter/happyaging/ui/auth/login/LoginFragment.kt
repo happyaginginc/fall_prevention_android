@@ -89,6 +89,9 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
+            // 로그인 버튼 비활성화하여 중복 클릭 방지
+            btnLogin.isEnabled = false
+
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
@@ -103,61 +106,79 @@ class LoginFragment : Fragment() {
                                 // 1) 토큰 저장
                                 val accessToken = loginResponse.data.accessToken.value
                                 val refreshToken = loginResponse.data.refreshToken.value
-                                runBlocking {
-                                    TokenManager(requireContext()).saveTokens(accessToken, refreshToken)
+                                try {
+                                    runBlocking {
+                                        TokenManager(requireContext()).saveTokens(accessToken, refreshToken)
+                                    }
+                                } catch (e: Exception) {
+                                    Toast.makeText(requireContext(), "토큰 저장 중 오류 발생: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    btnLogin.isEnabled = true
+                                    return
                                 }
 
                                 // 2) 바로 getUserInfo() 호출해서 사용자 정보 가져오기
-                                authService.getUserInfo().enqueue(object : Callback<ApiResponse<UserInfoResponse>> {
-                                    override fun onResponse(
-                                        call: Call<ApiResponse<UserInfoResponse>>,
-                                        resp: Response<ApiResponse<UserInfoResponse>>
-                                    ) {
-                                        if (resp.isSuccessful) {
-                                            resp.body()?.let { userInfoResp ->
-                                                if (userInfoResp.status == 200) {
-                                                    val userInfo = userInfoResp.data
-                                                    UserProfileManager.saveUserInfo(
-                                                        requireContext(),
-                                                        userId = userInfo.id,
-                                                        email = userInfo.email,
-                                                        name = userInfo.name,
-                                                        phone = userInfo.phoneNumber
-                                                    )
-                                                    Toast.makeText(requireContext(), R.string.login_success, Toast.LENGTH_SHORT).show()
-                                                    startActivity(Intent(requireContext(), HomeActivity::class.java))
-                                                    requireActivity().finish()
-                                                } else {
-                                                    Toast.makeText(requireContext(), "로그인 성공 but 사용자 정보 조회 실패", Toast.LENGTH_SHORT).show()
+                                try {
+                                    authService.getUserInfo().enqueue(object : Callback<ApiResponse<UserInfoResponse>> {
+                                        override fun onResponse(
+                                            call: Call<ApiResponse<UserInfoResponse>>,
+                                            resp: Response<ApiResponse<UserInfoResponse>>
+                                        ) {
+                                            // 로그인 버튼 재활성화 in case of failure
+                                            btnLogin.isEnabled = true
+                                            if (resp.isSuccessful) {
+                                                resp.body()?.let { userInfoResp ->
+                                                    if (userInfoResp.status == 200) {
+                                                        val userInfo = userInfoResp.data
+                                                        UserProfileManager.saveUserInfo(
+                                                            requireContext(),
+                                                            userId = userInfo.id,
+                                                            email = userInfo.email,
+                                                            name = userInfo.name,
+                                                            phone = userInfo.phoneNumber
+                                                        )
+                                                        Toast.makeText(requireContext(), R.string.login_success, Toast.LENGTH_SHORT).show()
+                                                        startActivity(Intent(requireContext(), HomeActivity::class.java))
+                                                        requireActivity().finish()
+                                                    } else {
+                                                        Toast.makeText(requireContext(), "로그인 성공 but 사용자 정보 조회 실패", Toast.LENGTH_SHORT).show()
+                                                    }
+                                                } ?: run {
+                                                    Toast.makeText(requireContext(), "사용자 정보가 비어있습니다.", Toast.LENGTH_SHORT).show()
                                                 }
-                                            } ?: run {
-                                                Toast.makeText(requireContext(), "사용자 정보가 비어있습니다.", Toast.LENGTH_SHORT).show()
+                                            } else {
+                                                Toast.makeText(requireContext(), "사용자 정보 요청 오류: ${resp.code()}", Toast.LENGTH_SHORT).show()
                                             }
-                                        } else {
-                                            Toast.makeText(requireContext(), "사용자 정보 요청 오류: ${resp.code()}", Toast.LENGTH_SHORT).show()
                                         }
-                                    }
-                                    override fun onFailure(call: Call<ApiResponse<UserInfoResponse>>, t: Throwable) {
-                                        Toast.makeText(requireContext(), "사용자 정보 요청 실패: ${t.message}", Toast.LENGTH_SHORT).show()
-                                    }
-                                })
+                                        override fun onFailure(call: Call<ApiResponse<UserInfoResponse>>, t: Throwable) {
+                                            btnLogin.isEnabled = true
+                                            Toast.makeText(requireContext(), "사용자 정보 요청 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+                                        }
+                                    })
+                                } catch (e: Exception) {
+                                    Toast.makeText(requireContext(), "사용자 정보 요청 중 오류 발생: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    btnLogin.isEnabled = true
+                                }
 
                             } else {
+                                btnLogin.isEnabled = true
                                 Toast.makeText(requireContext(),
                                     getString(R.string.login_fail_status, loginResponse.status),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
                         } ?: run {
+                            btnLogin.isEnabled = true
                             Toast.makeText(requireContext(), R.string.login_fail_empty_body, Toast.LENGTH_SHORT).show()
                         }
                     } else {
+                        btnLogin.isEnabled = true
                         val errorBody = response.errorBody()?.string() ?: getString(R.string.unknown_error)
                         Toast.makeText(requireContext(), getString(R.string.login_fail_server, errorBody), Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    btnLogin.isEnabled = true
                     Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show()
                 }
             })

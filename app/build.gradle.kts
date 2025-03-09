@@ -30,10 +30,10 @@ android {
         }
     }
 
-    // dataBinding 및 viewBinding을 buildFeatures 블록에서 함께 설정
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        buildConfig = true
     }
 
     compileOptions {
@@ -67,7 +67,6 @@ dependencies {
 
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
-    // 만약 Kotlin KAPT 사용 중이면: kapt(libs.compiler)
 
     // ================ 기타 AndroidX 라이브러리 ================
     implementation(libs.androidx.activity)

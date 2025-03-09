@@ -47,7 +47,7 @@
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/Theme.HappyAging.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -95,10 +95,9 @@
             android:name=".ui.survey.fallResult.FallSurveyRecordListActivity"
             android:label="낙상 위험등급 결과 목록" />
 
-        <!-- FileProvider: 한 번만 등록 -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.winter.happyaging"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

@@ -4,9 +4,12 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.winter.happyaging.data.auth.model.response.UserInfoResponse
 import com.winter.happyaging.data.auth.service.AuthService
@@ -20,16 +23,23 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : ComponentActivity() {
 
     private val tokenManager by lazy { TokenManager(this) }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
         if (!isNetworkConnected()) {
-            showNetworkFailDialog()
+            showNetworkFailDialog {
+                if (isNetworkConnected()) {
+                    checkAutoLogin()
+                } else {
+                    showNetworkFailDialog { checkAutoLogin() }
+                }
+            }
             return
         }
 
@@ -41,12 +51,12 @@ class SplashActivity : AppCompatActivity() {
         val refreshToken = tokenManager.getRefreshToken()
 
         if (accessToken.isNullOrEmpty() || refreshToken.isNullOrEmpty()) {
-            Log.d("checkAutoLogin", "토큰이 존재하지 않음. 로그인 화면으로 이동.")
+            Log.d("SplashActivity", "토큰이 존재하지 않음. 로그인 화면으로 이동.")
             navigateToIntro()
             return
         }
 
-        Log.d("checkAutoLogin", "토큰 확인 완료. 유저 정보 요청 시작.")
+        Log.d("SplashActivity", "토큰 확인 완료. 유저 정보 요청 시작.")
 
         val authService = RetrofitClient.getInstance(this).create(AuthService::class.java)
         authService.getUserInfo().enqueue(object : Callback<ApiResponse<UserInfoResponse>> {
@@ -57,7 +67,7 @@ class SplashActivity : AppCompatActivity() {
                 if (response.isSuccessful && response.body()?.status == 200) {
                     val userInfo = response.body()?.data
                     if (userInfo != null) {
-                        Log.d("checkAutoLogin", "유저 정보 로드 성공: ${userInfo.email}")
+                        Log.d("SplashActivity", "유저 정보 로드 성공: ${userInfo.email}")
                         UserProfileManager.saveUserInfo(
                             this@SplashActivity,
                             userInfo.id,
@@ -67,18 +77,20 @@ class SplashActivity : AppCompatActivity() {
                         )
                         navigateToHome()
                     } else {
-                        Log.d("checkAutoLogin", "유저 정보가 없음. 로그인 화면으로 이동.")
+                        Log.d("SplashActivity", "유저 정보가 없음. 로그인 화면으로 이동.")
                         navigateToIntro()
                     }
                 } else {
-                    Log.d("checkAutoLogin", "응답 실패 또는 상태 코드 오류: ${response.code()}")
-                    navigateToIntro()
+                    Log.d("SplashActivity", "응답 실패 또는 상태 코드 오류: ${response.code()}")
+                    // 재시도 다이얼로그를 통해 다시 시도
+                    showNetworkFailDialog { checkAutoLogin() }
                 }
             }
 
             override fun onFailure(call: Call<ApiResponse<UserInfoResponse>>, t: Throwable) {
-                Log.e("checkAutoLogin", "네트워크 요청 실패: ${t.localizedMessage}")
-                showNetworkFailDialog()
+                Log.e("SplashActivity", "네트워크 요청 실패: ${t.localizedMessage}")
+                // 재시도 다이얼로그를 통해 다시 시도
+                showNetworkFailDialog { checkAutoLogin() }
             }
         })
     }
@@ -93,18 +105,26 @@ class SplashActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun showNetworkFailDialog() {
+    private fun showNetworkFailDialog(retryAction: () -> Unit) {
         AlertDialog.Builder(this)
             .setTitle("네트워크 오류")
-            .setMessage("인터넷 연결 상태가 좋지 않아 진행할 수 없습니다.\n확인을 누르면 앱이 종료됩니다.")
-            .setPositiveButton("확인") { _, _ -> finish() }
+            .setMessage("인터넷 연결 상태가 좋지 않거나 서버에 접속할 수 없습니다. 네트워크 상태를 확인 후 다시 시도해 주세요.")
+            .setPositiveButton("재시도") { dialog, _ ->
+                dialog.dismiss()
+                retryAction()
+            }
+            .setNegativeButton("종료") { _, _ ->
+                finish()
+            }
             .setCancelable(false)
             .show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun isNetworkConnected(): Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = cm.activeNetwork
-        return network != null
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

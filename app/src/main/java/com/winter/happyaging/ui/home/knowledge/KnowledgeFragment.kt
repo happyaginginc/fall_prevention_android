@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.winter.happyaging.R
+import com.winter.happyaging.data.youtube.model.YoutubeVideo
 import com.winter.happyaging.databinding.FragmentKnowledgeBinding
 
 class KnowledgeFragment : Fragment() {
@@ -17,6 +18,7 @@ class KnowledgeFragment : Fragment() {
     private var _binding: FragmentKnowledgeBinding? = null
     private val binding get() = _binding!!
     private val videoAdapter = VideoAdapter(emptyList())
+    private var fullVideoList: List<YoutubeVideo> = emptyList()  // 전체 데이터 저장
 
     private val knowledgeViewModel: KnowledgeViewModel by activityViewModels()
 
@@ -41,8 +43,10 @@ class KnowledgeFragment : Fragment() {
             knowledgeViewModel.fetchVideos(isRefresh = true)
         }
 
+        // 전체 데이터 업데이트 후 검색어 적용
         knowledgeViewModel.videoList.observe(viewLifecycleOwner) { videos ->
-            videoAdapter.updateData(videos)
+            fullVideoList = videos
+            filterVideos(binding.edtSearchVideo.text.toString())
             binding.swipeRefreshLayout.isRefreshing = false
         }
 
@@ -50,7 +54,11 @@ class KnowledgeFragment : Fragment() {
     }
 
     private fun filterVideos(query: String) {
-        val filteredList = videoAdapter.currentList.filter { it.title.contains(query, ignoreCase = true) }
+        val filteredList = if (query.isEmpty()) {
+            fullVideoList
+        } else {
+            fullVideoList.filter { it.title.contains(query, ignoreCase = true) }
+        }
         videoAdapter.updateData(filteredList)
     }
 

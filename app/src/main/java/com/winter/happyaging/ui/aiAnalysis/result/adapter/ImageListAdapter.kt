@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.winter.happyaging.R
@@ -24,12 +25,22 @@ class ImageListAdapter(private val imageUrls: List<String>) :
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val url = imageUrls[position]
-        Glide.with(holder.imageView.context)
-            .load(url)
-            .placeholder(R.drawable.logo)
-            .error(R.drawable.logo)
-            .into(holder.imageView)
-        holder.imageView.setOnClickListener { ImagePopupDialog(it.context, url).show() }
+        try {
+            Glide.with(holder.imageView.context)
+                .load(url)
+                .placeholder(R.drawable.logo)
+                .error(R.drawable.logo)
+                .into(holder.imageView)
+        } catch (e: Exception) {
+            holder.imageView.setImageResource(R.drawable.logo)
+        }
+        holder.imageView.setOnClickListener {
+            try {
+                ImagePopupDialog(it.context, url).show()
+            } catch (e: Exception) {
+                Toast.makeText(it.context, "이미지 열기에 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun getItemCount(): Int = imageUrls.size

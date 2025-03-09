@@ -23,7 +23,7 @@ class RiskAssessmentIntroActivity : AppCompatActivity() {
 
         tokenManager = TokenManager(this)
         getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-            .getLong("seniorId", -1L) // seniorId 사용 여부에 따라 추가 처리 가능
+            .getLong("seniorId", -1L)
 
         binding.btnStartSurvey.setOnClickListener {
             QuestionRepository.getQuestionListOnce(this) {

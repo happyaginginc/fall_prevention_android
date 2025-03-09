@@ -1,4 +1,4 @@
-package com.winter.happyaging.ui.home.adapter
+package com.winter.happyaging.ui.home.product.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
